@@ -1,0 +1,74 @@
+============================================================
+CODE: find_spec
+  file: <frozen importlib._bootstrap_external>
+  argcount: 4
+  varnames: ('cls', 'fullname', 'path', 'target', 'spec', 'namespace_path')
+  names: ('sys', 'path', '_get_spec', 'loader', 'submodule_search_locations', 'origin', '_NamespacePath')
+  freevars: ()
+  cellvars: ()
+  consts: ['"Try to find a spec for \'fullname\' on sys.path or \'path\'.\\n\\n        The search is based on sys.path_hooks and sys.path_importer_cache.\\n        "', 'None']
+
+  1421           0 LOAD_FAST                2 (path)
+                 2 LOAD_CONST               1 (None)
+                 4 IS_OP                    0
+                 6 POP_JUMP_IF_FALSE       14
+  
+  1422           8 LOAD_GLOBAL              0 (sys)
+                10 LOAD_ATTR                1 (path)
+                12 STORE_FAST               2 (path)
+  
+  1423     >>   14 LOAD_FAST                0 (cls)
+                16 LOAD_METHOD              2 (_get_spec)
+                18 LOAD_FAST                1 (fullname)
+                20 LOAD_FAST                2 (path)
+                22 LOAD_FAST                3 (target)
+                24 CALL_METHOD              3
+                26 STORE_FAST               4 (spec)
+  
+  1424          28 LOAD_FAST                4 (spec)
+                30 LOAD_CONST               1 (None)
+                32 IS_OP                    0
+                34 POP_JUMP_IF_FALSE       40
+  
+  1425          36 LOAD_CONST               1 (None)
+                38 RETURN_VALUE
+  
+  1426     >>   40 LOAD_FAST                4 (spec)
+                42 LOAD_ATTR                3 (loader)
+                44 LOAD_CONST               1 (None)
+                46 IS_OP                    0
+                48 POP_JUMP_IF_FALSE       92
+  
+  1427          50 LOAD_FAST                4 (spec)
+                52 LOAD_ATTR                4 (submodule_search_locations)
+                54 STORE_FAST               5 (namespace_path)
+  
+  1428          56 LOAD_FAST                5 (namespace_path)
+                58 POP_JUMP_IF_FALSE       86
+  
+  1431          60 LOAD_CONST               1 (None)
+                62 LOAD_FAST                4 (spec)
+                64 STORE_ATTR               5 (origin)
+  
+  1432          66 LOAD_GLOBAL              6 (_NamespacePath)
+                68 LOAD_FAST                1 (fullname)
+                70 LOAD_FAST                5 (namespace_path)
+                72 LOAD_FAST                0 (cls)
+                74 LOAD_ATTR                2 (_get_spec)
+                76 CALL_FUNCTION            3
+                78 LOAD_FAST                4 (spec)
+                80 STORE_ATTR               4 (submodule_search_locations)
+  
+  1433          82 LOAD_FAST                4 (spec)
+                84 RETURN_VALUE
+  
+  1435     >>   86 LOAD_CONST               1 (None)
+                88 RETURN_VALUE
+                90 JUMP_FORWARD             4 (to 96)
+  
+  1437     >>   92 LOAD_FAST                4 (spec)
+                94 RETURN_VALUE
+           >>   96 LOAD_CONST               1 (None)
+                98 RETURN_VALUE
+  
+

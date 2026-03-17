@@ -1,0 +1,57 @@
+============================================================
+CODE: find_loader
+  file: <frozen zipimport>
+  argcount: 3
+  varnames: ('self', 'fullname', 'path', 'mi', 'modpath')
+  names: ('_get_module_info', '_get_module_path', '_is_dir', 'archive', 'path_sep')
+  freevars: ()
+  cellvars: ()
+  consts: ['"find_loader(fullname, path=None) -> self, str or None.\\n\\n        Search for a module specified by \'fullname\'. \'fullname\' must be the\\n        fully qualified (dotted) module name. It returns the zipimporter\\n        instance itself if the module was found, a string containing the\\n        full pat', 'None']
+
+  119           0 LOAD_GLOBAL              0 (_get_module_info)
+                2 LOAD_FAST                0 (self)
+                4 LOAD_FAST                1 (fullname)
+                6 CALL_FUNCTION            2
+                8 STORE_FAST               3 (mi)
+  
+  120          10 LOAD_FAST                3 (mi)
+               12 LOAD_CONST               1 (None)
+               14 IS_OP                    1
+               16 POP_JUMP_IF_FALSE       26
+  
+  122          18 LOAD_FAST                0 (self)
+               20 BUILD_LIST               0
+               22 BUILD_TUPLE              2
+               24 RETURN_VALUE
+  
+  129     >>   26 LOAD_GLOBAL              1 (_get_module_path)
+               28 LOAD_FAST                0 (self)
+               30 LOAD_FAST                1 (fullname)
+               32 CALL_FUNCTION            2
+               34 STORE_FAST               4 (modpath)
+  
+  130          36 LOAD_GLOBAL              2 (_is_dir)
+               38 LOAD_FAST                0 (self)
+               40 LOAD_FAST                4 (modpath)
+               42 CALL_FUNCTION            2
+               44 POP_JUMP_IF_FALSE       70
+  
+  134          46 LOAD_CONST               1 (None)
+               48 LOAD_FAST                0 (self)
+               50 LOAD_ATTR                3 (archive)
+               52 FORMAT_VALUE             0
+               54 LOAD_GLOBAL              4 (path_sep)
+               56 FORMAT_VALUE             0
+               58 LOAD_FAST                4 (modpath)
+               60 FORMAT_VALUE             0
+               62 BUILD_STRING             3
+               64 BUILD_LIST               1
+               66 BUILD_TUPLE              2
+               68 RETURN_VALUE
+  
+  136     >>   70 LOAD_CONST               1 (None)
+               72 BUILD_LIST               0
+               74 BUILD_TUPLE              2
+               76 RETURN_VALUE
+  
+

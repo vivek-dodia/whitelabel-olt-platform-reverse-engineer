@@ -1,0 +1,29 @@
+============================================================
+CODE: EnumBobTabFocus
+  file: <frozen com_def>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', 'Base', 'GN25L99', 'NRG6533', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['6']
+
+   37           0 LOAD_GLOBAL              6 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   38           8 NOP
+               10 NOP
+  
+   39          12 <0>
+               14 <0>
+  
+   40          16 <235>                  207
+               18 <169>                  143
+               20 <212>                   27
+               22 <190>                   74
+               24 MAKE_FUNCTION          141 (defaults, annotations, closure)
+  (failed)
+  
+

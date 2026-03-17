@@ -1,0 +1,100 @@
+============================================================
+CODE: _fix_up_module
+  file: <frozen importlib._bootstrap_external>
+  argcount: 4
+  varnames: ('ns', 'name', 'pathname', 'cpathname', 'loader', 'spec')
+  names: ('get', 'loader', 'SourcelessFileLoader', 'SourceFileLoader', 'spec_from_file_location', 'Exception')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'__loader__'", "'__spec__'", "('loader',)", "'__file__'", "'__cached__'"]
+
+  1622           0 LOAD_FAST                0 (ns)
+                 2 LOAD_METHOD              0 (get)
+                 4 LOAD_CONST               1 ('__loader__')
+                 6 CALL_METHOD              1
+                 8 STORE_FAST               4 (loader)
+  
+  1623          10 LOAD_FAST                0 (ns)
+                12 LOAD_METHOD              0 (get)
+                14 LOAD_CONST               2 ('__spec__')
+                16 CALL_METHOD              1
+                18 STORE_FAST               5 (spec)
+  
+  1624          20 LOAD_FAST                4 (loader)
+                22 POP_JUMP_IF_TRUE        66
+  
+  1625          24 LOAD_FAST                5 (spec)
+                26 POP_JUMP_IF_FALSE       36
+  
+  1626          28 LOAD_FAST                5 (spec)
+                30 LOAD_ATTR                1 (loader)
+                32 STORE_FAST               4 (loader)
+                34 JUMP_FORWARD            30 (to 66)
+  
+  1627     >>   36 LOAD_FAST                2 (pathname)
+                38 LOAD_FAST                3 (cpathname)
+                40 COMPARE_OP               2 (==)
+                42 POP_JUMP_IF_FALSE       56
+  
+  1628          44 LOAD_GLOBAL              2 (SourcelessFileLoader)
+                46 LOAD_FAST                1 (name)
+                48 LOAD_FAST                2 (pathname)
+                50 CALL_FUNCTION            2
+                52 STORE_FAST               4 (loader)
+                54 JUMP_FORWARD            10 (to 66)
+  
+  1630     >>   56 LOAD_GLOBAL              3 (SourceFileLoader)
+                58 LOAD_FAST                1 (name)
+                60 LOAD_FAST                2 (pathname)
+                62 CALL_FUNCTION            2
+                64 STORE_FAST               4 (loader)
+  
+  1631     >>   66 LOAD_FAST                5 (spec)
+                68 POP_JUMP_IF_TRUE        84
+  
+  1632          70 LOAD_GLOBAL              4 (spec_from_file_location)
+                72 LOAD_FAST                1 (name)
+                74 LOAD_FAST                2 (pathname)
+                76 LOAD_FAST                4 (loader)
+                78 LOAD_CONST               3 (('loader',))
+                80 CALL_FUNCTION_KW         3
+                82 STORE_FAST               5 (spec)
+  
+  1633     >>   84 SETUP_FINALLY           36 (to 122)
+  
+  1634          86 LOAD_FAST                5 (spec)
+                88 LOAD_FAST                0 (ns)
+                90 LOAD_CONST               2 ('__spec__')
+                92 STORE_SUBSCR
+  
+  1635          94 LOAD_FAST                4 (loader)
+                96 LOAD_FAST                0 (ns)
+                98 LOAD_CONST               1 ('__loader__')
+               100 STORE_SUBSCR
+  
+  1636         102 LOAD_FAST                2 (pathname)
+               104 LOAD_FAST                0 (ns)
+               106 LOAD_CONST               4 ('__file__')
+               108 STORE_SUBSCR
+  
+  1637         110 LOAD_FAST                3 (cpathname)
+               112 LOAD_FAST                0 (ns)
+               114 LOAD_CONST               5 ('__cached__')
+               116 STORE_SUBSCR
+               118 POP_BLOCK
+               120 JUMP_FORWARD            18 (to 140)
+  
+  1638     >>  122 DUP_TOP
+               124 LOAD_GLOBAL              5 (Exception)
+               126 JUMP_IF_NOT_EXC_MATCH   138
+               128 POP_TOP
+               130 POP_TOP
+               132 POP_TOP
+  
+  1640         134 POP_EXCEPT
+               136 JUMP_FORWARD             2 (to 140)
+           >>  138 RERAISE
+           >>  140 LOAD_CONST               0 (None)
+               142 RETURN_VALUE
+  
+

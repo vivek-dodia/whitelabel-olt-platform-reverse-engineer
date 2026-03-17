@@ -1,0 +1,17 @@
+============================================================
+CODE: _path_isfile
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('path',)
+  names: ('_path_is_mode_type',)
+  freevars: ()
+  cellvars: ()
+  consts: ["'Replacement for os.path.isfile.'", '32768']
+
+  156           0 LOAD_GLOBAL              0 (_path_is_mode_type)
+                2 LOAD_FAST                0 (path)
+                4 LOAD_CONST               1 (32768)
+                6 CALL_FUNCTION            2
+                8 RETURN_VALUE
+  
+

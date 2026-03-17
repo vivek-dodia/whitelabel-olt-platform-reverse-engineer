@@ -1,0 +1,23 @@
+============================================================
+CODE: oltBootCheckThread
+  file: <frozen OltInfoWidget>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', 'WidgetOltInfo', '__init__', 'sendPkt', 'run', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['28']
+
+  373           0 LOAD_GLOBAL              7 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+  374           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+               16 <195>                   22
+  (failed)
+  
+

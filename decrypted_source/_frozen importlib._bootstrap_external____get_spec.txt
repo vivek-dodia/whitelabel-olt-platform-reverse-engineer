@@ -1,0 +1,114 @@
+============================================================
+CODE: _get_spec
+  file: <frozen importlib._bootstrap_external>
+  argcount: 4
+  varnames: ('cls', 'fullname', 'path', 'target', 'namespace_path', 'entry', 'finder', 'spec', 'portions')
+  names: ('isinstance', 'str', 'bytes', '_path_importer_cache', 'hasattr', 'find_spec', '_legacy_get_spec', 'loader', 'submodule_search_locations', 'ImportError', 'extend', '_bootstrap', 'ModuleSpec')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Find the loader or namespace_path for this module/package name.'", 'None', "'find_spec'", "'spec missing loader'"]
+
+  1388           0 BUILD_LIST               0
+                 2 STORE_FAST               4 (namespace_path)
+  
+  1389           4 LOAD_FAST                2 (path)
+                 6 GET_ITER
+           >>    8 FOR_ITER               134 (to 144)
+                10 STORE_FAST               5 (entry)
+  
+  1390          12 LOAD_GLOBAL              0 (isinstance)
+                14 LOAD_FAST                5 (entry)
+                16 LOAD_GLOBAL              1 (str)
+                18 LOAD_GLOBAL              2 (bytes)
+                20 BUILD_TUPLE              2
+                22 CALL_FUNCTION            2
+                24 POP_JUMP_IF_TRUE        28
+  
+  1391          26 JUMP_ABSOLUTE            8
+  
+  1392     >>   28 LOAD_FAST                0 (cls)
+                30 LOAD_METHOD              3 (_path_importer_cache)
+                32 LOAD_FAST                5 (entry)
+                34 CALL_METHOD              1
+                36 STORE_FAST               6 (finder)
+  
+  1393          38 LOAD_FAST                6 (finder)
+                40 LOAD_CONST               1 (None)
+                42 IS_OP                    1
+                44 POP_JUMP_IF_FALSE        8
+  
+  1394          46 LOAD_GLOBAL              4 (hasattr)
+                48 LOAD_FAST                6 (finder)
+                50 LOAD_CONST               2 ('find_spec')
+                52 CALL_FUNCTION            2
+                54 POP_JUMP_IF_FALSE       70
+  
+  1395          56 LOAD_FAST                6 (finder)
+                58 LOAD_METHOD              5 (find_spec)
+                60 LOAD_FAST                1 (fullname)
+                62 LOAD_FAST                3 (target)
+                64 CALL_METHOD              2
+                66 STORE_FAST               7 (spec)
+                68 JUMP_FORWARD            12 (to 82)
+  
+  1397     >>   70 LOAD_FAST                0 (cls)
+                72 LOAD_METHOD              6 (_legacy_get_spec)
+                74 LOAD_FAST                1 (fullname)
+                76 LOAD_FAST                6 (finder)
+                78 CALL_METHOD              2
+                80 STORE_FAST               7 (spec)
+  
+  1398     >>   82 LOAD_FAST                7 (spec)
+                84 LOAD_CONST               1 (None)
+                86 IS_OP                    0
+                88 POP_JUMP_IF_FALSE       92
+  
+  1399          90 JUMP_ABSOLUTE            8
+  
+  1400     >>   92 LOAD_FAST                7 (spec)
+                94 LOAD_ATTR                7 (loader)
+                96 LOAD_CONST               1 (None)
+                98 IS_OP                    1
+               100 POP_JUMP_IF_FALSE      110
+  
+  1401         102 LOAD_FAST                7 (spec)
+               104 ROT_TWO
+               106 POP_TOP
+               108 RETURN_VALUE
+  
+  1402     >>  110 LOAD_FAST                7 (spec)
+               112 LOAD_ATTR                8 (submodule_search_locations)
+               114 STORE_FAST               8 (portions)
+  
+  1403         116 LOAD_FAST                8 (portions)
+               118 LOAD_CONST               1 (None)
+               120 IS_OP                    0
+               122 POP_JUMP_IF_FALSE      132
+  
+  1404         124 LOAD_GLOBAL              9 (ImportError)
+               126 LOAD_CONST               3 ('spec missing loader')
+               128 CALL_FUNCTION            1
+               130 RAISE_VARARGS            1
+  
+  1409     >>  132 LOAD_FAST                4 (namespace_path)
+               134 LOAD_METHOD             10 (extend)
+               136 LOAD_FAST                8 (portions)
+               138 CALL_METHOD              1
+               140 POP_TOP
+               142 JUMP_ABSOLUTE            8
+  
+  1411     >>  144 LOAD_GLOBAL             11 (_bootstrap)
+               146 LOAD_METHOD             12 (ModuleSpec)
+               148 LOAD_FAST                1 (fullname)
+               150 LOAD_CONST               1 (None)
+               152 CALL_METHOD              2
+               154 STORE_FAST               7 (spec)
+  
+  1412         156 LOAD_FAST                4 (namespace_path)
+               158 LOAD_FAST                7 (spec)
+               160 STORE_ATTR               8 (submodule_search_locations)
+  
+  1413         162 LOAD_FAST                7 (spec)
+               164 RETURN_VALUE
+  
+

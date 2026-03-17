@@ -1,0 +1,40 @@
+============================================================
+CODE: _path_is_mode_type
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('path', 'mode', 'stat_info')
+  names: ('_path_stat', 'OSError', 'st_mode')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Test whether the path is the specified mode type.'", 'False', '61440']
+
+  147           0 SETUP_FINALLY           12 (to 14)
+  
+  148           2 LOAD_GLOBAL              0 (_path_stat)
+                4 LOAD_FAST                0 (path)
+                6 CALL_FUNCTION            1
+                8 STORE_FAST               2 (stat_info)
+               10 POP_BLOCK
+               12 JUMP_FORWARD            20 (to 34)
+  
+  149     >>   14 DUP_TOP
+               16 LOAD_GLOBAL              1 (OSError)
+               18 JUMP_IF_NOT_EXC_MATCH    32
+               20 POP_TOP
+               22 POP_TOP
+               24 POP_TOP
+  
+  150          26 POP_EXCEPT
+               28 LOAD_CONST               1 (False)
+               30 RETURN_VALUE
+          >>   32 RERAISE
+  
+  151     >>   34 LOAD_FAST                2 (stat_info)
+               36 LOAD_ATTR                2 (st_mode)
+               38 LOAD_CONST               2 (61440)
+               40 BINARY_AND
+               42 LOAD_FAST                1 (mode)
+               44 COMPARE_OP               2 (==)
+               46 RETURN_VALUE
+  
+

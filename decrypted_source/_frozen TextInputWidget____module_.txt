@@ -1,0 +1,30 @@
+============================================================
+CODE: <module>
+  file: <frozen TextInputWidget>
+  argcount: 0
+  varnames: ()
+  names: ('datetime', 'PyQt5.QtGui', 'PyQt5.QtWidgets', 'PyQt5', 'QtGui', 'QtWidgets', 'QtCore', 'TextInputWidget_form', 'Ui_TextInputWidget', 'QDialog', 'WidgetTextInput', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['2']
+
+    1           0 LOAD_GLOBAL             11 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+    2           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+  
+    3          16 <129>                  161
+               18 CONTAINS_OP            161
+               20 UNPACK_SEQUENCE         90
+               22 <184>                   34
+  
+    4          24 <21>
+               26 LIST_EXTEND            254
+  (failed)
+  
+

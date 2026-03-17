@@ -1,0 +1,242 @@
+============================================================
+CODE: _get_data
+  file: <frozen zipimport>
+  argcount: 2
+  varnames: ('archive', 'toc_entry', 'datapath', 'compress', 'data_size', 'file_size', 'file_offset', 'time', 'date', 'crc', 'fp', 'buffer', 'name_size', 'extra_size', 'header_size', 'raw_data', 'decompress')
+  names: ('ZipImportError', '_io', 'open_code', 'seek', 'OSError', 'read', 'len', 'EOFError', '_unpack_uint16', '_get_decompress_func', 'Exception')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', '0', "'negative data size'", '"can\'t read Zip file: "', "('path',)", '30', "'EOF read where not expected'", '4', "b'PK\\x03\\x04'", "'bad local file header: '", '26', '28', '"zipimport: can\'t read data"', '"can\'t decompress data; zlib not available"', '-15']
+
+  532           0 LOAD_FAST                1 (toc_entry)
+                2 UNPACK_SEQUENCE          8
+                4 STORE_FAST               2 (datapath)
+                6 STORE_FAST               3 (compress)
+                8 STORE_FAST               4 (data_size)
+               10 STORE_FAST               5 (file_size)
+               12 STORE_FAST               6 (file_offset)
+               14 STORE_FAST               7 (time)
+               16 STORE_FAST               8 (date)
+               18 STORE_FAST               9 (crc)
+  
+  533          20 LOAD_FAST                4 (data_size)
+               22 LOAD_CONST               1 (0)
+               24 COMPARE_OP               0 (<)
+               26 POP_JUMP_IF_FALSE       36
+  
+  534          28 LOAD_GLOBAL              0 (ZipImportError)
+               30 LOAD_CONST               2 ('negative data size')
+               32 CALL_FUNCTION            1
+               34 RAISE_VARARGS            1
+  
+  536     >>   36 LOAD_GLOBAL              1 (_io)
+               38 LOAD_METHOD              2 (open_code)
+               40 LOAD_FAST                0 (archive)
+               42 CALL_METHOD              1
+               44 EXTENDED_ARG             1
+               46 SETUP_WITH             270 (to 318)
+               48 STORE_FAST              10 (fp)
+  
+  538          50 SETUP_FINALLY           14 (to 66)
+  
+  539          52 LOAD_FAST               10 (fp)
+               54 LOAD_METHOD              3 (seek)
+               56 LOAD_FAST                6 (file_offset)
+               58 CALL_METHOD              1
+               60 POP_TOP
+               62 POP_BLOCK
+               64 JUMP_FORWARD            36 (to 102)
+  
+  540     >>   66 DUP_TOP
+               68 LOAD_GLOBAL              4 (OSError)
+               70 JUMP_IF_NOT_EXC_MATCH   100
+               72 POP_TOP
+               74 POP_TOP
+               76 POP_TOP
+  
+  541          78 LOAD_GLOBAL              0 (ZipImportError)
+               80 LOAD_CONST               3 ("can't read Zip file: ")
+               82 LOAD_FAST                0 (archive)
+               84 FORMAT_VALUE             2 (repr)
+               86 BUILD_STRING             2
+               88 LOAD_FAST                0 (archive)
+               90 LOAD_CONST               4 (('path',))
+               92 CALL_FUNCTION_KW         2
+               94 RAISE_VARARGS            1
+               96 POP_EXCEPT
+               98 JUMP_FORWARD             2 (to 102)
+          >>  100 RERAISE
+  
+  542     >>  102 LOAD_FAST               10 (fp)
+              104 LOAD_METHOD              5 (read)
+              106 LOAD_CONST               5 (30)
+              108 CALL_METHOD              1
+              110 STORE_FAST              11 (buffer)
+  
+  543         112 LOAD_GLOBAL              6 (len)
+              114 LOAD_FAST               11 (buffer)
+              116 CALL_FUNCTION            1
+              118 LOAD_CONST               5 (30)
+              120 COMPARE_OP               3 (!=)
+              122 POP_JUMP_IF_FALSE      132
+  
+  544         124 LOAD_GLOBAL              7 (EOFError)
+              126 LOAD_CONST               6 ('EOF read where not expected')
+              128 CALL_FUNCTION            1
+              130 RAISE_VARARGS            1
+  
+  546     >>  132 LOAD_FAST               11 (buffer)
+              134 LOAD_CONST               0 (None)
+              136 LOAD_CONST               7 (4)
+              138 BUILD_SLICE              2
+              140 BINARY_SUBSCR
+              142 LOAD_CONST               8 (b'PK\x03\x04')
+              144 COMPARE_OP               3 (!=)
+              146 POP_JUMP_IF_FALSE      166
+  
+  548         148 LOAD_GLOBAL              0 (ZipImportError)
+              150 LOAD_CONST               9 ('bad local file header: ')
+              152 LOAD_FAST                0 (archive)
+              154 FORMAT_VALUE             2 (repr)
+              156 BUILD_STRING             2
+              158 LOAD_FAST                0 (archive)
+              160 LOAD_CONST               4 (('path',))
+              162 CALL_FUNCTION_KW         2
+              164 RAISE_VARARGS            1
+  
+  550     >>  166 LOAD_GLOBAL              8 (_unpack_uint16)
+              168 LOAD_FAST               11 (buffer)
+              170 LOAD_CONST              10 (26)
+              172 LOAD_CONST              11 (28)
+              174 BUILD_SLICE              2
+              176 BINARY_SUBSCR
+              178 CALL_FUNCTION            1
+              180 STORE_FAST              12 (name_size)
+  
+  551         182 LOAD_GLOBAL              8 (_unpack_uint16)
+              184 LOAD_FAST               11 (buffer)
+              186 LOAD_CONST              11 (28)
+              188 LOAD_CONST               5 (30)
+              190 BUILD_SLICE              2
+              192 BINARY_SUBSCR
+              194 CALL_FUNCTION            1
+              196 STORE_FAST              13 (extra_size)
+  
+  552         198 LOAD_CONST               5 (30)
+              200 LOAD_FAST               12 (name_size)
+              202 BINARY_ADD
+              204 LOAD_FAST               13 (extra_size)
+              206 BINARY_ADD
+              208 STORE_FAST              14 (header_size)
+  
+  553         210 LOAD_FAST                6 (file_offset)
+              212 LOAD_FAST               14 (header_size)
+              214 INPLACE_ADD
+              216 STORE_FAST               6 (file_offset)
+  
+  554         218 SETUP_FINALLY           14 (to 234)
+  
+  555         220 LOAD_FAST               10 (fp)
+              222 LOAD_METHOD              3 (seek)
+              224 LOAD_FAST                6 (file_offset)
+              226 CALL_METHOD              1
+              228 POP_TOP
+              230 POP_BLOCK
+              232 JUMP_FORWARD            38 (to 272)
+  
+  556     >>  234 DUP_TOP
+              236 LOAD_GLOBAL              4 (OSError)
+              238 EXTENDED_ARG             1
+              240 JUMP_IF_NOT_EXC_MATCH   270
+              242 POP_TOP
+              244 POP_TOP
+              246 POP_TOP
+  
+  557         248 LOAD_GLOBAL              0 (ZipImportError)
+              250 LOAD_CONST               3 ("can't read Zip file: ")
+              252 LOAD_FAST                0 (archive)
+              254 FORMAT_VALUE             2 (repr)
+              256 BUILD_STRING             2
+              258 LOAD_FAST                0 (archive)
+              260 LOAD_CONST               4 (('path',))
+              262 CALL_FUNCTION_KW         2
+              264 RAISE_VARARGS            1
+              266 POP_EXCEPT
+              268 JUMP_FORWARD             2 (to 272)
+          >>  270 RERAISE
+  
+  558     >>  272 LOAD_FAST               10 (fp)
+              274 LOAD_METHOD              5 (read)
+              276 LOAD_FAST                4 (data_size)
+              278 CALL_METHOD              1
+              280 STORE_FAST              15 (raw_data)
+  
+  559         282 LOAD_GLOBAL              6 (len)
+              284 LOAD_FAST               15 (raw_data)
+              286 CALL_FUNCTION            1
+              288 LOAD_FAST                4 (data_size)
+              290 COMPARE_OP               3 (!=)
+              292 EXTENDED_ARG             1
+              294 POP_JUMP_IF_FALSE      304
+  
+  560         296 LOAD_GLOBAL              4 (OSError)
+              298 LOAD_CONST              12 ("zipimport: can't read data")
+              300 CALL_FUNCTION            1
+              302 RAISE_VARARGS            1
+          >>  304 POP_BLOCK
+              306 LOAD_CONST               0 (None)
+              308 DUP_TOP
+              310 DUP_TOP
+              312 CALL_FUNCTION            3
+              314 POP_TOP
+              316 JUMP_FORWARD            18 (to 336)
+          >>  318 WITH_EXCEPT_START
+              320 EXTENDED_ARG             1
+              322 POP_JUMP_IF_TRUE       326
+              324 RERAISE
+          >>  326 POP_TOP
+              328 POP_TOP
+              330 POP_TOP
+              332 POP_EXCEPT
+              334 POP_TOP
+  
+  562     >>  336 LOAD_FAST                3 (compress)
+              338 LOAD_CONST               1 (0)
+              340 COMPARE_OP               2 (==)
+              342 EXTENDED_ARG             1
+              344 POP_JUMP_IF_FALSE      350
+  
+  564         346 LOAD_FAST               15 (raw_data)
+              348 RETURN_VALUE
+  
+  567     >>  350 SETUP_FINALLY           10 (to 362)
+  
+  568         352 LOAD_GLOBAL              9 (_get_decompress_func)
+              354 CALL_FUNCTION            0
+              356 STORE_FAST              16 (decompress)
+              358 POP_BLOCK
+              360 JUMP_FORWARD            28 (to 390)
+  
+  569     >>  362 DUP_TOP
+              364 LOAD_GLOBAL             10 (Exception)
+              366 EXTENDED_ARG             1
+              368 JUMP_IF_NOT_EXC_MATCH   388
+              370 POP_TOP
+              372 POP_TOP
+              374 POP_TOP
+  
+  570         376 LOAD_GLOBAL              0 (ZipImportError)
+              378 LOAD_CONST              13 ("can't decompress data; zlib not available")
+              380 CALL_FUNCTION            1
+              382 RAISE_VARARGS            1
+              384 POP_EXCEPT
+              386 JUMP_FORWARD             2 (to 390)
+          >>  388 RERAISE
+  
+  571     >>  390 LOAD_FAST               16 (decompress)
+              392 LOAD_FAST               15 (raw_data)
+              394 LOAD_CONST              14 (-15)
+              396 CALL_FUNCTION            2
+              398 RETURN_VALUE
+  
+

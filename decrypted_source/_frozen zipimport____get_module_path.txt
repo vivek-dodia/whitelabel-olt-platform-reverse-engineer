@@ -1,0 +1,22 @@
+============================================================
+CODE: _get_module_path
+  file: <frozen zipimport>
+  argcount: 2
+  varnames: ('self', 'fullname')
+  names: ('prefix', 'rpartition')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'.'", '2']
+
+  309           0 LOAD_FAST                0 (self)
+                2 LOAD_ATTR                0 (prefix)
+                4 LOAD_FAST                1 (fullname)
+                6 LOAD_METHOD              1 (rpartition)
+                8 LOAD_CONST               1 ('.')
+               10 CALL_METHOD              1
+               12 LOAD_CONST               2 (2)
+               14 BINARY_SUBSCR
+               16 BINARY_ADD
+               18 RETURN_VALUE
+  
+

@@ -1,0 +1,292 @@
+============================================================
+CODE: _init_module_attrs
+  file: <frozen importlib._bootstrap>
+  argcount: 2
+  varnames: ('spec', 'module', 'override', 'loader', '_NamespaceLoader')
+  names: ('getattr', 'name', '__name__', 'AttributeError', 'loader', 'submodule_search_locations', '_bootstrap_external', 'NotImplementedError', '_NamespaceLoader', '__new__', '_path', '__file__', '__loader__', 'parent', '__package__', '__spec__', '__path__', 'has_location', 'origin', 'cached', '__cached__')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'__name__'", "'__loader__'", "'__package__'", "'__path__'", "'__file__'", "'__cached__'"]
+
+  490           0 LOAD_FAST                2 (override)
+                2 POP_JUMP_IF_TRUE        20
+                4 LOAD_GLOBAL              0 (getattr)
+                6 LOAD_FAST                1 (module)
+                8 LOAD_CONST               1 ('__name__')
+               10 LOAD_CONST               0 (None)
+               12 CALL_FUNCTION            3
+               14 LOAD_CONST               0 (None)
+               16 IS_OP                    0
+               18 POP_JUMP_IF_FALSE       52
+  
+  491     >>   20 SETUP_FINALLY           12 (to 34)
+  
+  492          22 LOAD_FAST                0 (spec)
+               24 LOAD_ATTR                1 (name)
+               26 LOAD_FAST                1 (module)
+               28 STORE_ATTR               2 (__name__)
+               30 POP_BLOCK
+               32 JUMP_FORWARD            18 (to 52)
+  
+  493     >>   34 DUP_TOP
+               36 LOAD_GLOBAL              3 (AttributeError)
+               38 JUMP_IF_NOT_EXC_MATCH    50
+               40 POP_TOP
+               42 POP_TOP
+               44 POP_TOP
+  
+  494          46 POP_EXCEPT
+               48 JUMP_FORWARD             2 (to 52)
+          >>   50 RERAISE
+  
+  496     >>   52 LOAD_FAST                2 (override)
+               54 POP_JUMP_IF_TRUE        72
+               56 LOAD_GLOBAL              0 (getattr)
+               58 LOAD_FAST                1 (module)
+               60 LOAD_CONST               2 ('__loader__')
+               62 LOAD_CONST               0 (None)
+               64 CALL_FUNCTION            3
+               66 LOAD_CONST               0 (None)
+               68 IS_OP                    0
+               70 POP_JUMP_IF_FALSE      174
+  
+  497     >>   72 LOAD_FAST                0 (spec)
+               74 LOAD_ATTR                4 (loader)
+               76 STORE_FAST               3 (loader)
+  
+  498          78 LOAD_FAST                3 (loader)
+               80 LOAD_CONST               0 (None)
+               82 IS_OP                    0
+               84 POP_JUMP_IF_FALSE      144
+  
+  500          86 LOAD_FAST                0 (spec)
+               88 LOAD_ATTR                5 (submodule_search_locations)
+               90 LOAD_CONST               0 (None)
+               92 IS_OP                    1
+               94 POP_JUMP_IF_FALSE      144
+  
+  501          96 LOAD_GLOBAL              6 (_bootstrap_external)
+               98 LOAD_CONST               0 (None)
+              100 IS_OP                    0
+              102 POP_JUMP_IF_FALSE      108
+  
+  502         104 LOAD_GLOBAL              7 (NotImplementedError)
+              106 RAISE_VARARGS            1
+  
+  503     >>  108 LOAD_GLOBAL              6 (_bootstrap_external)
+              110 LOAD_ATTR                8 (_NamespaceLoader)
+              112 STORE_FAST               4 (_NamespaceLoader)
+  
+  505         114 LOAD_FAST                4 (_NamespaceLoader)
+              116 LOAD_METHOD              9 (__new__)
+              118 LOAD_FAST                4 (_NamespaceLoader)
+              120 CALL_METHOD              1
+              122 STORE_FAST               3 (loader)
+  
+  506         124 LOAD_FAST                0 (spec)
+              126 LOAD_ATTR                5 (submodule_search_locations)
+              128 LOAD_FAST                3 (loader)
+              130 STORE_ATTR              10 (_path)
+  
+  507         132 LOAD_FAST                3 (loader)
+              134 LOAD_FAST                0 (spec)
+              136 STORE_ATTR               4 (loader)
+  
+  518         138 LOAD_CONST               0 (None)
+              140 LOAD_FAST                1 (module)
+              142 STORE_ATTR              11 (__file__)
+  
+  519     >>  144 SETUP_FINALLY           10 (to 156)
+  
+  520         146 LOAD_FAST                3 (loader)
+              148 LOAD_FAST                1 (module)
+              150 STORE_ATTR              12 (__loader__)
+              152 POP_BLOCK
+              154 JUMP_FORWARD            18 (to 174)
+  
+  521     >>  156 DUP_TOP
+              158 LOAD_GLOBAL              3 (AttributeError)
+              160 JUMP_IF_NOT_EXC_MATCH   172
+              162 POP_TOP
+              164 POP_TOP
+              166 POP_TOP
+  
+  522         168 POP_EXCEPT
+              170 JUMP_FORWARD             2 (to 174)
+          >>  172 RERAISE
+  
+  524     >>  174 LOAD_FAST                2 (override)
+              176 POP_JUMP_IF_TRUE       194
+              178 LOAD_GLOBAL              0 (getattr)
+              180 LOAD_FAST                1 (module)
+              182 LOAD_CONST               3 ('__package__')
+              184 LOAD_CONST               0 (None)
+              186 CALL_FUNCTION            3
+              188 LOAD_CONST               0 (None)
+              190 IS_OP                    0
+              192 POP_JUMP_IF_FALSE      226
+  
+  525     >>  194 SETUP_FINALLY           12 (to 208)
+  
+  526         196 LOAD_FAST                0 (spec)
+              198 LOAD_ATTR               13 (parent)
+              200 LOAD_FAST                1 (module)
+              202 STORE_ATTR              14 (__package__)
+              204 POP_BLOCK
+              206 JUMP_FORWARD            18 (to 226)
+  
+  527     >>  208 DUP_TOP
+              210 LOAD_GLOBAL              3 (AttributeError)
+              212 JUMP_IF_NOT_EXC_MATCH   224
+              214 POP_TOP
+              216 POP_TOP
+              218 POP_TOP
+  
+  528         220 POP_EXCEPT
+              222 JUMP_FORWARD             2 (to 226)
+          >>  224 RERAISE
+  
+  530     >>  226 SETUP_FINALLY           10 (to 238)
+  
+  531         228 LOAD_FAST                0 (spec)
+              230 LOAD_FAST                1 (module)
+              232 STORE_ATTR              15 (__spec__)
+              234 POP_BLOCK
+              236 JUMP_FORWARD            18 (to 256)
+  
+  532     >>  238 DUP_TOP
+              240 LOAD_GLOBAL              3 (AttributeError)
+              242 JUMP_IF_NOT_EXC_MATCH   254
+              244 POP_TOP
+              246 POP_TOP
+              248 POP_TOP
+  
+  533         250 POP_EXCEPT
+              252 JUMP_FORWARD             2 (to 256)
+          >>  254 RERAISE
+  
+  535     >>  256 LOAD_FAST                2 (override)
+              258 EXTENDED_ARG             1
+              260 POP_JUMP_IF_TRUE       280
+              262 LOAD_GLOBAL              0 (getattr)
+              264 LOAD_FAST                1 (module)
+              266 LOAD_CONST               4 ('__path__')
+              268 LOAD_CONST               0 (None)
+              270 CALL_FUNCTION            3
+              272 LOAD_CONST               0 (None)
+              274 IS_OP                    0
+              276 EXTENDED_ARG             1
+              278 POP_JUMP_IF_FALSE      326
+  
+  536     >>  280 LOAD_FAST                0 (spec)
+              282 LOAD_ATTR                5 (submodule_search_locations)
+              284 LOAD_CONST               0 (None)
+              286 IS_OP                    1
+              288 EXTENDED_ARG             1
+              290 POP_JUMP_IF_FALSE      326
+  
+  537         292 SETUP_FINALLY           12 (to 306)
+  
+  538         294 LOAD_FAST                0 (spec)
+              296 LOAD_ATTR                5 (submodule_search_locations)
+              298 LOAD_FAST                1 (module)
+              300 STORE_ATTR              16 (__path__)
+              302 POP_BLOCK
+              304 JUMP_FORWARD            20 (to 326)
+  
+  539     >>  306 DUP_TOP
+              308 LOAD_GLOBAL              3 (AttributeError)
+              310 EXTENDED_ARG             1
+              312 JUMP_IF_NOT_EXC_MATCH   324
+              314 POP_TOP
+              316 POP_TOP
+              318 POP_TOP
+  
+  540         320 POP_EXCEPT
+              322 JUMP_FORWARD             2 (to 326)
+          >>  324 RERAISE
+  
+  542     >>  326 LOAD_FAST                0 (spec)
+              328 LOAD_ATTR               17 (has_location)
+              330 EXTENDED_ARG             1
+              332 POP_JUMP_IF_FALSE      462
+  
+  543         334 LOAD_FAST                2 (override)
+              336 EXTENDED_ARG             1
+              338 POP_JUMP_IF_TRUE       358
+              340 LOAD_GLOBAL              0 (getattr)
+              342 LOAD_FAST                1 (module)
+              344 LOAD_CONST               5 ('__file__')
+              346 LOAD_CONST               0 (None)
+              348 CALL_FUNCTION            3
+              350 LOAD_CONST               0 (None)
+              352 IS_OP                    0
+              354 EXTENDED_ARG             1
+              356 POP_JUMP_IF_FALSE      392
+  
+  544     >>  358 SETUP_FINALLY           12 (to 372)
+  
+  545         360 LOAD_FAST                0 (spec)
+              362 LOAD_ATTR               18 (origin)
+              364 LOAD_FAST                1 (module)
+              366 STORE_ATTR              11 (__file__)
+              368 POP_BLOCK
+              370 JUMP_FORWARD            20 (to 392)
+  
+  546     >>  372 DUP_TOP
+              374 LOAD_GLOBAL              3 (AttributeError)
+              376 EXTENDED_ARG             1
+              378 JUMP_IF_NOT_EXC_MATCH   390
+              380 POP_TOP
+              382 POP_TOP
+              384 POP_TOP
+  
+  547         386 POP_EXCEPT
+              388 JUMP_FORWARD             2 (to 392)
+          >>  390 RERAISE
+  
+  549     >>  392 LOAD_FAST                2 (override)
+              394 EXTENDED_ARG             1
+              396 POP_JUMP_IF_TRUE       416
+              398 LOAD_GLOBAL              0 (getattr)
+              400 LOAD_FAST                1 (module)
+              402 LOAD_CONST               6 ('__cached__')
+              404 LOAD_CONST               0 (None)
+              406 CALL_FUNCTION            3
+              408 LOAD_CONST               0 (None)
+              410 IS_OP                    0
+              412 EXTENDED_ARG             1
+              414 POP_JUMP_IF_FALSE      462
+  
+  550     >>  416 LOAD_FAST                0 (spec)
+              418 LOAD_ATTR               19 (cached)
+              420 LOAD_CONST               0 (None)
+              422 IS_OP                    1
+              424 EXTENDED_ARG             1
+              426 POP_JUMP_IF_FALSE      462
+  
+  551         428 SETUP_FINALLY           12 (to 442)
+  
+  552         430 LOAD_FAST                0 (spec)
+              432 LOAD_ATTR               19 (cached)
+              434 LOAD_FAST                1 (module)
+              436 STORE_ATTR              20 (__cached__)
+              438 POP_BLOCK
+              440 JUMP_FORWARD            20 (to 462)
+  
+  553     >>  442 DUP_TOP
+              444 LOAD_GLOBAL              3 (AttributeError)
+              446 EXTENDED_ARG             1
+              448 JUMP_IF_NOT_EXC_MATCH   460
+              450 POP_TOP
+              452 POP_TOP
+              454 POP_TOP
+  
+  554         456 POP_EXCEPT
+              458 JUMP_FORWARD             2 (to 462)
+          >>  460 RERAISE
+  
+  555     >>  462 LOAD_FAST                1 (module)
+              464 RETURN_VALUE
+  
+

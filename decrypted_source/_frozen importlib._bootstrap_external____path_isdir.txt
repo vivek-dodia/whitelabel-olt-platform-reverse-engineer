@@ -1,0 +1,25 @@
+============================================================
+CODE: _path_isdir
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('path',)
+  names: ('_os', 'getcwd', '_path_is_mode_type')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Replacement for os.path.isdir.'", '16384']
+
+  161           0 LOAD_FAST                0 (path)
+                2 POP_JUMP_IF_TRUE        12
+  
+  162           4 LOAD_GLOBAL              0 (_os)
+                6 LOAD_METHOD              1 (getcwd)
+                8 CALL_METHOD              0
+               10 STORE_FAST               0 (path)
+  
+  163     >>   12 LOAD_GLOBAL              2 (_path_is_mode_type)
+               14 LOAD_FAST                0 (path)
+               16 LOAD_CONST               1 (16384)
+               18 CALL_FUNCTION            2
+               20 RETURN_VALUE
+  
+

@@ -1,0 +1,86 @@
+============================================================
+CODE: _find_and_load
+  file: <frozen importlib._bootstrap>
+  argcount: 2
+  varnames: ('name', 'import_', 'module', 'message')
+  names: ('_ModuleLockManager', 'sys', 'modules', 'get', '_NEEDS_LOADING', '_find_and_load_unlocked', 'format', 'ModuleNotFoundError', '_lock_unlock_module')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Find and load the module.'", 'None', "'import of {} halted; None in sys.modules'", "('name',)"]
+
+  1004           0 LOAD_GLOBAL              0 (_ModuleLockManager)
+                 2 LOAD_FAST                0 (name)
+                 4 CALL_FUNCTION            1
+                 6 SETUP_WITH              62 (to 70)
+                 8 POP_TOP
+  
+  1005          10 LOAD_GLOBAL              1 (sys)
+                12 LOAD_ATTR                2 (modules)
+                14 LOAD_METHOD              3 (get)
+                16 LOAD_FAST                0 (name)
+                18 LOAD_GLOBAL              4 (_NEEDS_LOADING)
+                20 CALL_METHOD              2
+                22 STORE_FAST               2 (module)
+  
+  1006          24 LOAD_FAST                2 (module)
+                26 LOAD_GLOBAL              4 (_NEEDS_LOADING)
+                28 IS_OP                    0
+                30 POP_JUMP_IF_FALSE       56
+  
+  1007          32 LOAD_GLOBAL              5 (_find_and_load_unlocked)
+                34 LOAD_FAST                0 (name)
+                36 LOAD_FAST                1 (import_)
+                38 CALL_FUNCTION            2
+                40 POP_BLOCK
+                42 ROT_TWO
+                44 LOAD_CONST               1 (None)
+                46 DUP_TOP
+                48 DUP_TOP
+                50 CALL_FUNCTION            3
+                52 POP_TOP
+                54 RETURN_VALUE
+           >>   56 POP_BLOCK
+                58 LOAD_CONST               1 (None)
+                60 DUP_TOP
+                62 DUP_TOP
+                64 CALL_FUNCTION            3
+                66 POP_TOP
+                68 JUMP_FORWARD            16 (to 86)
+           >>   70 WITH_EXCEPT_START
+                72 POP_JUMP_IF_TRUE        76
+                74 RERAISE
+           >>   76 POP_TOP
+                78 POP_TOP
+                80 POP_TOP
+                82 POP_EXCEPT
+                84 POP_TOP
+  
+  1009     >>   86 LOAD_FAST                2 (module)
+                88 LOAD_CONST               1 (None)
+                90 IS_OP                    0
+                92 POP_JUMP_IF_FALSE      116
+  
+  1010          94 LOAD_CONST               2 ('import of {} halted; None in sys.modules')
+                96 LOAD_METHOD              6 (format)
+  
+  1011          98 LOAD_FAST                0 (name)
+  
+  1010         100 CALL_METHOD              1
+               102 STORE_FAST               3 (message)
+  
+  1012         104 LOAD_GLOBAL              7 (ModuleNotFoundError)
+               106 LOAD_FAST                3 (message)
+               108 LOAD_FAST                0 (name)
+               110 LOAD_CONST               3 (('name',))
+               112 CALL_FUNCTION_KW         2
+               114 RAISE_VARARGS            1
+  
+  1014     >>  116 LOAD_GLOBAL              8 (_lock_unlock_module)
+               118 LOAD_FAST                0 (name)
+               120 CALL_FUNCTION            1
+               122 POP_TOP
+  
+  1015         124 LOAD_FAST                2 (module)
+               126 RETURN_VALUE
+  
+

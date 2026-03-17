@@ -1,0 +1,44 @@
+============================================================
+CODE: cb
+  file: <frozen importlib._bootstrap>
+  argcount: 2
+  varnames: ('ref', 'name')
+  names: ('_imp', 'acquire_lock', '_module_locks', 'get', 'release_lock')
+  freevars: ()
+  cellvars: ()
+  consts: ['None']
+
+  186           0 LOAD_GLOBAL              0 (_imp)
+                2 LOAD_METHOD              1 (acquire_lock)
+                4 CALL_METHOD              0
+                6 POP_TOP
+  
+  187           8 SETUP_FINALLY           32 (to 42)
+  
+  191          10 LOAD_GLOBAL              2 (_module_locks)
+               12 LOAD_METHOD              3 (get)
+               14 LOAD_FAST                1 (name)
+               16 CALL_METHOD              1
+               18 LOAD_FAST                0 (ref)
+               20 IS_OP                    0
+               22 POP_JUMP_IF_FALSE       30
+  
+  192          24 LOAD_GLOBAL              2 (_module_locks)
+               26 LOAD_FAST                1 (name)
+               28 DELETE_SUBSCR
+          >>   30 POP_BLOCK
+  
+  194          32 LOAD_GLOBAL              0 (_imp)
+               34 LOAD_METHOD              4 (release_lock)
+               36 CALL_METHOD              0
+               38 POP_TOP
+               40 JUMP_FORWARD            10 (to 52)
+          >>   42 LOAD_GLOBAL              0 (_imp)
+               44 LOAD_METHOD              4 (release_lock)
+               46 CALL_METHOD              0
+               48 POP_TOP
+               50 RERAISE
+          >>   52 LOAD_CONST               0 (None)
+               54 RETURN_VALUE
+  
+

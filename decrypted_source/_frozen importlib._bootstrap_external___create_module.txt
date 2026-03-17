@@ -1,0 +1,36 @@
+============================================================
+CODE: create_module
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('self', 'spec', 'module')
+  names: ('_bootstrap', '_call_with_frames_removed', '_imp', 'create_dynamic', '_verbose_message', 'name', 'path')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Create an unitialized extension module'", "'extension module {!r} loaded from {!r}'"]
+
+  1173           0 LOAD_GLOBAL              0 (_bootstrap)
+                 2 LOAD_METHOD              1 (_call_with_frames_removed)
+  
+  1174           4 LOAD_GLOBAL              2 (_imp)
+                 6 LOAD_ATTR                3 (create_dynamic)
+                 8 LOAD_FAST                1 (spec)
+  
+  1173          10 CALL_METHOD              2
+                12 STORE_FAST               2 (module)
+  
+  1175          14 LOAD_GLOBAL              0 (_bootstrap)
+                16 LOAD_METHOD              4 (_verbose_message)
+                18 LOAD_CONST               1 ('extension module {!r} loaded from {!r}')
+  
+  1176          20 LOAD_FAST                1 (spec)
+                22 LOAD_ATTR                5 (name)
+                24 LOAD_FAST                0 (self)
+                26 LOAD_ATTR                6 (path)
+  
+  1175          28 CALL_METHOD              3
+                30 POP_TOP
+  
+  1177          32 LOAD_FAST                2 (module)
+                34 RETURN_VALUE
+  
+

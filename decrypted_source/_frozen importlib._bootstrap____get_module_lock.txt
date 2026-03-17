@@ -1,0 +1,171 @@
+============================================================
+CODE: _get_module_lock
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('name', 'lock', 'cb')
+  names: ('_imp', 'acquire_lock', '_module_locks', 'KeyError', '_thread', '_DummyModuleLock', '_ModuleLock', '_weakref', 'ref', 'release_lock')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Get or create the module lock for a given module name.\\n\\n    Acquire/release internally the global import lock to protect\\n    _module_locks.'", 'None', '<code:cb>', "'_get_module_lock.<locals>.cb'"]
+
+  172           0 LOAD_GLOBAL              0 (_imp)
+                2 LOAD_METHOD              1 (acquire_lock)
+                4 CALL_METHOD              0
+                6 POP_TOP
+  
+  173           8 SETUP_FINALLY          112 (to 122)
+  
+  174          10 SETUP_FINALLY           14 (to 26)
+  
+  175          12 LOAD_GLOBAL              2 (_module_locks)
+               14 LOAD_FAST                0 (name)
+               16 BINARY_SUBSCR
+               18 CALL_FUNCTION            0
+               20 STORE_FAST               1 (lock)
+               22 POP_BLOCK
+               24 JUMP_FORWARD            22 (to 48)
+  
+  176     >>   26 DUP_TOP
+               28 LOAD_GLOBAL              3 (KeyError)
+               30 JUMP_IF_NOT_EXC_MATCH    46
+               32 POP_TOP
+               34 POP_TOP
+               36 POP_TOP
+  
+  177          38 LOAD_CONST               1 (None)
+               40 STORE_FAST               1 (lock)
+               42 POP_EXCEPT
+               44 JUMP_FORWARD             2 (to 48)
+          >>   46 RERAISE
+  
+  179     >>   48 LOAD_FAST                1 (lock)
+               50 LOAD_CONST               1 (None)
+               52 IS_OP                    0
+               54 POP_JUMP_IF_FALSE      110
+  
+  180          56 LOAD_GLOBAL              4 (_thread)
+               58 LOAD_CONST               1 (None)
+               60 IS_OP                    0
+               62 POP_JUMP_IF_FALSE       74
+  
+  181          64 LOAD_GLOBAL              5 (_DummyModuleLock)
+               66 LOAD_FAST                0 (name)
+               68 CALL_FUNCTION            1
+               70 STORE_FAST               1 (lock)
+               72 JUMP_FORWARD             8 (to 82)
+  
+  183     >>   74 LOAD_GLOBAL              6 (_ModuleLock)
+               76 LOAD_FAST                0 (name)
+               78 CALL_FUNCTION            1
+               80 STORE_FAST               1 (lock)
+  
+  185     >>   82 LOAD_FAST                0 (name)
+               84 BUILD_TUPLE              1
+               86 LOAD_CONST               2 (<code object cb at 0x000001A3BA0BA9D0, file "<frozen importlib._bootstrap>", line 185>)
+               88 LOAD_CONST               3 ('_get_module_lock.<locals>.cb')
+               90 MAKE_FUNCTION            1 (defaults)
+               92 STORE_FAST               2 (cb)
+  
+  196          94 LOAD_GLOBAL              7 (_weakref)
+               96 LOAD_METHOD              8 (ref)
+               98 LOAD_FAST                1 (lock)
+              100 LOAD_FAST                2 (cb)
+              102 CALL_METHOD              2
+              104 LOAD_GLOBAL              2 (_module_locks)
+              106 LOAD_FAST                0 (name)
+              108 STORE_SUBSCR
+          >>  110 POP_BLOCK
+  
+  198         112 LOAD_GLOBAL              0 (_imp)
+              114 LOAD_METHOD              9 (release_lock)
+              116 CALL_METHOD              0
+              118 POP_TOP
+              120 JUMP_FORWARD            10 (to 132)
+          >>  122 LOAD_GLOBAL              0 (_imp)
+              124 LOAD_METHOD              9 (release_lock)
+              126 CALL_METHOD              0
+              128 POP_TOP
+              130 RERAISE
+  
+  200     >>  132 LOAD_FAST                1 (lock)
+              134 RETURN_VALUE
+  
+  Disassembly of <code object cb at 0x000001A3BA0BA9D0, file "<frozen importlib._bootstrap>", line 185>:
+  186           0 LOAD_GLOBAL              0 (_imp)
+                2 LOAD_METHOD              1 (acquire_lock)
+                4 CALL_METHOD              0
+                6 POP_TOP
+  
+  187           8 SETUP_FINALLY           32 (to 42)
+  
+  191          10 LOAD_GLOBAL              2 (_module_locks)
+               12 LOAD_METHOD              3 (get)
+               14 LOAD_FAST                1 (name)
+               16 CALL_METHOD              1
+               18 LOAD_FAST                0 (ref)
+               20 IS_OP                    0
+               22 POP_JUMP_IF_FALSE       30
+  
+  192          24 LOAD_GLOBAL              2 (_module_locks)
+               26 LOAD_FAST                1 (name)
+               28 DELETE_SUBSCR
+          >>   30 POP_BLOCK
+  
+  194          32 LOAD_GLOBAL              0 (_imp)
+               34 LOAD_METHOD              4 (release_lock)
+               36 CALL_METHOD              0
+               38 POP_TOP
+               40 JUMP_FORWARD            10 (to 52)
+          >>   42 LOAD_GLOBAL              0 (_imp)
+               44 LOAD_METHOD              4 (release_lock)
+               46 CALL_METHOD              0
+               48 POP_TOP
+               50 RERAISE
+          >>   52 LOAD_CONST               0 (None)
+               54 RETURN_VALUE
+  
+
+  ============================================================
+  CODE: cb
+    file: <frozen importlib._bootstrap>
+    argcount: 2
+    varnames: ('ref', 'name')
+    names: ('_imp', 'acquire_lock', '_module_locks', 'get', 'release_lock')
+    freevars: ()
+    cellvars: ()
+    consts: ['None']
+
+    186           0 LOAD_GLOBAL              0 (_imp)
+                  2 LOAD_METHOD              1 (acquire_lock)
+                  4 CALL_METHOD              0
+                  6 POP_TOP
+    
+    187           8 SETUP_FINALLY           32 (to 42)
+    
+    191          10 LOAD_GLOBAL              2 (_module_locks)
+                 12 LOAD_METHOD              3 (get)
+                 14 LOAD_FAST                1 (name)
+                 16 CALL_METHOD              1
+                 18 LOAD_FAST                0 (ref)
+                 20 IS_OP                    0
+                 22 POP_JUMP_IF_FALSE       30
+    
+    192          24 LOAD_GLOBAL              2 (_module_locks)
+                 26 LOAD_FAST                1 (name)
+                 28 DELETE_SUBSCR
+            >>   30 POP_BLOCK
+    
+    194          32 LOAD_GLOBAL              0 (_imp)
+                 34 LOAD_METHOD              4 (release_lock)
+                 36 CALL_METHOD              0
+                 38 POP_TOP
+                 40 JUMP_FORWARD            10 (to 52)
+            >>   42 LOAD_GLOBAL              0 (_imp)
+                 44 LOAD_METHOD              4 (release_lock)
+                 46 CALL_METHOD              0
+                 48 POP_TOP
+                 50 RERAISE
+            >>   52 LOAD_CONST               0 (None)
+                 54 RETURN_VALUE
+    
+

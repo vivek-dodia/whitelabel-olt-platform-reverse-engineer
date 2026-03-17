@@ -1,0 +1,156 @@
+============================================================
+CODE: _fill_cache
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('self', 'path', 'contents', 'lower_suffix_contents', 'item', 'name', 'dot', 'suffix', 'new_name')
+  names: ('path', '_os', 'listdir', 'getcwd', 'FileNotFoundError', 'PermissionError', 'NotADirectoryError', 'sys', 'platform', 'startswith', 'set', '_path_cache', 'partition', 'format', 'lower', 'add', '_CASE_INSENSITIVE_PLATFORMS', '_relaxed_path_cache')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Fill the cache of potential modules and packages for this directory.'", "'win'", "'.'", "'{}.{}'", '<code:<setcomp>>', "'FileFinder._fill_cache.<locals>.<setcomp>'", 'None']
+
+  1567           0 LOAD_FAST                0 (self)
+                 2 LOAD_ATTR                0 (path)
+                 4 STORE_FAST               1 (path)
+  
+  1568           6 SETUP_FINALLY           22 (to 30)
+  
+  1569           8 LOAD_GLOBAL              1 (_os)
+                10 LOAD_METHOD              2 (listdir)
+                12 LOAD_FAST                1 (path)
+                14 JUMP_IF_TRUE_OR_POP     22
+                16 LOAD_GLOBAL              1 (_os)
+                18 LOAD_METHOD              3 (getcwd)
+                20 CALL_METHOD              0
+           >>   22 CALL_METHOD              1
+                24 STORE_FAST               2 (contents)
+                26 POP_BLOCK
+                28 JUMP_FORWARD            28 (to 58)
+  
+  1570     >>   30 DUP_TOP
+                32 LOAD_GLOBAL              4 (FileNotFoundError)
+                34 LOAD_GLOBAL              5 (PermissionError)
+                36 LOAD_GLOBAL              6 (NotADirectoryError)
+                38 BUILD_TUPLE              3
+                40 JUMP_IF_NOT_EXC_MATCH    56
+                42 POP_TOP
+                44 POP_TOP
+                46 POP_TOP
+  
+  1573          48 BUILD_LIST               0
+                50 STORE_FAST               2 (contents)
+                52 POP_EXCEPT
+                54 JUMP_FORWARD             2 (to 58)
+           >>   56 RERAISE
+  
+  1576     >>   58 LOAD_GLOBAL              7 (sys)
+                60 LOAD_ATTR                8 (platform)
+                62 LOAD_METHOD              9 (startswith)
+                64 LOAD_CONST               1 ('win')
+                66 CALL_METHOD              1
+                68 POP_JUMP_IF_TRUE        82
+  
+  1577          70 LOAD_GLOBAL             10 (set)
+                72 LOAD_FAST                2 (contents)
+                74 CALL_FUNCTION            1
+                76 LOAD_FAST                0 (self)
+                78 STORE_ATTR              11 (_path_cache)
+                80 JUMP_FORWARD            74 (to 156)
+  
+  1584     >>   82 LOAD_GLOBAL             10 (set)
+                84 CALL_FUNCTION            0
+                86 STORE_FAST               3 (lower_suffix_contents)
+  
+  1585          88 LOAD_FAST                2 (contents)
+                90 GET_ITER
+           >>   92 FOR_ITER                56 (to 150)
+                94 STORE_FAST               4 (item)
+  
+  1586          96 LOAD_FAST                4 (item)
+                98 LOAD_METHOD             12 (partition)
+               100 LOAD_CONST               2 ('.')
+               102 CALL_METHOD              1
+               104 UNPACK_SEQUENCE          3
+               106 STORE_FAST               5 (name)
+               108 STORE_FAST               6 (dot)
+               110 STORE_FAST               7 (suffix)
+  
+  1587         112 LOAD_FAST                6 (dot)
+               114 POP_JUMP_IF_FALSE      134
+  
+  1588         116 LOAD_CONST               3 ('{}.{}')
+               118 LOAD_METHOD             13 (format)
+               120 LOAD_FAST                5 (name)
+               122 LOAD_FAST                7 (suffix)
+               124 LOAD_METHOD             14 (lower)
+               126 CALL_METHOD              0
+               128 CALL_METHOD              2
+               130 STORE_FAST               8 (new_name)
+               132 JUMP_FORWARD             4 (to 138)
+  
+  1590     >>  134 LOAD_FAST                5 (name)
+               136 STORE_FAST               8 (new_name)
+  
+  1591     >>  138 LOAD_FAST                3 (lower_suffix_contents)
+               140 LOAD_METHOD             15 (add)
+               142 LOAD_FAST                8 (new_name)
+               144 CALL_METHOD              1
+               146 POP_TOP
+               148 JUMP_ABSOLUTE           92
+  
+  1592     >>  150 LOAD_FAST                3 (lower_suffix_contents)
+               152 LOAD_FAST                0 (self)
+               154 STORE_ATTR              11 (_path_cache)
+  
+  1593     >>  156 LOAD_GLOBAL              7 (sys)
+               158 LOAD_ATTR                8 (platform)
+               160 LOAD_METHOD              9 (startswith)
+               162 LOAD_GLOBAL             16 (_CASE_INSENSITIVE_PLATFORMS)
+               164 CALL_METHOD              1
+               166 POP_JUMP_IF_FALSE      184
+  
+  1594         168 LOAD_CONST               4 (<code object <setcomp> at 0x000001A3BA50CB30, file "<frozen importlib._bootstrap_external>", line 1594>)
+               170 LOAD_CONST               5 ('FileFinder._fill_cache.<locals>.<setcomp>')
+               172 MAKE_FUNCTION            0
+               174 LOAD_FAST                2 (contents)
+               176 GET_ITER
+               178 CALL_FUNCTION            1
+               180 LOAD_FAST                0 (self)
+               182 STORE_ATTR              17 (_relaxed_path_cache)
+           >>  184 LOAD_CONST               6 (None)
+               186 RETURN_VALUE
+  
+  Disassembly of <code object <setcomp> at 0x000001A3BA50CB30, file "<frozen importlib._bootstrap_external>", line 1594>:
+  1594           0 BUILD_SET                0
+                 2 LOAD_FAST                0 (.0)
+           >>    4 FOR_ITER                12 (to 18)
+                 6 STORE_FAST               1 (fn)
+                 8 LOAD_FAST                1 (fn)
+                10 LOAD_METHOD              0 (lower)
+                12 CALL_METHOD              0
+                14 SET_ADD                  2
+                16 JUMP_ABSOLUTE            4
+           >>   18 RETURN_VALUE
+  
+
+  ============================================================
+  CODE: <setcomp>
+    file: <frozen importlib._bootstrap_external>
+    argcount: 1
+    varnames: ('.0', 'fn')
+    names: ('lower',)
+    freevars: ()
+    cellvars: ()
+    consts: []
+
+    1594           0 BUILD_SET                0
+                   2 LOAD_FAST                0 (.0)
+             >>    4 FOR_ITER                12 (to 18)
+                   6 STORE_FAST               1 (fn)
+                   8 LOAD_FAST                1 (fn)
+                  10 LOAD_METHOD              0 (lower)
+                  12 CALL_METHOD              0
+                  14 SET_ADD                  2
+                  16 JUMP_ABSOLUTE            4
+             >>   18 RETURN_VALUE
+    
+

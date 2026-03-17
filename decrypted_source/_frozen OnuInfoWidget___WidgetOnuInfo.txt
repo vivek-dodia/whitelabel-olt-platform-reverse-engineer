@@ -1,0 +1,32 @@
+============================================================
+CODE: WidgetOnuInfo
+  file: <frozen OnuInfoWidget>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', '__init__', 'operationItem_fun', 'processMenuClicked', 'enterEvent', 'leaveEvent', 'pushButton_deactivate_clicked', 'pushButton_activate_clicked', 'pushButton_clearGponSn_clicked', 'pushButton_disable_clicked', 'pushButton_enable_clicked', 'pushButton_enable_update_optinfo_clicked', 'pushButton_disable_update_optinfo_clicked', 'setRangeTime', 'setResponseTime', 'recalcDistance', 'pyqtSignal', 'QAction', 'str', 'set_action_text_signal', 'set_action_text_emit', 'setOpticalInfo', 'clear_onu_info', 'EnumOnuStatus', 'setOnuState', 'setDisplay', 'showEvent', 'setLiteMode', '__classcell__', '__armor_wrap__')
+  freevars: ()
+  cellvars: ('__class__',)
+  consts: ['3']
+
+   21           0 LOAD_GLOBAL             31 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   22           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+               16 LIST_TO_TUPLE
+               18 UNARY_INVERT
+  
+   51          20 <171>                  223
+               22 CALL_FUNCTION_EX       105
+               24 <240>                  213
+               26 SETUP_ASYNC_WITH        54 (to 82)
+  
+   73          28 INPLACE_TRUE_DIVIDE
+               30 POP_JUMP_IF_TRUE        15
+  (failed)
+  
+

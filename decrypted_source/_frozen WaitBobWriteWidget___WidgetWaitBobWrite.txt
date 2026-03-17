@@ -1,0 +1,32 @@
+============================================================
+CODE: WidgetWaitBobWrite
+  file: <frozen WaitBobWriteWidget>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', '__init__', 'pyqtSignal', 'dialog_accept_signal', 'dialog_accept_emit', '__classcell__', '__armor_wrap__')
+  freevars: ()
+  cellvars: ('__class__',)
+  consts: ['3']
+
+   12           0 LOAD_GLOBAL              8 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   13           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+               16 UNARY_NOT
+               18 <169>                  194
+  
+   26          20 DICT_MERGE              46
+               22 <167>                  125
+               24 <180>                   80
+  
+   28          26 <205>                  208
+               28 BUILD_TUPLE             91
+               30 JUMP_IF_TRUE_OR_POP    161
+  (failed)
+  
+

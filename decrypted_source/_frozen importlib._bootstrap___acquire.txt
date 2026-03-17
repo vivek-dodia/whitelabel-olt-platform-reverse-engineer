@@ -1,0 +1,133 @@
+============================================================
+CODE: acquire
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('self', 'tid')
+  names: ('_thread', 'get_ident', '_blocking_on', 'lock', 'count', 'owner', 'has_deadlock', '_DeadlockError', 'wakeup', 'acquire', 'waiters', 'release')
+  freevars: ()
+  cellvars: ()
+  consts: ["'\\n        Acquire the module lock.  If a potential deadlock is detected,\\n        a _DeadlockError is raised.\\n        Otherwise, the lock is always acquired and True is returned.\\n        '", '0', '1', 'None', 'True', "'deadlock detected by %r'", 'False']
+
+   93           0 LOAD_GLOBAL              0 (_thread)
+                2 LOAD_METHOD              1 (get_ident)
+                4 CALL_METHOD              0
+                6 STORE_FAST               1 (tid)
+  
+   94           8 LOAD_FAST                0 (self)
+               10 LOAD_GLOBAL              2 (_blocking_on)
+               12 LOAD_FAST                1 (tid)
+               14 STORE_SUBSCR
+  
+   95          16 SETUP_FINALLY          180 (to 198)
+  
+   97     >>   18 LOAD_FAST                0 (self)
+               20 LOAD_ATTR                3 (lock)
+               22 SETUP_WITH             126 (to 150)
+               24 POP_TOP
+  
+   98          26 LOAD_FAST                0 (self)
+               28 LOAD_ATTR                4 (count)
+               30 LOAD_CONST               1 (0)
+               32 COMPARE_OP               2 (==)
+               34 POP_JUMP_IF_TRUE        46
+               36 LOAD_FAST                0 (self)
+               38 LOAD_ATTR                5 (owner)
+               40 LOAD_FAST                1 (tid)
+               42 COMPARE_OP               2 (==)
+               44 POP_JUMP_IF_FALSE       90
+  
+   99     >>   46 LOAD_FAST                1 (tid)
+               48 LOAD_FAST                0 (self)
+               50 STORE_ATTR               5 (owner)
+  
+  100          52 LOAD_FAST                0 (self)
+               54 DUP_TOP
+               56 LOAD_ATTR                4 (count)
+               58 LOAD_CONST               2 (1)
+               60 INPLACE_ADD
+               62 ROT_TWO
+               64 STORE_ATTR               4 (count)
+  
+  101          66 POP_BLOCK
+               68 LOAD_CONST               3 (None)
+               70 DUP_TOP
+               72 DUP_TOP
+               74 CALL_FUNCTION            3
+               76 POP_TOP
+               78 POP_BLOCK
+  
+  110          80 LOAD_GLOBAL              2 (_blocking_on)
+               82 LOAD_FAST                1 (tid)
+               84 DELETE_SUBSCR
+  
+  101          86 LOAD_CONST               4 (True)
+               88 RETURN_VALUE
+  
+  102     >>   90 LOAD_FAST                0 (self)
+               92 LOAD_METHOD              6 (has_deadlock)
+               94 CALL_METHOD              0
+               96 POP_JUMP_IF_FALSE      110
+  
+  103          98 LOAD_GLOBAL              7 (_DeadlockError)
+              100 LOAD_CONST               5 ('deadlock detected by %r')
+              102 LOAD_FAST                0 (self)
+              104 BINARY_MODULO
+              106 CALL_FUNCTION            1
+              108 RAISE_VARARGS            1
+  
+  104     >>  110 LOAD_FAST                0 (self)
+              112 LOAD_ATTR                8 (wakeup)
+              114 LOAD_METHOD              9 (acquire)
+              116 LOAD_CONST               6 (False)
+              118 CALL_METHOD              1
+              120 POP_JUMP_IF_FALSE      136
+  
+  105         122 LOAD_FAST                0 (self)
+              124 DUP_TOP
+              126 LOAD_ATTR               10 (waiters)
+              128 LOAD_CONST               2 (1)
+              130 INPLACE_ADD
+              132 ROT_TWO
+              134 STORE_ATTR              10 (waiters)
+          >>  136 POP_BLOCK
+              138 LOAD_CONST               3 (None)
+              140 DUP_TOP
+              142 DUP_TOP
+              144 CALL_FUNCTION            3
+              146 POP_TOP
+              148 JUMP_FORWARD            16 (to 166)
+          >>  150 WITH_EXCEPT_START
+              152 POP_JUMP_IF_TRUE       156
+              154 RERAISE
+          >>  156 POP_TOP
+              158 POP_TOP
+              160 POP_TOP
+              162 POP_EXCEPT
+              164 POP_TOP
+  
+  107     >>  166 LOAD_FAST                0 (self)
+              168 LOAD_ATTR                8 (wakeup)
+              170 LOAD_METHOD              9 (acquire)
+              172 CALL_METHOD              0
+              174 POP_TOP
+  
+  108         176 LOAD_FAST                0 (self)
+              178 LOAD_ATTR                8 (wakeup)
+              180 LOAD_METHOD             11 (release)
+              182 CALL_METHOD              0
+              184 POP_TOP
+              186 JUMP_ABSOLUTE           18
+              188 POP_BLOCK
+  
+  110         190 LOAD_GLOBAL              2 (_blocking_on)
+              192 LOAD_FAST                1 (tid)
+              194 DELETE_SUBSCR
+              196 JUMP_FORWARD             8 (to 206)
+          >>  198 LOAD_GLOBAL              2 (_blocking_on)
+              200 LOAD_FAST                1 (tid)
+              202 DELETE_SUBSCR
+              204 RERAISE
+          >>  206 LOAD_CONST               3 (None)
+              208 RETURN_VALUE
+  
+

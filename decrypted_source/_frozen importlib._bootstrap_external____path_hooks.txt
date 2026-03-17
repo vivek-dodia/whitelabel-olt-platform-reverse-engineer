@@ -1,0 +1,60 @@
+============================================================
+CODE: _path_hooks
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('cls', 'path', 'hook')
+  names: ('sys', 'path_hooks', '_warnings', 'warn', 'ImportWarning', 'ImportError')
+  freevars: ()
+  cellvars: ()
+  consts: ['"Search sys.path_hooks for a finder for \'path\'."', 'None', "'sys.path_hooks is empty'"]
+
+  1336           0 LOAD_GLOBAL              0 (sys)
+                 2 LOAD_ATTR                1 (path_hooks)
+                 4 LOAD_CONST               1 (None)
+                 6 IS_OP                    1
+                 8 POP_JUMP_IF_FALSE       28
+                10 LOAD_GLOBAL              0 (sys)
+                12 LOAD_ATTR                1 (path_hooks)
+                14 POP_JUMP_IF_TRUE        28
+  
+  1337          16 LOAD_GLOBAL              2 (_warnings)
+                18 LOAD_METHOD              3 (warn)
+                20 LOAD_CONST               2 ('sys.path_hooks is empty')
+                22 LOAD_GLOBAL              4 (ImportWarning)
+                24 CALL_METHOD              2
+                26 POP_TOP
+  
+  1338     >>   28 LOAD_GLOBAL              0 (sys)
+                30 LOAD_ATTR                1 (path_hooks)
+                32 GET_ITER
+           >>   34 FOR_ITER                42 (to 78)
+                36 STORE_FAST               2 (hook)
+  
+  1339          38 SETUP_FINALLY           14 (to 54)
+  
+  1340          40 LOAD_FAST                2 (hook)
+                42 LOAD_FAST                1 (path)
+                44 CALL_FUNCTION            1
+                46 POP_BLOCK
+                48 ROT_TWO
+                50 POP_TOP
+                52 RETURN_VALUE
+  
+  1341     >>   54 DUP_TOP
+                56 LOAD_GLOBAL              5 (ImportError)
+                58 JUMP_IF_NOT_EXC_MATCH    74
+                60 POP_TOP
+                62 POP_TOP
+                64 POP_TOP
+  
+  1342          66 POP_EXCEPT
+                68 JUMP_ABSOLUTE           34
+                70 POP_EXCEPT
+                72 JUMP_ABSOLUTE           34
+           >>   74 RERAISE
+                76 JUMP_ABSOLUTE           34
+  
+  1344     >>   78 LOAD_CONST               1 (None)
+                80 RETURN_VALUE
+  
+

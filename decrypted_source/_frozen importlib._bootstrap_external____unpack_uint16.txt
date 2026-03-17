@@ -1,0 +1,27 @@
+============================================================
+CODE: _unpack_uint16
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('data',)
+  names: ('len', 'int', 'from_bytes')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Convert 2 bytes in little-endian to an integer.'", '2', "'little'"]
+
+   86           0 LOAD_GLOBAL              0 (len)
+                2 LOAD_FAST                0 (data)
+                4 CALL_FUNCTION            1
+                6 LOAD_CONST               1 (2)
+                8 COMPARE_OP               2 (==)
+               10 POP_JUMP_IF_TRUE        16
+               12 LOAD_ASSERTION_ERROR
+               14 RAISE_VARARGS            1
+  
+   87     >>   16 LOAD_GLOBAL              1 (int)
+               18 LOAD_METHOD              2 (from_bytes)
+               20 LOAD_FAST                0 (data)
+               22 LOAD_CONST               2 ('little')
+               24 CALL_METHOD              2
+               26 RETURN_VALUE
+  
+

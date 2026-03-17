@@ -1,0 +1,55 @@
+============================================================
+CODE: _get_cached
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('filename',)
+  names: ('endswith', 'tuple', 'SOURCE_SUFFIXES', 'cache_from_source', 'NotImplementedError', 'BYTECODE_SUFFIXES')
+  freevars: ()
+  cellvars: ()
+  consts: ['None']
+
+  492           0 LOAD_FAST                0 (filename)
+                2 LOAD_METHOD              0 (endswith)
+                4 LOAD_GLOBAL              1 (tuple)
+                6 LOAD_GLOBAL              2 (SOURCE_SUFFIXES)
+                8 CALL_FUNCTION            1
+               10 CALL_METHOD              1
+               12 POP_JUMP_IF_FALSE       46
+  
+  493          14 SETUP_FINALLY           10 (to 26)
+  
+  494          16 LOAD_GLOBAL              3 (cache_from_source)
+               18 LOAD_FAST                0 (filename)
+               20 CALL_FUNCTION            1
+               22 POP_BLOCK
+               24 RETURN_VALUE
+  
+  495     >>   26 DUP_TOP
+               28 LOAD_GLOBAL              4 (NotImplementedError)
+               30 JUMP_IF_NOT_EXC_MATCH    42
+               32 POP_TOP
+               34 POP_TOP
+               36 POP_TOP
+  
+  496          38 POP_EXCEPT
+               40 JUMP_ABSOLUTE           68
+          >>   42 RERAISE
+               44 JUMP_FORWARD            22 (to 68)
+  
+  497     >>   46 LOAD_FAST                0 (filename)
+               48 LOAD_METHOD              0 (endswith)
+               50 LOAD_GLOBAL              1 (tuple)
+               52 LOAD_GLOBAL              5 (BYTECODE_SUFFIXES)
+               54 CALL_FUNCTION            1
+               56 CALL_METHOD              1
+               58 POP_JUMP_IF_FALSE       64
+  
+  498          60 LOAD_FAST                0 (filename)
+               62 RETURN_VALUE
+  
+  500     >>   64 LOAD_CONST               0 (None)
+               66 RETURN_VALUE
+          >>   68 LOAD_CONST               0 (None)
+               70 RETURN_VALUE
+  
+

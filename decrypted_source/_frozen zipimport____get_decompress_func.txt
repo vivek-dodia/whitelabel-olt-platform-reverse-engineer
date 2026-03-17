@@ -1,0 +1,78 @@
+============================================================
+CODE: _get_decompress_func
+  file: <frozen zipimport>
+  argcount: 0
+  varnames: ('decompress',)
+  names: ('_importing_zlib', '_bootstrap', '_verbose_message', 'ZipImportError', 'zlib', 'decompress', 'Exception')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'zipimport: zlib UNAVAILABLE'", '"can\'t decompress data; zlib not available"', 'True', '0', "('decompress',)", 'False', "'zipimport: zlib available'"]
+
+  512           0 LOAD_GLOBAL              0 (_importing_zlib)
+                2 POP_JUMP_IF_FALSE       22
+  
+  515           4 LOAD_GLOBAL              1 (_bootstrap)
+                6 LOAD_METHOD              2 (_verbose_message)
+                8 LOAD_CONST               1 ('zipimport: zlib UNAVAILABLE')
+               10 CALL_METHOD              1
+               12 POP_TOP
+  
+  516          14 LOAD_GLOBAL              3 (ZipImportError)
+               16 LOAD_CONST               2 ("can't decompress data; zlib not available")
+               18 CALL_FUNCTION            1
+               20 RAISE_VARARGS            1
+  
+  518     >>   22 LOAD_CONST               3 (True)
+               24 STORE_GLOBAL             0 (_importing_zlib)
+  
+  519          26 SETUP_FINALLY           62 (to 90)
+               28 SETUP_FINALLY           16 (to 46)
+  
+  520          30 LOAD_CONST               4 (0)
+               32 LOAD_CONST               5 (('decompress',))
+               34 IMPORT_NAME              4 (zlib)
+               36 IMPORT_FROM              5 (decompress)
+               38 STORE_FAST               0 (decompress)
+               40 POP_TOP
+               42 POP_BLOCK
+               44 JUMP_FORWARD            36 (to 82)
+  
+  521     >>   46 DUP_TOP
+               48 LOAD_GLOBAL              6 (Exception)
+               50 JUMP_IF_NOT_EXC_MATCH    80
+               52 POP_TOP
+               54 POP_TOP
+               56 POP_TOP
+  
+  522          58 LOAD_GLOBAL              1 (_bootstrap)
+               60 LOAD_METHOD              2 (_verbose_message)
+               62 LOAD_CONST               1 ('zipimport: zlib UNAVAILABLE')
+               64 CALL_METHOD              1
+               66 POP_TOP
+  
+  523          68 LOAD_GLOBAL              3 (ZipImportError)
+               70 LOAD_CONST               2 ("can't decompress data; zlib not available")
+               72 CALL_FUNCTION            1
+               74 RAISE_VARARGS            1
+               76 POP_EXCEPT
+               78 JUMP_FORWARD             2 (to 82)
+          >>   80 RERAISE
+          >>   82 POP_BLOCK
+  
+  525          84 LOAD_CONST               6 (False)
+               86 STORE_GLOBAL             0 (_importing_zlib)
+               88 JUMP_FORWARD             6 (to 96)
+          >>   90 LOAD_CONST               6 (False)
+               92 STORE_GLOBAL             0 (_importing_zlib)
+               94 RERAISE
+  
+  527     >>   96 LOAD_GLOBAL              1 (_bootstrap)
+               98 LOAD_METHOD              2 (_verbose_message)
+              100 LOAD_CONST               7 ('zipimport: zlib available')
+              102 CALL_METHOD              1
+              104 POP_TOP
+  
+  528         106 LOAD_FAST                0 (decompress)
+              108 RETURN_VALUE
+  
+

@@ -1,0 +1,151 @@
+============================================================
+CODE: _handle_fromlist
+  file: <frozen importlib._bootstrap>
+  argcount: 3
+  varnames: ('module', 'fromlist', 'import_', 'recursive', 'x', 'where', 'from_name', 'exc')
+  names: ('isinstance', 'str', '__name__', 'TypeError', 'type', 'hasattr', '_handle_fromlist', '__all__', 'format', '_call_with_frames_removed', 'ModuleNotFoundError', 'name', 'sys', 'modules', 'get', '_NEEDS_LOADING')
+  freevars: ()
+  cellvars: ()
+  consts: ['"Figure out what __import__ should return.\\n\\n    The import_ parameter is a callable which takes the name of module to\\n    import. It is required to decouple the function from assuming importlib\'s\\n    import implementation is desired.\\n\\n    "', "'.__all__'", '"``from list\'\'"', "'Item in '", "' must be str, not '", "'*'", "'__all__'", 'True', "('recursive',)", "'{}.{}'", 'None']
+
+  1043           0 LOAD_FAST                1 (fromlist)
+                 2 GET_ITER
+           >>    4 FOR_ITER               222 (to 228)
+                 6 STORE_FAST               4 (x)
+  
+  1044           8 LOAD_GLOBAL              0 (isinstance)
+                10 LOAD_FAST                4 (x)
+                12 LOAD_GLOBAL              1 (str)
+                14 CALL_FUNCTION            2
+                16 POP_JUMP_IF_TRUE        66
+  
+  1045          18 LOAD_FAST                3 (recursive)
+                20 POP_JUMP_IF_FALSE       34
+  
+  1046          22 LOAD_FAST                0 (module)
+                24 LOAD_ATTR                2 (__name__)
+                26 LOAD_CONST               1 ('.__all__')
+                28 BINARY_ADD
+                30 STORE_FAST               5 (where)
+                32 JUMP_FORWARD             4 (to 38)
+  
+  1048     >>   34 LOAD_CONST               2 ("``from list''")
+                36 STORE_FAST               5 (where)
+  
+  1049     >>   38 LOAD_GLOBAL              3 (TypeError)
+                40 LOAD_CONST               3 ('Item in ')
+                42 LOAD_FAST                5 (where)
+                44 FORMAT_VALUE             0
+                46 LOAD_CONST               4 (' must be str, not ')
+  
+  1050          48 LOAD_GLOBAL              4 (type)
+                50 LOAD_FAST                4 (x)
+                52 CALL_FUNCTION            1
+                54 LOAD_ATTR                2 (__name__)
+  
+  1049          56 FORMAT_VALUE             0
+                58 BUILD_STRING             4
+                60 CALL_FUNCTION            1
+                62 RAISE_VARARGS            1
+                64 JUMP_ABSOLUTE            4
+  
+  1051     >>   66 LOAD_FAST                4 (x)
+                68 LOAD_CONST               5 ('*')
+                70 COMPARE_OP               2 (==)
+                72 POP_JUMP_IF_FALSE      108
+  
+  1052          74 LOAD_FAST                3 (recursive)
+                76 POP_JUMP_IF_TRUE       226
+                78 LOAD_GLOBAL              5 (hasattr)
+                80 LOAD_FAST                0 (module)
+                82 LOAD_CONST               6 ('__all__')
+                84 CALL_FUNCTION            2
+                86 POP_JUMP_IF_FALSE      226
+  
+  1053          88 LOAD_GLOBAL              6 (_handle_fromlist)
+                90 LOAD_FAST                0 (module)
+                92 LOAD_FAST                0 (module)
+                94 LOAD_ATTR                7 (__all__)
+                96 LOAD_FAST                2 (import_)
+  
+  1054          98 LOAD_CONST               7 (True)
+  
+  1053         100 LOAD_CONST               8 (('recursive',))
+               102 CALL_FUNCTION_KW         4
+               104 POP_TOP
+               106 JUMP_ABSOLUTE            4
+  
+  1055     >>  108 LOAD_GLOBAL              5 (hasattr)
+               110 LOAD_FAST                0 (module)
+               112 LOAD_FAST                4 (x)
+               114 CALL_FUNCTION            2
+               116 POP_JUMP_IF_TRUE         4
+  
+  1056         118 LOAD_CONST               9 ('{}.{}')
+               120 LOAD_METHOD              8 (format)
+               122 LOAD_FAST                0 (module)
+               124 LOAD_ATTR                2 (__name__)
+               126 LOAD_FAST                4 (x)
+               128 CALL_METHOD              2
+               130 STORE_FAST               6 (from_name)
+  
+  1057         132 SETUP_FINALLY           14 (to 148)
+  
+  1058         134 LOAD_GLOBAL              9 (_call_with_frames_removed)
+               136 LOAD_FAST                2 (import_)
+               138 LOAD_FAST                6 (from_name)
+               140 CALL_FUNCTION            2
+               142 POP_TOP
+               144 POP_BLOCK
+               146 JUMP_ABSOLUTE            4
+  
+  1059     >>  148 DUP_TOP
+               150 LOAD_GLOBAL             10 (ModuleNotFoundError)
+               152 JUMP_IF_NOT_EXC_MATCH   224
+               154 POP_TOP
+               156 STORE_FAST               7 (exc)
+               158 POP_TOP
+               160 SETUP_FINALLY           54 (to 216)
+  
+  1063         162 LOAD_FAST                7 (exc)
+               164 LOAD_ATTR               11 (name)
+               166 LOAD_FAST                6 (from_name)
+               168 COMPARE_OP               2 (==)
+               170 POP_JUMP_IF_FALSE      202
+  
+  1064         172 LOAD_GLOBAL             12 (sys)
+               174 LOAD_ATTR               13 (modules)
+               176 LOAD_METHOD             14 (get)
+               178 LOAD_FAST                6 (from_name)
+               180 LOAD_GLOBAL             15 (_NEEDS_LOADING)
+               182 CALL_METHOD              2
+               184 LOAD_CONST              10 (None)
+               186 IS_OP                    1
+  
+  1063         188 POP_JUMP_IF_FALSE      202
+  
+  1065         190 POP_BLOCK
+               192 POP_EXCEPT
+               194 LOAD_CONST              10 (None)
+               196 STORE_FAST               7 (exc)
+               198 DELETE_FAST              7 (exc)
+               200 JUMP_ABSOLUTE            4
+  
+  1066     >>  202 RAISE_VARARGS            0
+               204 POP_BLOCK
+               206 POP_EXCEPT
+               208 LOAD_CONST              10 (None)
+               210 STORE_FAST               7 (exc)
+               212 DELETE_FAST              7 (exc)
+               214 JUMP_ABSOLUTE            4
+           >>  216 LOAD_CONST              10 (None)
+               218 STORE_FAST               7 (exc)
+               220 DELETE_FAST              7 (exc)
+               222 RERAISE
+           >>  224 RERAISE
+           >>  226 JUMP_ABSOLUTE            4
+  
+  1067     >>  228 LOAD_FAST                0 (module)
+               230 RETURN_VALUE
+  
+

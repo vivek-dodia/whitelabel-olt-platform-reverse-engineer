@@ -1,0 +1,43 @@
+============================================================
+CODE: Ui_WaitBobWriteWidget
+  file: <frozen WaitBobWriteWidget_form>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', 'setupUi', 'retranslateUi', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['3']
+
+   14           0 LOAD_GLOBAL              5 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   15           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+  
+   29          16 INPLACE_SUBTRACT
+               18 <232>                   45
+               20 YIELD_VALUE
+               22 <140>                  135
+               24 <45>
+               26 <168>                   37
+               28 <225>                   85
+               30 IS_OP                   28
+               32 <123>                  248
+               34 <166>                   57
+               36 <232>                  119
+               38 <187>                  206
+               40 SET_ADD                105
+               42 BUILD_TUPLE             44
+               44 <129>                  222
+               46 <255>                  198
+               48 BUILD_MAP              141
+               50 <243>                  145
+               52 <216>                  116
+               54 <222>                  125
+  (failed)
+  
+

@@ -1,0 +1,27 @@
+============================================================
+CODE: find_distributions
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('cls', 'args', 'kwargs', 'MetadataPathFinder')
+  names: ('importlib.metadata', 'MetadataPathFinder', 'find_distributions')
+  freevars: ()
+  cellvars: ()
+  consts: ["'\\n        Find distributions.\\n\\n        Return an iterable of all Distribution instances capable of\\n        loading the metadata for packages matching ``context.name``\\n        (or all names if ``None`` indicated) along the paths in the list\\n        of directories ``context.path``.\\n        '", '0', "('MetadataPathFinder',)"]
+
+  1462           0 LOAD_CONST               1 (0)
+                 2 LOAD_CONST               2 (('MetadataPathFinder',))
+                 4 IMPORT_NAME              0 (importlib.metadata)
+                 6 IMPORT_FROM              1 (MetadataPathFinder)
+                 8 STORE_FAST               3 (MetadataPathFinder)
+                10 POP_TOP
+  
+  1463          12 LOAD_FAST                3 (MetadataPathFinder)
+                14 LOAD_ATTR                2 (find_distributions)
+                16 LOAD_FAST                1 (args)
+                18 BUILD_MAP                0
+                20 LOAD_FAST                2 (kwargs)
+                22 DICT_MERGE               1
+                24 CALL_FUNCTION_EX         1
+                26 RETURN_VALUE
+  
+

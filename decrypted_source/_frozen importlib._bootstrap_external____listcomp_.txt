@@ -1,0 +1,25 @@
+============================================================
+CODE: <listcomp>
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('.0', 'p')
+  names: ('rstrip', 'path_separators')
+  freevars: ()
+  cellvars: ()
+  consts: []
+
+  114           0 BUILD_LIST               0
+                2 LOAD_FAST                0 (.0)
+          >>    4 FOR_ITER                18 (to 24)
+                6 STORE_FAST               1 (p)
+                8 LOAD_FAST                1 (p)
+               10 POP_JUMP_IF_FALSE        4
+               12 LOAD_FAST                1 (p)
+               14 LOAD_METHOD              0 (rstrip)
+               16 LOAD_GLOBAL              1 (path_separators)
+               18 CALL_METHOD              1
+               20 LIST_APPEND              2
+               22 JUMP_ABSOLUTE            4
+          >>   24 RETURN_VALUE
+  
+

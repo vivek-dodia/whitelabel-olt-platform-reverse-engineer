@@ -1,0 +1,23 @@
+============================================================
+CODE: <genexpr>
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('.0', 'suffix')
+  names: ()
+  freevars: ('loader',)
+  cellvars: ()
+  consts: ['None']
+
+  1481           0 LOAD_FAST                0 (.0)
+           >>    2 FOR_ITER                14 (to 18)
+                 4 STORE_FAST               1 (suffix)
+                 6 LOAD_FAST                1 (suffix)
+                 8 LOAD_DEREF               0 (loader)
+                10 BUILD_TUPLE              2
+                12 YIELD_VALUE
+                14 POP_TOP
+                16 JUMP_ABSOLUTE            2
+           >>   18 LOAD_CONST               0 (None)
+                20 RETURN_VALUE
+  
+

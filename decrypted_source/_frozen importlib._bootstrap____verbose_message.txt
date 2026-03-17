@@ -1,0 +1,42 @@
+============================================================
+CODE: _verbose_message
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('message', 'verbosity', 'args')
+  names: ('sys', 'flags', 'verbose', 'startswith', 'print', 'format', 'stderr')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Print the message to stderr if -v/PYTHONVERBOSE is turned on.'", "('#', 'import ')", "'# '", "('file',)", 'None']
+
+  233           0 LOAD_GLOBAL              0 (sys)
+                2 LOAD_ATTR                1 (flags)
+                4 LOAD_ATTR                2 (verbose)
+                6 LOAD_FAST                1 (verbosity)
+                8 COMPARE_OP               5 (>=)
+               10 POP_JUMP_IF_FALSE       50
+  
+  234          12 LOAD_FAST                0 (message)
+               14 LOAD_METHOD              3 (startswith)
+               16 LOAD_CONST               1 (('#', 'import '))
+               18 CALL_METHOD              1
+               20 POP_JUMP_IF_TRUE        30
+  
+  235          22 LOAD_CONST               2 ('# ')
+               24 LOAD_FAST                0 (message)
+               26 BINARY_ADD
+               28 STORE_FAST               0 (message)
+  
+  236     >>   30 LOAD_GLOBAL              4 (print)
+               32 LOAD_FAST                0 (message)
+               34 LOAD_ATTR                5 (format)
+               36 LOAD_FAST                2 (args)
+               38 CALL_FUNCTION_EX         0
+               40 LOAD_GLOBAL              0 (sys)
+               42 LOAD_ATTR                6 (stderr)
+               44 LOAD_CONST               3 (('file',))
+               46 CALL_FUNCTION_KW         2
+               48 POP_TOP
+          >>   50 LOAD_CONST               4 (None)
+               52 RETURN_VALUE
+  
+

@@ -1,0 +1,31 @@
+============================================================
+CODE: <module>
+  file: <frozen gdt>
+  argcount: 0
+  varnames: ()
+  names: ('PasswordWidget', 'WidgetPassword', 'WaitBobWriteWidget', 'WidgetWaitBobWrite', 'math', 'log10', 'qdarkstyle', 'PyQt5', 'QtWidgets', 'QtCore', 'QtGui', 'PyQt5.QtCore', 'PyQt5.QtGui', 'PyQt5.QtWidgets', 'scapy', 'interfaces', 'MessageWidget', 'WidgetMessage', 'OltInfoWidget', 'WidgetOltInfo', 'OmciMsgWidget', 'WidgetOmciMsg', 'OnuInfoWidget', 'WidgetOnuInfo', 'TextInputWidget', 'WidgetTextInput', 'WaitPasswordSaveWidget', 'WidgetWaitPasswordSave', 'gdt_form', 'Ui_GponDebugTool', 'olt_socket', 'Crypto.Cipher', 'AES', 'reedsolo', 'RSCodec', 'Crypto.Hash', 'CMAC', 'binascii', 'hexlify', 'unhexlify', 'public_for_upgrade', 'upg_padding_size', '_async_raise', 'QMainWindow', 'GponDebugToolWindow', 'threading', 'Thread', 'ReadAxRegThread', 'load_default_25l99_reg_thread', 'load_default_6533_reg_thread', 'QWidget', 'MaskWidget', '__name__', 'os', 'path', 'exists', 'makedirs', 'fmt', 'QCoreApplication', 'setAttribute', 'Qt', 'AA_EnableHighDpiScaling', 'QGuiApplication', 'HighDpiScaleFactorRoundingPolicy', 'PassThrough', 'QApplication', 'sys', 'argv', 'app', 'setStyleSheet', 'load_stylesheet_pyqt5', 'datetime', 'now', 'dt', 'logging', 'basicConfig', 'INFO', 'strftime', 'main_win', 'show', 'exit', 'exec_', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['2']
+
+     1           0 LOAD_GLOBAL             82 (__armor_wrap__)
+                 2 CALL_FUNCTION            0
+                 4 NOP
+                 6 RETURN_VALUE
+                 8 NOP
+                10 NOP
+  
+     2          12 <0>
+                14 <0>
+                16 <211>                  188
+                18 <241>                  220
+                20 GET_YIELD_FROM_ITER
+                22 <219>                  203
+  
+     4          24 <224>                   88
+                26 <207>                  243
+                28 BINARY_SUBTRACT
+                30 BINARY_MODULO
+  (failed)
+  
+

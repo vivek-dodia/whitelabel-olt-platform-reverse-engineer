@@ -1,0 +1,32 @@
+============================================================
+CODE: EnumUpgradeProcess
+  file: <frozen com_def>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', 'CheckVersion', 'CheckMaxOnu', 'UpdateDNA', 'CheckRunning', 'Unlock', 'Erase', 'Program', 'CheckResult', 'TryRecover', 'RecheckResult', 'Fallback', 'Switch', 'CheckStartup', 'Finish', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['8']
+
+   51           0 LOAD_GLOBAL             17 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   52           8 NOP
+               10 NOP
+  
+   53          12 <0>
+               14 <0>
+  
+   54          16 BINARY_RSHIFT
+               18 SETUP_FINALLY          170 (to 190)
+  
+   55          20 <177>                  224
+               22 <184>                  157
+  
+   56          24 JUMP_IF_TRUE_OR_POP     33
+               26 <229>                  126
+  (failed)
+  
+

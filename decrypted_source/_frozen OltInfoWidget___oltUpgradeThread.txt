@@ -1,0 +1,25 @@
+============================================================
+CODE: oltUpgradeThread
+  file: <frozen OltInfoWidget>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', 'WidgetOltInfo', '__init__', 'sendPkt', 're_sendPkt', 'mysleep', 'no_rsp_handler', 'send_program_flash', 'send_erase_flash', 'erase_flash_area', 'write_startup_param', 'run', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['32']
+
+  441           0 LOAD_GLOBAL             14 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+  442           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+               16 MAKE_FUNCTION           39 (defaults, kwdefaults, annotations)
+               18 <195>                    2
+               20 INPLACE_POWER
+  (failed)
+  
+

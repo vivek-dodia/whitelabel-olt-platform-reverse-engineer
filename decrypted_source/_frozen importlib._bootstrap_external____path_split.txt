@@ -1,0 +1,86 @@
+============================================================
+CODE: _path_split
+  file: <frozen importlib._bootstrap_external>
+  argcount: 1
+  varnames: ('path', 'i')
+  names: ('max', 'path_separators')
+  freevars: ()
+  cellvars: ('path',)
+  consts: ["'Replacement for os.path.split().'", '<code:<genexpr>>', "'_path_split.<locals>.<genexpr>'", '0', "''", 'None', '1']
+
+  129           0 LOAD_GLOBAL              0 (max)
+                2 LOAD_CLOSURE             0 (path)
+                4 BUILD_TUPLE              1
+                6 LOAD_CONST               1 (<code object <genexpr> at 0x000001A3BA0CE7C0, file "<frozen importlib._bootstrap_external>", line 129>)
+                8 LOAD_CONST               2 ('_path_split.<locals>.<genexpr>')
+               10 MAKE_FUNCTION            8 (closure)
+               12 LOAD_GLOBAL              1 (path_separators)
+               14 GET_ITER
+               16 CALL_FUNCTION            1
+               18 CALL_FUNCTION            1
+               20 STORE_FAST               1 (i)
+  
+  130          22 LOAD_FAST                1 (i)
+               24 LOAD_CONST               3 (0)
+               26 COMPARE_OP               0 (<)
+               28 POP_JUMP_IF_FALSE       38
+  
+  131          30 LOAD_CONST               4 ('')
+               32 LOAD_DEREF               0 (path)
+               34 BUILD_TUPLE              2
+               36 RETURN_VALUE
+  
+  132     >>   38 LOAD_DEREF               0 (path)
+               40 LOAD_CONST               5 (None)
+               42 LOAD_FAST                1 (i)
+               44 BUILD_SLICE              2
+               46 BINARY_SUBSCR
+               48 LOAD_DEREF               0 (path)
+               50 LOAD_FAST                1 (i)
+               52 LOAD_CONST               6 (1)
+               54 BINARY_ADD
+               56 LOAD_CONST               5 (None)
+               58 BUILD_SLICE              2
+               60 BINARY_SUBSCR
+               62 BUILD_TUPLE              2
+               64 RETURN_VALUE
+  
+  Disassembly of <code object <genexpr> at 0x000001A3BA0CE7C0, file "<frozen importlib._bootstrap_external>", line 129>:
+  129           0 LOAD_FAST                0 (.0)
+          >>    2 FOR_ITER                16 (to 20)
+                4 STORE_FAST               1 (p)
+                6 LOAD_DEREF               0 (path)
+                8 LOAD_METHOD              0 (rfind)
+               10 LOAD_FAST                1 (p)
+               12 CALL_METHOD              1
+               14 YIELD_VALUE
+               16 POP_TOP
+               18 JUMP_ABSOLUTE            2
+          >>   20 LOAD_CONST               0 (None)
+               22 RETURN_VALUE
+  
+
+  ============================================================
+  CODE: <genexpr>
+    file: <frozen importlib._bootstrap_external>
+    argcount: 1
+    varnames: ('.0', 'p')
+    names: ('rfind',)
+    freevars: ('path',)
+    cellvars: ()
+    consts: ['None']
+
+    129           0 LOAD_FAST                0 (.0)
+            >>    2 FOR_ITER                16 (to 20)
+                  4 STORE_FAST               1 (p)
+                  6 LOAD_DEREF               0 (path)
+                  8 LOAD_METHOD              0 (rfind)
+                 10 LOAD_FAST                1 (p)
+                 12 CALL_METHOD              1
+                 14 YIELD_VALUE
+                 16 POP_TOP
+                 18 JUMP_ABSOLUTE            2
+            >>   20 LOAD_CONST               0 (None)
+                 22 RETURN_VALUE
+    
+

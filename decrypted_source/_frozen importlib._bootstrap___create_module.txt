@@ -1,0 +1,39 @@
+============================================================
+CODE: create_module
+  file: <frozen importlib._bootstrap>
+  argcount: 2
+  varnames: ('self', 'spec')
+  names: ('name', 'sys', 'builtin_module_names', 'ImportError', 'format', '_call_with_frames_removed', '_imp', 'create_builtin')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Create a built-in module'", "'{!r} is not a built-in module'", "('name',)"]
+
+  760           0 LOAD_FAST                1 (spec)
+                2 LOAD_ATTR                0 (name)
+                4 LOAD_GLOBAL              1 (sys)
+                6 LOAD_ATTR                2 (builtin_module_names)
+                8 CONTAINS_OP              1
+               10 POP_JUMP_IF_FALSE       34
+  
+  761          12 LOAD_GLOBAL              3 (ImportError)
+               14 LOAD_CONST               1 ('{!r} is not a built-in module')
+               16 LOAD_METHOD              4 (format)
+               18 LOAD_FAST                1 (spec)
+               20 LOAD_ATTR                0 (name)
+               22 CALL_METHOD              1
+  
+  762          24 LOAD_FAST                1 (spec)
+               26 LOAD_ATTR                0 (name)
+  
+  761          28 LOAD_CONST               2 (('name',))
+               30 CALL_FUNCTION_KW         2
+               32 RAISE_VARARGS            1
+  
+  763     >>   34 LOAD_GLOBAL              5 (_call_with_frames_removed)
+               36 LOAD_GLOBAL              6 (_imp)
+               38 LOAD_ATTR                7 (create_builtin)
+               40 LOAD_FAST                1 (spec)
+               42 CALL_FUNCTION            2
+               44 RETURN_VALUE
+  
+

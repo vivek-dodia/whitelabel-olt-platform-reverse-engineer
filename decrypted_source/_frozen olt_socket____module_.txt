@@ -1,0 +1,27 @@
+============================================================
+CODE: <module>
+  file: <frozen olt_socket>
+  argcount: 0
+  varnames: ()
+  names: ('binascii', 'threading', 'socket', 'struct', 'base64', 'scapy.all', 'scapy.layers.l2', 'Ether', 'LLC', 'scapy.layers.all', 'com_def', 'time', 'datetime', 'gdt', 'GponDebugToolWindow', 'char2hex', 'hex2char', 'host', 'BUFFSIZE', 'GreenStyle', 'RedStyle', 'OnuIdStyleLabelActive', 'OnuIdStyleLabelDeactivate', 'GreenStyleTool', 'RedStyleTool', 'GrayStyleTool', 'Thread', 'OltListenThread', 'twos_comp', 'round_to_nearest_integer', 'oltSocketThread', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['2']
+
+    1           0 LOAD_GLOBAL             31 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+    2           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+  
+    3          16 <219>                  150
+               18 GET_AWAITABLE
+               20 <237>                  181
+               22 <252>                   28
+  (failed)
+  
+

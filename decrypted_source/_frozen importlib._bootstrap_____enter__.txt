@@ -1,0 +1,26 @@
+============================================================
+CODE: __enter__
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('self',)
+  names: ('_get_module_lock', '_name', '_lock', 'acquire')
+  freevars: ()
+  cellvars: ()
+  consts: ['None']
+
+  157           0 LOAD_GLOBAL              0 (_get_module_lock)
+                2 LOAD_FAST                0 (self)
+                4 LOAD_ATTR                1 (_name)
+                6 CALL_FUNCTION            1
+                8 LOAD_FAST                0 (self)
+               10 STORE_ATTR               2 (_lock)
+  
+  158          12 LOAD_FAST                0 (self)
+               14 LOAD_ATTR                2 (_lock)
+               16 LOAD_METHOD              3 (acquire)
+               18 CALL_METHOD              0
+               20 POP_TOP
+               22 LOAD_CONST               0 (None)
+               24 RETURN_VALUE
+  
+

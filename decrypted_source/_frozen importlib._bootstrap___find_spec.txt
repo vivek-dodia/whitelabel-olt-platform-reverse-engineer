@@ -1,0 +1,39 @@
+============================================================
+CODE: find_spec
+  file: <frozen importlib._bootstrap>
+  argcount: 4
+  varnames: ('cls', 'fullname', 'path', 'target')
+  names: ('_imp', 'is_builtin', 'spec_from_loader', '_ORIGIN')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "('origin',)"]
+
+  738           0 LOAD_FAST                2 (path)
+                2 LOAD_CONST               0 (None)
+                4 IS_OP                    1
+                6 POP_JUMP_IF_FALSE       12
+  
+  739           8 LOAD_CONST               0 (None)
+               10 RETURN_VALUE
+  
+  740     >>   12 LOAD_GLOBAL              0 (_imp)
+               14 LOAD_METHOD              1 (is_builtin)
+               16 LOAD_FAST                1 (fullname)
+               18 CALL_METHOD              1
+               20 POP_JUMP_IF_FALSE       38
+  
+  741          22 LOAD_GLOBAL              2 (spec_from_loader)
+               24 LOAD_FAST                1 (fullname)
+               26 LOAD_FAST                0 (cls)
+               28 LOAD_FAST                0 (cls)
+               30 LOAD_ATTR                3 (_ORIGIN)
+               32 LOAD_CONST               1 (('origin',))
+               34 CALL_FUNCTION_KW         3
+               36 RETURN_VALUE
+  
+  743     >>   38 LOAD_CONST               0 (None)
+               40 RETURN_VALUE
+               42 LOAD_CONST               0 (None)
+               44 RETURN_VALUE
+  
+

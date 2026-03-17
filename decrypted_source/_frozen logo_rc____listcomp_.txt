@@ -1,0 +1,35 @@
+============================================================
+CODE: <listcomp>
+  file: <frozen logo_rc>
+  argcount: 1
+  varnames: ('.0', 'v')
+  names: ('int', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['3']
+
+  4146           0 LOAD_GLOBAL              1 (__armor_wrap__)
+                 2 CALL_FUNCTION            0
+                 4 NOP
+                 6 RETURN_VALUE
+                 8 NOP
+                10 NOP
+                12 <0>
+                14 <0>
+                16 <221>                  215
+                18 <218>                  118
+                20 LIST_EXTEND            104
+                22 BUILD_LIST              87
+                24 CALL_METHOD            131
+                26 SETUP_WITH              23 (to 51)
+                28 <32>
+                30 <194>                   91
+                32 BUILD_SET              233
+                34 <250>                   61
+                36 <242>                  107
+                38 <7>
+                40 <252>                  190
+                42 <213>                   66
+  (failed)
+  
+

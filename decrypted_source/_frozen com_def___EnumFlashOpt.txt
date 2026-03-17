@@ -1,0 +1,23 @@
+============================================================
+CODE: EnumFlashOpt
+  file: <frozen com_def>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', 'Idle', 'Read', 'Erase', 'Write', 'Erase64K', '__armor_wrap__')
+  freevars: ()
+  cellvars: ()
+  consts: ['7']
+
+   43           0 LOAD_GLOBAL              8 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   44           8 NOP
+               10 NOP
+  
+   45          12 <0>
+               14 <0>
+  (failed)
+  
+

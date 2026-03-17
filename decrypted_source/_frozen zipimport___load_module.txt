@@ -1,0 +1,158 @@
+============================================================
+CODE: load_module
+  file: <frozen zipimport>
+  argcount: 2
+  varnames: ('self', 'fullname', 'code', 'ispackage', 'modpath', 'mod', 'path', 'fullpath')
+  names: ('_get_module_code', 'sys', 'modules', 'get', 'isinstance', '_module_type', '__loader__', '_get_module_path', '_bootstrap_external', '_path_join', 'archive', '__path__', 'hasattr', '__builtins__', '_fix_up_module', '__dict__', 'exec', 'KeyError', 'ImportError', '_bootstrap', '_verbose_message')
+  freevars: ()
+  cellvars: ()
+  consts: ['"load_module(fullname) -> module.\\n\\n        Load the module specified by \'fullname\'. \'fullname\' must be the\\n        fully qualified (dotted) module name. It returns the imported\\n        module, or raises ZipImportError if it wasn\'t found.\\n        "', 'None', "'__builtins__'", "'Loaded module '", "' not found in sys.modules'", "'import {} # loaded from Zip {}'"]
+
+  241           0 LOAD_GLOBAL              0 (_get_module_code)
+                2 LOAD_FAST                0 (self)
+                4 LOAD_FAST                1 (fullname)
+                6 CALL_FUNCTION            2
+                8 UNPACK_SEQUENCE          3
+               10 STORE_FAST               2 (code)
+               12 STORE_FAST               3 (ispackage)
+               14 STORE_FAST               4 (modpath)
+  
+  242          16 LOAD_GLOBAL              1 (sys)
+               18 LOAD_ATTR                2 (modules)
+               20 LOAD_METHOD              3 (get)
+               22 LOAD_FAST                1 (fullname)
+               24 CALL_METHOD              1
+               26 STORE_FAST               5 (mod)
+  
+  243          28 LOAD_FAST                5 (mod)
+               30 LOAD_CONST               1 (None)
+               32 IS_OP                    0
+               34 POP_JUMP_IF_TRUE        46
+               36 LOAD_GLOBAL              4 (isinstance)
+               38 LOAD_FAST                5 (mod)
+               40 LOAD_GLOBAL              5 (_module_type)
+               42 CALL_FUNCTION            2
+               44 POP_JUMP_IF_TRUE        64
+  
+  244     >>   46 LOAD_GLOBAL              5 (_module_type)
+               48 LOAD_FAST                1 (fullname)
+               50 CALL_FUNCTION            1
+               52 STORE_FAST               5 (mod)
+  
+  245          54 LOAD_FAST                5 (mod)
+               56 LOAD_GLOBAL              1 (sys)
+               58 LOAD_ATTR                2 (modules)
+               60 LOAD_FAST                1 (fullname)
+               62 STORE_SUBSCR
+  
+  246     >>   64 LOAD_FAST                0 (self)
+               66 LOAD_FAST                5 (mod)
+               68 STORE_ATTR               6 (__loader__)
+  
+  248          70 SETUP_FINALLY           84 (to 156)
+  
+  249          72 LOAD_FAST                3 (ispackage)
+               74 POP_JUMP_IF_FALSE      108
+  
+  252          76 LOAD_GLOBAL              7 (_get_module_path)
+               78 LOAD_FAST                0 (self)
+               80 LOAD_FAST                1 (fullname)
+               82 CALL_FUNCTION            2
+               84 STORE_FAST               6 (path)
+  
+  253          86 LOAD_GLOBAL              8 (_bootstrap_external)
+               88 LOAD_METHOD              9 (_path_join)
+               90 LOAD_FAST                0 (self)
+               92 LOAD_ATTR               10 (archive)
+               94 LOAD_FAST                6 (path)
+               96 CALL_METHOD              2
+               98 STORE_FAST               7 (fullpath)
+  
+  254         100 LOAD_FAST                7 (fullpath)
+              102 BUILD_LIST               1
+              104 LOAD_FAST                5 (mod)
+              106 STORE_ATTR              11 (__path__)
+  
+  256     >>  108 LOAD_GLOBAL             12 (hasattr)
+              110 LOAD_FAST                5 (mod)
+              112 LOAD_CONST               2 ('__builtins__')
+              114 CALL_FUNCTION            2
+              116 POP_JUMP_IF_TRUE       124
+  
+  257         118 LOAD_GLOBAL             13 (__builtins__)
+              120 LOAD_FAST                5 (mod)
+              122 STORE_ATTR              13 (__builtins__)
+  
+  258     >>  124 LOAD_GLOBAL              8 (_bootstrap_external)
+              126 LOAD_METHOD             14 (_fix_up_module)
+              128 LOAD_FAST                5 (mod)
+              130 LOAD_ATTR               15 (__dict__)
+              132 LOAD_FAST                1 (fullname)
+              134 LOAD_FAST                4 (modpath)
+              136 CALL_METHOD              3
+              138 POP_TOP
+  
+  259         140 LOAD_GLOBAL             16 (exec)
+              142 LOAD_FAST                2 (code)
+              144 LOAD_FAST                5 (mod)
+              146 LOAD_ATTR               15 (__dict__)
+              148 CALL_FUNCTION            2
+              150 POP_TOP
+              152 POP_BLOCK
+              154 JUMP_FORWARD            22 (to 178)
+  
+  260     >>  156 POP_TOP
+              158 POP_TOP
+              160 POP_TOP
+  
+  261         162 LOAD_GLOBAL              1 (sys)
+              164 LOAD_ATTR                2 (modules)
+              166 LOAD_FAST                1 (fullname)
+              168 DELETE_SUBSCR
+  
+  262         170 RAISE_VARARGS            0
+              172 POP_EXCEPT
+              174 JUMP_FORWARD             2 (to 178)
+              176 RERAISE
+  
+  264     >>  178 SETUP_FINALLY           14 (to 194)
+  
+  265         180 LOAD_GLOBAL              1 (sys)
+              182 LOAD_ATTR                2 (modules)
+              184 LOAD_FAST                1 (fullname)
+              186 BINARY_SUBSCR
+              188 STORE_FAST               5 (mod)
+              190 POP_BLOCK
+              192 JUMP_FORWARD            34 (to 228)
+  
+  266     >>  194 DUP_TOP
+              196 LOAD_GLOBAL             17 (KeyError)
+              198 JUMP_IF_NOT_EXC_MATCH   226
+              200 POP_TOP
+              202 POP_TOP
+              204 POP_TOP
+  
+  267         206 LOAD_GLOBAL             18 (ImportError)
+              208 LOAD_CONST               3 ('Loaded module ')
+              210 LOAD_FAST                1 (fullname)
+              212 FORMAT_VALUE             2 (repr)
+              214 LOAD_CONST               4 (' not found in sys.modules')
+              216 BUILD_STRING             3
+              218 CALL_FUNCTION            1
+              220 RAISE_VARARGS            1
+              222 POP_EXCEPT
+              224 JUMP_FORWARD             2 (to 228)
+          >>  226 RERAISE
+  
+  268     >>  228 LOAD_GLOBAL             19 (_bootstrap)
+              230 LOAD_METHOD             20 (_verbose_message)
+              232 LOAD_CONST               5 ('import {} # loaded from Zip {}')
+              234 LOAD_FAST                1 (fullname)
+              236 LOAD_FAST                4 (modpath)
+              238 CALL_METHOD              3
+              240 POP_TOP
+  
+  269         242 LOAD_FAST                5 (mod)
+              244 RETURN_VALUE
+  
+

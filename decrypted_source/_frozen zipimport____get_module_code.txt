@@ -1,0 +1,127 @@
+============================================================
+CODE: _get_module_code
+  file: <frozen zipimport>
+  argcount: 2
+  varnames: ('self', 'fullname', 'path', 'suffix', 'isbytecode', 'ispackage', 'fullpath', 'toc_entry', 'modpath', 'data', 'code')
+  names: ('_get_module_path', '_zip_searchorder', '_bootstrap', '_verbose_message', 'archive', 'path_sep', '_files', 'KeyError', '_get_data', '_unmarshal_code', '_compile_source', 'ZipImportError')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'trying {}{}{}'", '2', "('verbosity',)", '0', '"can\'t find module "', "('name',)"]
+
+  699           0 LOAD_GLOBAL              0 (_get_module_path)
+                2 LOAD_FAST                0 (self)
+                4 LOAD_FAST                1 (fullname)
+                6 CALL_FUNCTION            2
+                8 STORE_FAST               2 (path)
+  
+  700          10 LOAD_GLOBAL              1 (_zip_searchorder)
+               12 GET_ITER
+          >>   14 FOR_ITER               158 (to 174)
+               16 UNPACK_SEQUENCE          3
+               18 STORE_FAST               3 (suffix)
+               20 STORE_FAST               4 (isbytecode)
+               22 STORE_FAST               5 (ispackage)
+  
+  701          24 LOAD_FAST                2 (path)
+               26 LOAD_FAST                3 (suffix)
+               28 BINARY_ADD
+               30 STORE_FAST               6 (fullpath)
+  
+  702          32 LOAD_GLOBAL              2 (_bootstrap)
+               34 LOAD_ATTR                3 (_verbose_message)
+               36 LOAD_CONST               1 ('trying {}{}{}')
+               38 LOAD_FAST                0 (self)
+               40 LOAD_ATTR                4 (archive)
+               42 LOAD_GLOBAL              5 (path_sep)
+               44 LOAD_FAST                6 (fullpath)
+               46 LOAD_CONST               2 (2)
+               48 LOAD_CONST               3 (('verbosity',))
+               50 CALL_FUNCTION_KW         5
+               52 POP_TOP
+  
+  703          54 SETUP_FINALLY           14 (to 70)
+  
+  704          56 LOAD_FAST                0 (self)
+               58 LOAD_ATTR                6 (_files)
+               60 LOAD_FAST                6 (fullpath)
+               62 BINARY_SUBSCR
+               64 STORE_FAST               7 (toc_entry)
+               66 POP_BLOCK
+               68 JUMP_FORWARD            18 (to 88)
+  
+  705     >>   70 DUP_TOP
+               72 LOAD_GLOBAL              7 (KeyError)
+               74 JUMP_IF_NOT_EXC_MATCH    86
+               76 POP_TOP
+               78 POP_TOP
+               80 POP_TOP
+  
+  706          82 POP_EXCEPT
+               84 JUMP_ABSOLUTE           14
+          >>   86 RERAISE
+  
+  708     >>   88 LOAD_FAST                7 (toc_entry)
+               90 LOAD_CONST               4 (0)
+               92 BINARY_SUBSCR
+               94 STORE_FAST               8 (modpath)
+  
+  709          96 LOAD_GLOBAL              8 (_get_data)
+               98 LOAD_FAST                0 (self)
+              100 LOAD_ATTR                4 (archive)
+              102 LOAD_FAST                7 (toc_entry)
+              104 CALL_FUNCTION            2
+              106 STORE_FAST               9 (data)
+  
+  710         108 LOAD_FAST                4 (isbytecode)
+              110 POP_JUMP_IF_FALSE      130
+  
+  711         112 LOAD_GLOBAL              9 (_unmarshal_code)
+              114 LOAD_FAST                0 (self)
+              116 LOAD_FAST                8 (modpath)
+              118 LOAD_FAST                6 (fullpath)
+              120 LOAD_FAST                1 (fullname)
+              122 LOAD_FAST                9 (data)
+              124 CALL_FUNCTION            5
+              126 STORE_FAST              10 (code)
+              128 JUMP_FORWARD            10 (to 140)
+  
+  713     >>  130 LOAD_GLOBAL             10 (_compile_source)
+              132 LOAD_FAST                8 (modpath)
+              134 LOAD_FAST                9 (data)
+              136 CALL_FUNCTION            2
+              138 STORE_FAST              10 (code)
+  
+  714     >>  140 LOAD_FAST               10 (code)
+              142 LOAD_CONST               0 (None)
+              144 IS_OP                    0
+              146 POP_JUMP_IF_FALSE      150
+  
+  717         148 JUMP_ABSOLUTE           14
+  
+  718     >>  150 LOAD_FAST                7 (toc_entry)
+              152 LOAD_CONST               4 (0)
+              154 BINARY_SUBSCR
+              156 STORE_FAST               8 (modpath)
+  
+  719         158 LOAD_FAST               10 (code)
+              160 LOAD_FAST                5 (ispackage)
+              162 LOAD_FAST                8 (modpath)
+              164 BUILD_TUPLE              3
+              166 ROT_TWO
+              168 POP_TOP
+              170 RETURN_VALUE
+              172 JUMP_ABSOLUTE           14
+  
+  721     >>  174 LOAD_GLOBAL             11 (ZipImportError)
+              176 LOAD_CONST               5 ("can't find module ")
+              178 LOAD_FAST                1 (fullname)
+              180 FORMAT_VALUE             2 (repr)
+              182 BUILD_STRING             2
+              184 LOAD_FAST                1 (fullname)
+              186 LOAD_CONST               6 (('name',))
+              188 CALL_FUNCTION_KW         2
+              190 RAISE_VARARGS            1
+              192 LOAD_CONST               0 (None)
+              194 RETURN_VALUE
+  
+

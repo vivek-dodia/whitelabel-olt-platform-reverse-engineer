@@ -1,0 +1,176 @@
+============================================================
+CODE: _find_and_load_unlocked
+  file: <frozen importlib._bootstrap>
+  argcount: 2
+  varnames: ('name', 'import_', 'path', 'parent', 'parent_module', 'msg', 'spec', 'module', 'child')
+  names: ('rpartition', 'sys', 'modules', '_call_with_frames_removed', '__path__', 'AttributeError', '_ERR_MSG', 'format', 'ModuleNotFoundError', '_find_spec', '_load_unlocked', 'setattr', '_warnings', 'warn', 'ImportWarning')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'.'", '0', "'; {!r} is not a package'", "('name',)", '2', "'Cannot set an attribute on '", "' for child module '"]
+
+  968           0 LOAD_CONST               0 (None)
+                2 STORE_FAST               2 (path)
+  
+  969           4 LOAD_FAST                0 (name)
+                6 LOAD_METHOD              0 (rpartition)
+                8 LOAD_CONST               1 ('.')
+               10 CALL_METHOD              1
+               12 LOAD_CONST               2 (0)
+               14 BINARY_SUBSCR
+               16 STORE_FAST               3 (parent)
+  
+  970          18 LOAD_FAST                3 (parent)
+               20 POP_JUMP_IF_FALSE      132
+  
+  971          22 LOAD_FAST                3 (parent)
+               24 LOAD_GLOBAL              1 (sys)
+               26 LOAD_ATTR                2 (modules)
+               28 CONTAINS_OP              1
+               30 POP_JUMP_IF_FALSE       42
+  
+  972          32 LOAD_GLOBAL              3 (_call_with_frames_removed)
+               34 LOAD_FAST                1 (import_)
+               36 LOAD_FAST                3 (parent)
+               38 CALL_FUNCTION            2
+               40 POP_TOP
+  
+  974     >>   42 LOAD_FAST                0 (name)
+               44 LOAD_GLOBAL              1 (sys)
+               46 LOAD_ATTR                2 (modules)
+               48 CONTAINS_OP              0
+               50 POP_JUMP_IF_FALSE       62
+  
+  975          52 LOAD_GLOBAL              1 (sys)
+               54 LOAD_ATTR                2 (modules)
+               56 LOAD_FAST                0 (name)
+               58 BINARY_SUBSCR
+               60 RETURN_VALUE
+  
+  976     >>   62 LOAD_GLOBAL              1 (sys)
+               64 LOAD_ATTR                2 (modules)
+               66 LOAD_FAST                3 (parent)
+               68 BINARY_SUBSCR
+               70 STORE_FAST               4 (parent_module)
+  
+  977          72 SETUP_FINALLY           10 (to 84)
+  
+  978          74 LOAD_FAST                4 (parent_module)
+               76 LOAD_ATTR                4 (__path__)
+               78 STORE_FAST               2 (path)
+               80 POP_BLOCK
+               82 JUMP_FORWARD            48 (to 132)
+  
+  979     >>   84 DUP_TOP
+               86 LOAD_GLOBAL              5 (AttributeError)
+               88 JUMP_IF_NOT_EXC_MATCH   130
+               90 POP_TOP
+               92 POP_TOP
+               94 POP_TOP
+  
+  980          96 LOAD_GLOBAL              6 (_ERR_MSG)
+               98 LOAD_CONST               3 ('; {!r} is not a package')
+              100 BINARY_ADD
+              102 LOAD_METHOD              7 (format)
+              104 LOAD_FAST                0 (name)
+              106 LOAD_FAST                3 (parent)
+              108 CALL_METHOD              2
+              110 STORE_FAST               5 (msg)
+  
+  981         112 LOAD_GLOBAL              8 (ModuleNotFoundError)
+              114 LOAD_FAST                5 (msg)
+              116 LOAD_FAST                0 (name)
+              118 LOAD_CONST               4 (('name',))
+              120 CALL_FUNCTION_KW         2
+              122 LOAD_CONST               0 (None)
+              124 RAISE_VARARGS            2
+              126 POP_EXCEPT
+              128 JUMP_FORWARD             2 (to 132)
+          >>  130 RERAISE
+  
+  982     >>  132 LOAD_GLOBAL              9 (_find_spec)
+              134 LOAD_FAST                0 (name)
+              136 LOAD_FAST                2 (path)
+              138 CALL_FUNCTION            2
+              140 STORE_FAST               6 (spec)
+  
+  983         142 LOAD_FAST                6 (spec)
+              144 LOAD_CONST               0 (None)
+              146 IS_OP                    0
+              148 POP_JUMP_IF_FALSE      170
+  
+  984         150 LOAD_GLOBAL              8 (ModuleNotFoundError)
+              152 LOAD_GLOBAL              6 (_ERR_MSG)
+              154 LOAD_METHOD              7 (format)
+              156 LOAD_FAST                0 (name)
+              158 CALL_METHOD              1
+              160 LOAD_FAST                0 (name)
+              162 LOAD_CONST               4 (('name',))
+              164 CALL_FUNCTION_KW         2
+              166 RAISE_VARARGS            1
+              168 JUMP_FORWARD             8 (to 178)
+  
+  986     >>  170 LOAD_GLOBAL             10 (_load_unlocked)
+              172 LOAD_FAST                6 (spec)
+              174 CALL_FUNCTION            1
+              176 STORE_FAST               7 (module)
+  
+  987     >>  178 LOAD_FAST                3 (parent)
+              180 EXTENDED_ARG             1
+              182 POP_JUMP_IF_FALSE      274
+  
+  989         184 LOAD_GLOBAL              1 (sys)
+              186 LOAD_ATTR                2 (modules)
+              188 LOAD_FAST                3 (parent)
+              190 BINARY_SUBSCR
+              192 STORE_FAST               4 (parent_module)
+  
+  990         194 LOAD_FAST                0 (name)
+              196 LOAD_METHOD              0 (rpartition)
+              198 LOAD_CONST               1 ('.')
+              200 CALL_METHOD              1
+              202 LOAD_CONST               5 (2)
+              204 BINARY_SUBSCR
+              206 STORE_FAST               8 (child)
+  
+  991         208 SETUP_FINALLY           16 (to 226)
+  
+  992         210 LOAD_GLOBAL             11 (setattr)
+              212 LOAD_FAST                4 (parent_module)
+              214 LOAD_FAST                8 (child)
+              216 LOAD_FAST                7 (module)
+              218 CALL_FUNCTION            3
+              220 POP_TOP
+              222 POP_BLOCK
+              224 JUMP_FORWARD            48 (to 274)
+  
+  993     >>  226 DUP_TOP
+              228 LOAD_GLOBAL              5 (AttributeError)
+              230 EXTENDED_ARG             1
+              232 JUMP_IF_NOT_EXC_MATCH   272
+              234 POP_TOP
+              236 POP_TOP
+              238 POP_TOP
+  
+  994         240 LOAD_CONST               6 ('Cannot set an attribute on ')
+              242 LOAD_FAST                3 (parent)
+              244 FORMAT_VALUE             2 (repr)
+              246 LOAD_CONST               7 (' for child module ')
+              248 LOAD_FAST                8 (child)
+              250 FORMAT_VALUE             2 (repr)
+              252 BUILD_STRING             4
+              254 STORE_FAST               5 (msg)
+  
+  995         256 LOAD_GLOBAL             12 (_warnings)
+              258 LOAD_METHOD             13 (warn)
+              260 LOAD_FAST                5 (msg)
+              262 LOAD_GLOBAL             14 (ImportWarning)
+              264 CALL_METHOD              2
+              266 POP_TOP
+              268 POP_EXCEPT
+              270 JUMP_FORWARD             2 (to 274)
+          >>  272 RERAISE
+  
+  996     >>  274 LOAD_FAST                7 (module)
+              276 RETURN_VALUE
+  
+

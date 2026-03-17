@@ -1,0 +1,29 @@
+============================================================
+CODE: WidgetTextInput
+  file: <frozen TextInputWidget>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', '__init__', 'lineEdittextChanged', 'pushButton_forgot_clicked', '__classcell__', '__armor_wrap__')
+  freevars: ()
+  cellvars: ('__class__',)
+  consts: ['3']
+
+    8           0 LOAD_GLOBAL              7 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+    9           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+               16 <243>                   10
+               18 BINARY_MATRIX_MULTIPLY
+               20 BUILD_MAP               74
+  
+   35          22 GET_AITER
+               24 BUILD_SLICE            247
+               26 YIELD_VALUE
+  (failed)
+  
+

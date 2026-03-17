@@ -1,0 +1,76 @@
+============================================================
+CODE: _sanity_check
+  file: <frozen importlib._bootstrap>
+  argcount: 3
+  varnames: ('name', 'package', 'level')
+  names: ('isinstance', 'str', 'TypeError', 'format', 'type', 'ValueError', 'ImportError')
+  freevars: ()
+  cellvars: ()
+  consts: ['\'Verify arguments are "sane".\'', "'module name must be str, not {}'", '0', "'level must be >= 0'", "'__package__ not set to a string'", "'attempted relative import with no known parent package'", "'Empty module name'", 'None']
+
+  950           0 LOAD_GLOBAL              0 (isinstance)
+                2 LOAD_FAST                0 (name)
+                4 LOAD_GLOBAL              1 (str)
+                6 CALL_FUNCTION            2
+                8 POP_JUMP_IF_TRUE        28
+  
+  951          10 LOAD_GLOBAL              2 (TypeError)
+               12 LOAD_CONST               1 ('module name must be str, not {}')
+               14 LOAD_METHOD              3 (format)
+               16 LOAD_GLOBAL              4 (type)
+               18 LOAD_FAST                0 (name)
+               20 CALL_FUNCTION            1
+               22 CALL_METHOD              1
+               24 CALL_FUNCTION            1
+               26 RAISE_VARARGS            1
+  
+  952     >>   28 LOAD_FAST                2 (level)
+               30 LOAD_CONST               2 (0)
+               32 COMPARE_OP               0 (<)
+               34 POP_JUMP_IF_FALSE       44
+  
+  953          36 LOAD_GLOBAL              5 (ValueError)
+               38 LOAD_CONST               3 ('level must be >= 0')
+               40 CALL_FUNCTION            1
+               42 RAISE_VARARGS            1
+  
+  954     >>   44 LOAD_FAST                2 (level)
+               46 LOAD_CONST               2 (0)
+               48 COMPARE_OP               4 (>)
+               50 POP_JUMP_IF_FALSE       84
+  
+  955          52 LOAD_GLOBAL              0 (isinstance)
+               54 LOAD_FAST                1 (package)
+               56 LOAD_GLOBAL              1 (str)
+               58 CALL_FUNCTION            2
+               60 POP_JUMP_IF_TRUE        72
+  
+  956          62 LOAD_GLOBAL              2 (TypeError)
+               64 LOAD_CONST               4 ('__package__ not set to a string')
+               66 CALL_FUNCTION            1
+               68 RAISE_VARARGS            1
+               70 JUMP_FORWARD            12 (to 84)
+  
+  957     >>   72 LOAD_FAST                1 (package)
+               74 POP_JUMP_IF_TRUE        84
+  
+  958          76 LOAD_GLOBAL              6 (ImportError)
+               78 LOAD_CONST               5 ('attempted relative import with no known parent package')
+               80 CALL_FUNCTION            1
+               82 RAISE_VARARGS            1
+  
+  960     >>   84 LOAD_FAST                0 (name)
+               86 POP_JUMP_IF_TRUE       104
+               88 LOAD_FAST                2 (level)
+               90 LOAD_CONST               2 (0)
+               92 COMPARE_OP               2 (==)
+               94 POP_JUMP_IF_FALSE      104
+  
+  961          96 LOAD_GLOBAL              5 (ValueError)
+               98 LOAD_CONST               6 ('Empty module name')
+              100 CALL_FUNCTION            1
+              102 RAISE_VARARGS            1
+          >>  104 LOAD_CONST               7 (None)
+              106 RETURN_VALUE
+  
+

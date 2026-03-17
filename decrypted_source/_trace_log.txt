@@ -1,0 +1,8 @@
+CALL com_def.py::<module>
+  args: ()
+  names: ('pytransform', 'pyarmor', '__name__', '__file__')
+  consts: ['0', "('pyarmor',)", "b'PYARMOR\\x00\\x00\\x03\\t\\x00a\\r\\r\\n\\t4\\xe0\\x02\\x01\\x00\\x00\\x00\\x01\\x00\\x00\\x00@\\x00\\x00\\x00v*\\x00\\x00", '2', 'None']
+CALL <frozen com_def>::<module>
+  args: ()
+  names: ('datetime', 'enum', 'Enum', 'IntEnum', 'GdtVersion', 'AesKey', 'timedelta', 'ResponseTimeout', 'EnumCustomer', 'EnumSpeedMode', 'EnumTabFocus', 'EnumBobTabFocus', 'EnumFlashOpt', 'EnumUpgradeProcess', 'EnumUpgradeResult', 'EnumOltImageStatus', 'EnumImageAddress', 'EnumMagicCode', 'EnumMessageType', 'EnumMessageId', 'EnumChangePasswordResult', 'EnumOnuStatus', 'EnumOnuOfflineReason', 'EnumOmciMessageType', 'EnumOmciDeviceIdentifier', 'EnumOmciManagedEntity', 'object', 'StPackageInfo', 'StIicInfo', 'StOltConfig', 'StPasswordInfo', 'char2hex', 'hex2char', '__armor_wrap__')
+  consts: ['2']

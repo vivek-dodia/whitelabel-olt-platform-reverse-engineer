@@ -1,0 +1,18 @@
+============================================================
+CODE: __exit__
+  file: <frozen importlib._bootstrap>
+  argcount: 4
+  varnames: ('self', 'exc_type', 'exc_value', 'exc_traceback')
+  names: ('_imp', 'release_lock')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Release the import lock regardless of any raised exceptions.'", 'None']
+
+  880           0 LOAD_GLOBAL              0 (_imp)
+                2 LOAD_METHOD              1 (release_lock)
+                4 CALL_METHOD              0
+                6 POP_TOP
+                8 LOAD_CONST               1 (None)
+               10 RETURN_VALUE
+  
+

@@ -1,0 +1,15 @@
+============================================================
+CODE: has_location
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('self',)
+  names: ('_set_fileattr',)
+  freevars: ()
+  cellvars: ()
+  consts: ['None']
+
+  408           0 LOAD_FAST                0 (self)
+                2 LOAD_ATTR                0 (_set_fileattr)
+                4 RETURN_VALUE
+  
+

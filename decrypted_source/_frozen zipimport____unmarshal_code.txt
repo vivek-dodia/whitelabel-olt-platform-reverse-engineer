@@ -1,0 +1,208 @@
+============================================================
+CODE: _unmarshal_code
+  file: <frozen zipimport>
+  argcount: 5
+  varnames: ('self', 'pathname', 'fullpath', 'fullname', 'data', 'exc_details', 'flags', 'hash_based', 'check_source', 'source_bytes', 'source_hash', 'source_mtime', 'source_size', 'code')
+  names: ('_bootstrap_external', '_classify_pyc', 'ImportError', '_imp', 'check_hash_based_pycs', '_get_pyc_source', 'source_hash', '_RAW_MAGIC_NUMBER', '_validate_hash_pyc', '_get_mtime_and_size_of_source', '_eq_mtime', '_unpack_uint32', '_bootstrap', '_verbose_message', 'marshal', 'loads', 'isinstance', '_code_type', 'TypeError')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "('name', 'path')", '1', '0', '2', "'never'", "'always'", '8', '12', '16', "'bytecode is stale for '", "'compiled module '", "' is not a code object'"]
+
+  589           0 LOAD_FAST                3 (fullname)
+  
+  590           2 LOAD_FAST                2 (fullpath)
+  
+  588           4 LOAD_CONST               1 (('name', 'path'))
+                6 BUILD_CONST_KEY_MAP      2
+                8 STORE_FAST               5 (exc_details)
+  
+  593          10 SETUP_FINALLY           18 (to 30)
+  
+  594          12 LOAD_GLOBAL              0 (_bootstrap_external)
+               14 LOAD_METHOD              1 (_classify_pyc)
+               16 LOAD_FAST                4 (data)
+               18 LOAD_FAST                3 (fullname)
+               20 LOAD_FAST                5 (exc_details)
+               22 CALL_METHOD              3
+               24 STORE_FAST               6 (flags)
+               26 POP_BLOCK
+               28 JUMP_FORWARD            20 (to 50)
+  
+  595     >>   30 DUP_TOP
+               32 LOAD_GLOBAL              2 (ImportError)
+               34 JUMP_IF_NOT_EXC_MATCH    48
+               36 POP_TOP
+               38 POP_TOP
+               40 POP_TOP
+  
+  596          42 POP_EXCEPT
+               44 LOAD_CONST               0 (None)
+               46 RETURN_VALUE
+          >>   48 RERAISE
+  
+  598     >>   50 LOAD_FAST                6 (flags)
+               52 LOAD_CONST               2 (1)
+               54 BINARY_AND
+               56 LOAD_CONST               3 (0)
+               58 COMPARE_OP               3 (!=)
+               60 STORE_FAST               7 (hash_based)
+  
+  599          62 LOAD_FAST                7 (hash_based)
+               64 POP_JUMP_IF_FALSE      178
+  
+  600          66 LOAD_FAST                6 (flags)
+               68 LOAD_CONST               4 (2)
+               70 BINARY_AND
+               72 LOAD_CONST               3 (0)
+               74 COMPARE_OP               3 (!=)
+               76 STORE_FAST               8 (check_source)
+  
+  601          78 LOAD_GLOBAL              3 (_imp)
+               80 LOAD_ATTR                4 (check_hash_based_pycs)
+               82 LOAD_CONST               5 ('never')
+               84 COMPARE_OP               3 (!=)
+               86 POP_JUMP_IF_FALSE      176
+  
+  602          88 LOAD_FAST                8 (check_source)
+  
+  601          90 POP_JUMP_IF_TRUE       102
+  
+  602          92 LOAD_GLOBAL              3 (_imp)
+               94 LOAD_ATTR                4 (check_hash_based_pycs)
+               96 LOAD_CONST               6 ('always')
+               98 COMPARE_OP               2 (==)
+  
+  601         100 POP_JUMP_IF_FALSE      176
+  
+  603     >>  102 LOAD_GLOBAL              5 (_get_pyc_source)
+              104 LOAD_FAST                0 (self)
+              106 LOAD_FAST                2 (fullpath)
+              108 CALL_FUNCTION            2
+              110 STORE_FAST               9 (source_bytes)
+  
+  604         112 LOAD_FAST                9 (source_bytes)
+              114 LOAD_CONST               0 (None)
+              116 IS_OP                    1
+              118 POP_JUMP_IF_FALSE      176
+  
+  605         120 LOAD_GLOBAL              3 (_imp)
+              122 LOAD_METHOD              6 (source_hash)
+  
+  606         124 LOAD_GLOBAL              0 (_bootstrap_external)
+              126 LOAD_ATTR                7 (_RAW_MAGIC_NUMBER)
+  
+  607         128 LOAD_FAST                9 (source_bytes)
+  
+  605         130 CALL_METHOD              2
+              132 STORE_FAST              10 (source_hash)
+  
+  610         134 SETUP_FINALLY           20 (to 156)
+  
+  611         136 LOAD_GLOBAL              0 (_bootstrap_external)
+              138 LOAD_METHOD              8 (_validate_hash_pyc)
+  
+  612         140 LOAD_FAST                4 (data)
+              142 LOAD_FAST               10 (source_hash)
+              144 LOAD_FAST                3 (fullname)
+              146 LOAD_FAST                5 (exc_details)
+  
+  611         148 CALL_METHOD              4
+              150 POP_TOP
+              152 POP_BLOCK
+              154 JUMP_FORWARD            20 (to 176)
+  
+  613     >>  156 DUP_TOP
+              158 LOAD_GLOBAL              2 (ImportError)
+              160 JUMP_IF_NOT_EXC_MATCH   174
+              162 POP_TOP
+              164 POP_TOP
+              166 POP_TOP
+  
+  614         168 POP_EXCEPT
+              170 LOAD_CONST               0 (None)
+              172 RETURN_VALUE
+          >>  174 RERAISE
+          >>  176 JUMP_FORWARD            84 (to 262)
+  
+  617     >>  178 LOAD_GLOBAL              9 (_get_mtime_and_size_of_source)
+              180 LOAD_FAST                0 (self)
+              182 LOAD_FAST                2 (fullpath)
+              184 CALL_FUNCTION            2
+  
+  616         186 UNPACK_SEQUENCE          2
+              188 STORE_FAST              11 (source_mtime)
+              190 STORE_FAST              12 (source_size)
+  
+  619         192 LOAD_FAST               11 (source_mtime)
+              194 EXTENDED_ARG             1
+              196 POP_JUMP_IF_FALSE      262
+  
+  622         198 LOAD_GLOBAL             10 (_eq_mtime)
+              200 LOAD_GLOBAL             11 (_unpack_uint32)
+              202 LOAD_FAST                4 (data)
+              204 LOAD_CONST               7 (8)
+              206 LOAD_CONST               8 (12)
+              208 BUILD_SLICE              2
+              210 BINARY_SUBSCR
+              212 CALL_FUNCTION            1
+              214 LOAD_FAST               11 (source_mtime)
+              216 CALL_FUNCTION            2
+              218 POP_JUMP_IF_FALSE      242
+  
+  623         220 LOAD_GLOBAL             11 (_unpack_uint32)
+              222 LOAD_FAST                4 (data)
+              224 LOAD_CONST               8 (12)
+              226 LOAD_CONST               9 (16)
+              228 BUILD_SLICE              2
+              230 BINARY_SUBSCR
+              232 CALL_FUNCTION            1
+              234 LOAD_FAST               12 (source_size)
+              236 COMPARE_OP               3 (!=)
+  
+  622         238 EXTENDED_ARG             1
+              240 POP_JUMP_IF_FALSE      262
+  
+  624     >>  242 LOAD_GLOBAL             12 (_bootstrap)
+              244 LOAD_METHOD             13 (_verbose_message)
+  
+  625         246 LOAD_CONST              10 ('bytecode is stale for ')
+              248 LOAD_FAST                3 (fullname)
+              250 FORMAT_VALUE             2 (repr)
+              252 BUILD_STRING             2
+  
+  624         254 CALL_METHOD              1
+              256 POP_TOP
+  
+  626         258 LOAD_CONST               0 (None)
+              260 RETURN_VALUE
+  
+  628     >>  262 LOAD_GLOBAL             14 (marshal)
+              264 LOAD_METHOD             15 (loads)
+              266 LOAD_FAST                4 (data)
+              268 LOAD_CONST               9 (16)
+              270 LOAD_CONST               0 (None)
+              272 BUILD_SLICE              2
+              274 BINARY_SUBSCR
+              276 CALL_METHOD              1
+              278 STORE_FAST              13 (code)
+  
+  629         280 LOAD_GLOBAL             16 (isinstance)
+              282 LOAD_FAST               13 (code)
+              284 LOAD_GLOBAL             17 (_code_type)
+              286 CALL_FUNCTION            2
+              288 EXTENDED_ARG             1
+              290 POP_JUMP_IF_TRUE       308
+  
+  630         292 LOAD_GLOBAL             18 (TypeError)
+              294 LOAD_CONST              11 ('compiled module ')
+              296 LOAD_FAST                1 (pathname)
+              298 FORMAT_VALUE             2 (repr)
+              300 LOAD_CONST              12 (' is not a code object')
+              302 BUILD_STRING             3
+              304 CALL_FUNCTION            1
+              306 RAISE_VARARGS            1
+  
+  631     >>  308 LOAD_FAST               13 (code)
+              310 RETURN_VALUE
+  
+

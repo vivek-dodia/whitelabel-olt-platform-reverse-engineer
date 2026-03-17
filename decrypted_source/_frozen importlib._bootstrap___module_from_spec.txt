@@ -1,0 +1,61 @@
+============================================================
+CODE: module_from_spec
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('spec', 'module')
+  names: ('hasattr', 'loader', 'create_module', 'ImportError', '_new_module', 'name', '_init_module_attrs')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Create a module based on the provided spec.'", 'None', "'create_module'", "'exec_module'", "'loaders that define exec_module() must also define create_module()'"]
+
+  561           0 LOAD_CONST               1 (None)
+                2 STORE_FAST               1 (module)
+  
+  562           4 LOAD_GLOBAL              0 (hasattr)
+                6 LOAD_FAST                0 (spec)
+                8 LOAD_ATTR                1 (loader)
+               10 LOAD_CONST               2 ('create_module')
+               12 CALL_FUNCTION            2
+               14 POP_JUMP_IF_FALSE       30
+  
+  565          16 LOAD_FAST                0 (spec)
+               18 LOAD_ATTR                1 (loader)
+               20 LOAD_METHOD              2 (create_module)
+               22 LOAD_FAST                0 (spec)
+               24 CALL_METHOD              1
+               26 STORE_FAST               1 (module)
+               28 JUMP_FORWARD            20 (to 50)
+  
+  566     >>   30 LOAD_GLOBAL              0 (hasattr)
+               32 LOAD_FAST                0 (spec)
+               34 LOAD_ATTR                1 (loader)
+               36 LOAD_CONST               3 ('exec_module')
+               38 CALL_FUNCTION            2
+               40 POP_JUMP_IF_FALSE       50
+  
+  567          42 LOAD_GLOBAL              3 (ImportError)
+               44 LOAD_CONST               4 ('loaders that define exec_module() must also define create_module()')
+               46 CALL_FUNCTION            1
+               48 RAISE_VARARGS            1
+  
+  569     >>   50 LOAD_FAST                1 (module)
+               52 LOAD_CONST               1 (None)
+               54 IS_OP                    0
+               56 POP_JUMP_IF_FALSE       68
+  
+  570          58 LOAD_GLOBAL              4 (_new_module)
+               60 LOAD_FAST                0 (spec)
+               62 LOAD_ATTR                5 (name)
+               64 CALL_FUNCTION            1
+               66 STORE_FAST               1 (module)
+  
+  571     >>   68 LOAD_GLOBAL              6 (_init_module_attrs)
+               70 LOAD_FAST                0 (spec)
+               72 LOAD_FAST                1 (module)
+               74 CALL_FUNCTION            2
+               76 POP_TOP
+  
+  572          78 LOAD_FAST                1 (module)
+               80 RETURN_VALUE
+  
+

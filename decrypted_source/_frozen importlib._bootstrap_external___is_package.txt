@@ -1,0 +1,47 @@
+============================================================
+CODE: is_package
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('self', 'fullname', 'filename', 'filename_base', 'tail_name')
+  names: ('_path_split', 'get_filename', 'rsplit', 'rpartition')
+  freevars: ()
+  cellvars: ()
+  consts: ['"Concrete implementation of InspectLoader.is_package by checking if\\n        the path returned by get_filename has a filename of \'__init__.py\'."', '1', "'.'", '0', '2', "'__init__'"]
+
+  836           0 LOAD_GLOBAL              0 (_path_split)
+                2 LOAD_FAST                0 (self)
+                4 LOAD_METHOD              1 (get_filename)
+                6 LOAD_FAST                1 (fullname)
+                8 CALL_METHOD              1
+               10 CALL_FUNCTION            1
+               12 LOAD_CONST               1 (1)
+               14 BINARY_SUBSCR
+               16 STORE_FAST               2 (filename)
+  
+  837          18 LOAD_FAST                2 (filename)
+               20 LOAD_METHOD              2 (rsplit)
+               22 LOAD_CONST               2 ('.')
+               24 LOAD_CONST               1 (1)
+               26 CALL_METHOD              2
+               28 LOAD_CONST               3 (0)
+               30 BINARY_SUBSCR
+               32 STORE_FAST               3 (filename_base)
+  
+  838          34 LOAD_FAST                1 (fullname)
+               36 LOAD_METHOD              3 (rpartition)
+               38 LOAD_CONST               2 ('.')
+               40 CALL_METHOD              1
+               42 LOAD_CONST               4 (2)
+               44 BINARY_SUBSCR
+               46 STORE_FAST               4 (tail_name)
+  
+  839          48 LOAD_FAST                3 (filename_base)
+               50 LOAD_CONST               5 ('__init__')
+               52 COMPARE_OP               2 (==)
+               54 JUMP_IF_FALSE_OR_POP    62
+               56 LOAD_FAST                4 (tail_name)
+               58 LOAD_CONST               5 ('__init__')
+               60 COMPARE_OP               3 (!=)
+          >>   62 RETURN_VALUE
+  
+

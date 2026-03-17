@@ -1,0 +1,46 @@
+============================================================
+CODE: cached
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('self',)
+  names: ('_cached', 'origin', '_set_fileattr', '_bootstrap_external', 'NotImplementedError', '_get_cached')
+  freevars: ()
+  cellvars: ()
+  consts: ['None']
+
+  387           0 LOAD_FAST                0 (self)
+                2 LOAD_ATTR                0 (_cached)
+                4 LOAD_CONST               0 (None)
+                6 IS_OP                    0
+                8 POP_JUMP_IF_FALSE       52
+  
+  388          10 LOAD_FAST                0 (self)
+               12 LOAD_ATTR                1 (origin)
+               14 LOAD_CONST               0 (None)
+               16 IS_OP                    1
+               18 POP_JUMP_IF_FALSE       52
+               20 LOAD_FAST                0 (self)
+               22 LOAD_ATTR                2 (_set_fileattr)
+               24 POP_JUMP_IF_FALSE       52
+  
+  389          26 LOAD_GLOBAL              3 (_bootstrap_external)
+               28 LOAD_CONST               0 (None)
+               30 IS_OP                    0
+               32 POP_JUMP_IF_FALSE       38
+  
+  390          34 LOAD_GLOBAL              4 (NotImplementedError)
+               36 RAISE_VARARGS            1
+  
+  391     >>   38 LOAD_GLOBAL              3 (_bootstrap_external)
+               40 LOAD_METHOD              5 (_get_cached)
+               42 LOAD_FAST                0 (self)
+               44 LOAD_ATTR                1 (origin)
+               46 CALL_METHOD              1
+               48 LOAD_FAST                0 (self)
+               50 STORE_ATTR               0 (_cached)
+  
+  392     >>   52 LOAD_FAST                0 (self)
+               54 LOAD_ATTR                0 (_cached)
+               56 RETURN_VALUE
+  
+

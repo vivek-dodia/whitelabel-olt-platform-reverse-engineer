@@ -1,0 +1,176 @@
+============================================================
+CODE: _load_backward_compatible
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('spec', 'module')
+  names: ('loader', 'load_module', 'name', 'sys', 'modules', 'pop', 'getattr', '__loader__', 'AttributeError', '__name__', '__package__', 'hasattr', 'rpartition', '__spec__')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'__loader__'", "'__package__'", "'__path__'", "'.'", '0', "'__spec__'"]
+
+  626           0 SETUP_FINALLY           18 (to 20)
+  
+  627           2 LOAD_FAST                0 (spec)
+                4 LOAD_ATTR                0 (loader)
+                6 LOAD_METHOD              1 (load_module)
+                8 LOAD_FAST                0 (spec)
+               10 LOAD_ATTR                2 (name)
+               12 CALL_METHOD              1
+               14 POP_TOP
+               16 POP_BLOCK
+               18 JUMP_FORWARD            52 (to 72)
+  
+  628     >>   20 POP_TOP
+               22 POP_TOP
+               24 POP_TOP
+  
+  629          26 LOAD_FAST                0 (spec)
+               28 LOAD_ATTR                2 (name)
+               30 LOAD_GLOBAL              3 (sys)
+               32 LOAD_ATTR                4 (modules)
+               34 CONTAINS_OP              0
+               36 POP_JUMP_IF_FALSE       64
+  
+  630          38 LOAD_GLOBAL              3 (sys)
+               40 LOAD_ATTR                4 (modules)
+               42 LOAD_METHOD              5 (pop)
+               44 LOAD_FAST                0 (spec)
+               46 LOAD_ATTR                2 (name)
+               48 CALL_METHOD              1
+               50 STORE_FAST               1 (module)
+  
+  631          52 LOAD_FAST                1 (module)
+               54 LOAD_GLOBAL              3 (sys)
+               56 LOAD_ATTR                4 (modules)
+               58 LOAD_FAST                0 (spec)
+               60 LOAD_ATTR                2 (name)
+               62 STORE_SUBSCR
+  
+  632     >>   64 RAISE_VARARGS            0
+               66 POP_EXCEPT
+               68 JUMP_FORWARD             2 (to 72)
+               70 RERAISE
+  
+  635     >>   72 LOAD_GLOBAL              3 (sys)
+               74 LOAD_ATTR                4 (modules)
+               76 LOAD_METHOD              5 (pop)
+               78 LOAD_FAST                0 (spec)
+               80 LOAD_ATTR                2 (name)
+               82 CALL_METHOD              1
+               84 STORE_FAST               1 (module)
+  
+  636          86 LOAD_FAST                1 (module)
+               88 LOAD_GLOBAL              3 (sys)
+               90 LOAD_ATTR                4 (modules)
+               92 LOAD_FAST                0 (spec)
+               94 LOAD_ATTR                2 (name)
+               96 STORE_SUBSCR
+  
+  637          98 LOAD_GLOBAL              6 (getattr)
+              100 LOAD_FAST                1 (module)
+              102 LOAD_CONST               1 ('__loader__')
+              104 LOAD_CONST               0 (None)
+              106 CALL_FUNCTION            3
+              108 LOAD_CONST               0 (None)
+              110 IS_OP                    0
+              112 POP_JUMP_IF_FALSE      146
+  
+  638         114 SETUP_FINALLY           12 (to 128)
+  
+  639         116 LOAD_FAST                0 (spec)
+              118 LOAD_ATTR                0 (loader)
+              120 LOAD_FAST                1 (module)
+              122 STORE_ATTR               7 (__loader__)
+              124 POP_BLOCK
+              126 JUMP_FORWARD            18 (to 146)
+  
+  640     >>  128 DUP_TOP
+              130 LOAD_GLOBAL              8 (AttributeError)
+              132 JUMP_IF_NOT_EXC_MATCH   144
+              134 POP_TOP
+              136 POP_TOP
+              138 POP_TOP
+  
+  641         140 POP_EXCEPT
+              142 JUMP_FORWARD             2 (to 146)
+          >>  144 RERAISE
+  
+  642     >>  146 LOAD_GLOBAL              6 (getattr)
+              148 LOAD_FAST                1 (module)
+              150 LOAD_CONST               2 ('__package__')
+              152 LOAD_CONST               0 (None)
+              154 CALL_FUNCTION            3
+              156 LOAD_CONST               0 (None)
+              158 IS_OP                    0
+              160 POP_JUMP_IF_FALSE      222
+  
+  643         162 SETUP_FINALLY           40 (to 204)
+  
+  647         164 LOAD_FAST                1 (module)
+              166 LOAD_ATTR                9 (__name__)
+              168 LOAD_FAST                1 (module)
+              170 STORE_ATTR              10 (__package__)
+  
+  648         172 LOAD_GLOBAL             11 (hasattr)
+              174 LOAD_FAST                1 (module)
+              176 LOAD_CONST               3 ('__path__')
+              178 CALL_FUNCTION            2
+              180 POP_JUMP_IF_TRUE       200
+  
+  649         182 LOAD_FAST                0 (spec)
+              184 LOAD_ATTR                2 (name)
+              186 LOAD_METHOD             12 (rpartition)
+              188 LOAD_CONST               4 ('.')
+              190 CALL_METHOD              1
+              192 LOAD_CONST               5 (0)
+              194 BINARY_SUBSCR
+              196 LOAD_FAST                1 (module)
+              198 STORE_ATTR              10 (__package__)
+          >>  200 POP_BLOCK
+              202 JUMP_FORWARD            18 (to 222)
+  
+  650     >>  204 DUP_TOP
+              206 LOAD_GLOBAL              8 (AttributeError)
+              208 JUMP_IF_NOT_EXC_MATCH   220
+              210 POP_TOP
+              212 POP_TOP
+              214 POP_TOP
+  
+  651         216 POP_EXCEPT
+              218 JUMP_FORWARD             2 (to 222)
+          >>  220 RERAISE
+  
+  652     >>  222 LOAD_GLOBAL              6 (getattr)
+              224 LOAD_FAST                1 (module)
+              226 LOAD_CONST               6 ('__spec__')
+              228 LOAD_CONST               0 (None)
+              230 CALL_FUNCTION            3
+              232 LOAD_CONST               0 (None)
+              234 IS_OP                    0
+              236 EXTENDED_ARG             1
+              238 POP_JUMP_IF_FALSE      272
+  
+  653         240 SETUP_FINALLY           10 (to 252)
+  
+  654         242 LOAD_FAST                0 (spec)
+              244 LOAD_FAST                1 (module)
+              246 STORE_ATTR              13 (__spec__)
+              248 POP_BLOCK
+              250 JUMP_FORWARD            20 (to 272)
+  
+  655     >>  252 DUP_TOP
+              254 LOAD_GLOBAL              8 (AttributeError)
+              256 EXTENDED_ARG             1
+              258 JUMP_IF_NOT_EXC_MATCH   270
+              260 POP_TOP
+              262 POP_TOP
+              264 POP_TOP
+  
+  656         266 POP_EXCEPT
+              268 JUMP_FORWARD             2 (to 272)
+          >>  270 RERAISE
+  
+  657     >>  272 LOAD_FAST                1 (module)
+              274 RETURN_VALUE
+  
+

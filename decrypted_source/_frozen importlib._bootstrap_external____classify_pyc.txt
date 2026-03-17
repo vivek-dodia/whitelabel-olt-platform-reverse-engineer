@@ -1,0 +1,108 @@
+============================================================
+CODE: _classify_pyc
+  file: <frozen importlib._bootstrap_external>
+  argcount: 3
+  varnames: ('data', 'name', 'exc_details', 'magic', 'message', 'flags')
+  names: ('MAGIC_NUMBER', '_bootstrap', '_verbose_message', 'ImportError', 'len', 'EOFError', '_unpack_uint32')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Perform basic validity checking of a pyc header and return the flags field,\\n    which determines how the pyc should be further validated against the source.\\n\\n    *data* is the contents of the pyc file. (Only the first 16 bytes are\\n    required, though.)\\n\\n    *name* is the name of the module b", 'None', '4', "'bad magic number in '", "': '", "'{}'", '16', "'reached EOF while reading pyc header of '", '8', '-4', "'invalid flags '", "' in '"]
+
+  576           0 LOAD_FAST                0 (data)
+                2 LOAD_CONST               1 (None)
+                4 LOAD_CONST               2 (4)
+                6 BUILD_SLICE              2
+                8 BINARY_SUBSCR
+               10 STORE_FAST               3 (magic)
+  
+  577          12 LOAD_FAST                3 (magic)
+               14 LOAD_GLOBAL              0 (MAGIC_NUMBER)
+               16 COMPARE_OP               3 (!=)
+               18 POP_JUMP_IF_FALSE       64
+  
+  578          20 LOAD_CONST               3 ('bad magic number in ')
+               22 LOAD_FAST                1 (name)
+               24 FORMAT_VALUE             2 (repr)
+               26 LOAD_CONST               4 (': ')
+               28 LOAD_FAST                3 (magic)
+               30 FORMAT_VALUE             2 (repr)
+               32 BUILD_STRING             4
+               34 STORE_FAST               4 (message)
+  
+  579          36 LOAD_GLOBAL              1 (_bootstrap)
+               38 LOAD_METHOD              2 (_verbose_message)
+               40 LOAD_CONST               5 ('{}')
+               42 LOAD_FAST                4 (message)
+               44 CALL_METHOD              2
+               46 POP_TOP
+  
+  580          48 LOAD_GLOBAL              3 (ImportError)
+               50 LOAD_FAST                4 (message)
+               52 BUILD_TUPLE              1
+               54 BUILD_MAP                0
+               56 LOAD_FAST                2 (exc_details)
+               58 DICT_MERGE               1
+               60 CALL_FUNCTION_EX         1
+               62 RAISE_VARARGS            1
+  
+  581     >>   64 LOAD_GLOBAL              4 (len)
+               66 LOAD_FAST                0 (data)
+               68 CALL_FUNCTION            1
+               70 LOAD_CONST               6 (16)
+               72 COMPARE_OP               0 (<)
+               74 POP_JUMP_IF_FALSE      106
+  
+  582          76 LOAD_CONST               7 ('reached EOF while reading pyc header of ')
+               78 LOAD_FAST                1 (name)
+               80 FORMAT_VALUE             2 (repr)
+               82 BUILD_STRING             2
+               84 STORE_FAST               4 (message)
+  
+  583          86 LOAD_GLOBAL              1 (_bootstrap)
+               88 LOAD_METHOD              2 (_verbose_message)
+               90 LOAD_CONST               5 ('{}')
+               92 LOAD_FAST                4 (message)
+               94 CALL_METHOD              2
+               96 POP_TOP
+  
+  584          98 LOAD_GLOBAL              5 (EOFError)
+              100 LOAD_FAST                4 (message)
+              102 CALL_FUNCTION            1
+              104 RAISE_VARARGS            1
+  
+  585     >>  106 LOAD_GLOBAL              6 (_unpack_uint32)
+              108 LOAD_FAST                0 (data)
+              110 LOAD_CONST               2 (4)
+              112 LOAD_CONST               8 (8)
+              114 BUILD_SLICE              2
+              116 BINARY_SUBSCR
+              118 CALL_FUNCTION            1
+              120 STORE_FAST               5 (flags)
+  
+  587         122 LOAD_FAST                5 (flags)
+              124 LOAD_CONST               9 (-4)
+              126 BINARY_AND
+              128 POP_JUMP_IF_FALSE      162
+  
+  588         130 LOAD_CONST              10 ('invalid flags ')
+              132 LOAD_FAST                5 (flags)
+              134 FORMAT_VALUE             2 (repr)
+              136 LOAD_CONST              11 (' in ')
+              138 LOAD_FAST                1 (name)
+              140 FORMAT_VALUE             2 (repr)
+              142 BUILD_STRING             4
+              144 STORE_FAST               4 (message)
+  
+  589         146 LOAD_GLOBAL              3 (ImportError)
+              148 LOAD_FAST                4 (message)
+              150 BUILD_TUPLE              1
+              152 BUILD_MAP                0
+              154 LOAD_FAST                2 (exc_details)
+              156 DICT_MERGE               1
+              158 CALL_FUNCTION_EX         1
+              160 RAISE_VARARGS            1
+  
+  590     >>  162 LOAD_FAST                5 (flags)
+              164 RETURN_VALUE
+  
+

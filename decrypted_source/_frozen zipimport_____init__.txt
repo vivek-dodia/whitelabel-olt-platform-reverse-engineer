@@ -1,0 +1,184 @@
+============================================================
+CODE: __init__
+  file: <frozen zipimport>
+  argcount: 2
+  varnames: ('self', 'path', 'os', 'prefix', 'st', 'dirname', 'basename', 'files')
+  names: ('isinstance', 'str', 'os', 'fsdecode', 'ZipImportError', 'alt_path_sep', 'replace', 'path_sep', '_bootstrap_external', '_path_stat', 'OSError', 'ValueError', '_path_split', 'append', 'st_mode', '_zip_directory_cache', 'KeyError', '_read_directory', '_files', 'archive', '_path_join', 'prefix')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', '0', "'archive path is empty'", "('path',)", "'not a Zip file'", '61440', '32768', '-1']
+
+   64           0 LOAD_GLOBAL              0 (isinstance)
+                2 LOAD_FAST                1 (path)
+                4 LOAD_GLOBAL              1 (str)
+                6 CALL_FUNCTION            2
+                8 POP_JUMP_IF_TRUE        28
+  
+   65          10 LOAD_CONST               1 (0)
+               12 LOAD_CONST               0 (None)
+               14 IMPORT_NAME              2 (os)
+               16 STORE_FAST               2 (os)
+  
+   66          18 LOAD_FAST                2 (os)
+               20 LOAD_METHOD              3 (fsdecode)
+               22 LOAD_FAST                1 (path)
+               24 CALL_METHOD              1
+               26 STORE_FAST               1 (path)
+  
+   67     >>   28 LOAD_FAST                1 (path)
+               30 POP_JUMP_IF_TRUE        44
+  
+   68          32 LOAD_GLOBAL              4 (ZipImportError)
+               34 LOAD_CONST               2 ('archive path is empty')
+               36 LOAD_FAST                1 (path)
+               38 LOAD_CONST               3 (('path',))
+               40 CALL_FUNCTION_KW         2
+               42 RAISE_VARARGS            1
+  
+   69     >>   44 LOAD_GLOBAL              5 (alt_path_sep)
+               46 POP_JUMP_IF_FALSE       60
+  
+   70          48 LOAD_FAST                1 (path)
+               50 LOAD_METHOD              6 (replace)
+               52 LOAD_GLOBAL              5 (alt_path_sep)
+               54 LOAD_GLOBAL              7 (path_sep)
+               56 CALL_METHOD              2
+               58 STORE_FAST               1 (path)
+  
+   72     >>   60 BUILD_LIST               0
+               62 STORE_FAST               3 (prefix)
+  
+   74     >>   64 SETUP_FINALLY           14 (to 80)
+  
+   75          66 LOAD_GLOBAL              8 (_bootstrap_external)
+               68 LOAD_METHOD              9 (_path_stat)
+               70 LOAD_FAST                1 (path)
+               72 CALL_METHOD              1
+               74 STORE_FAST               4 (st)
+               76 POP_BLOCK
+               78 JUMP_FORWARD            70 (to 150)
+  
+   76     >>   80 DUP_TOP
+               82 LOAD_GLOBAL             10 (OSError)
+               84 LOAD_GLOBAL             11 (ValueError)
+               86 BUILD_TUPLE              2
+               88 JUMP_IF_NOT_EXC_MATCH   148
+               90 POP_TOP
+               92 POP_TOP
+               94 POP_TOP
+  
+   79          96 LOAD_GLOBAL              8 (_bootstrap_external)
+               98 LOAD_METHOD             12 (_path_split)
+              100 LOAD_FAST                1 (path)
+              102 CALL_METHOD              1
+              104 UNPACK_SEQUENCE          2
+              106 STORE_FAST               5 (dirname)
+              108 STORE_FAST               6 (basename)
+  
+   80         110 LOAD_FAST                5 (dirname)
+              112 LOAD_FAST                1 (path)
+              114 COMPARE_OP               2 (==)
+              116 POP_JUMP_IF_FALSE      130
+  
+   81         118 LOAD_GLOBAL              4 (ZipImportError)
+              120 LOAD_CONST               4 ('not a Zip file')
+              122 LOAD_FAST                1 (path)
+              124 LOAD_CONST               3 (('path',))
+              126 CALL_FUNCTION_KW         2
+              128 RAISE_VARARGS            1
+  
+   82     >>  130 LOAD_FAST                5 (dirname)
+              132 STORE_FAST               1 (path)
+  
+   83         134 LOAD_FAST                3 (prefix)
+              136 LOAD_METHOD             13 (append)
+              138 LOAD_FAST                6 (basename)
+              140 CALL_METHOD              1
+              142 POP_TOP
+              144 POP_EXCEPT
+              146 JUMP_ABSOLUTE           64
+          >>  148 RERAISE
+  
+   86     >>  150 LOAD_FAST                4 (st)
+              152 LOAD_ATTR               14 (st_mode)
+              154 LOAD_CONST               5 (61440)
+              156 BINARY_AND
+              158 LOAD_CONST               6 (32768)
+              160 COMPARE_OP               3 (!=)
+              162 POP_JUMP_IF_FALSE      180
+  
+   88         164 LOAD_GLOBAL              4 (ZipImportError)
+              166 LOAD_CONST               4 ('not a Zip file')
+              168 LOAD_FAST                1 (path)
+              170 LOAD_CONST               3 (('path',))
+              172 CALL_FUNCTION_KW         2
+              174 RAISE_VARARGS            1
+  
+   89         176 JUMP_ABSOLUTE          180
+              178 JUMP_ABSOLUTE           64
+  
+   91     >>  180 SETUP_FINALLY           12 (to 194)
+  
+   92         182 LOAD_GLOBAL             15 (_zip_directory_cache)
+              184 LOAD_FAST                1 (path)
+              186 BINARY_SUBSCR
+              188 STORE_FAST               7 (files)
+              190 POP_BLOCK
+              192 JUMP_FORWARD            34 (to 228)
+  
+   93     >>  194 DUP_TOP
+              196 LOAD_GLOBAL             16 (KeyError)
+              198 JUMP_IF_NOT_EXC_MATCH   226
+              200 POP_TOP
+              202 POP_TOP
+              204 POP_TOP
+  
+   94         206 LOAD_GLOBAL             17 (_read_directory)
+              208 LOAD_FAST                1 (path)
+              210 CALL_FUNCTION            1
+              212 STORE_FAST               7 (files)
+  
+   95         214 LOAD_FAST                7 (files)
+              216 LOAD_GLOBAL             15 (_zip_directory_cache)
+              218 LOAD_FAST                1 (path)
+              220 STORE_SUBSCR
+              222 POP_EXCEPT
+              224 JUMP_FORWARD             2 (to 228)
+          >>  226 RERAISE
+  
+   96     >>  228 LOAD_FAST                7 (files)
+              230 LOAD_FAST                0 (self)
+              232 STORE_ATTR              18 (_files)
+  
+   97         234 LOAD_FAST                1 (path)
+              236 LOAD_FAST                0 (self)
+              238 STORE_ATTR              19 (archive)
+  
+   99         240 LOAD_GLOBAL              8 (_bootstrap_external)
+              242 LOAD_ATTR               20 (_path_join)
+              244 LOAD_FAST                3 (prefix)
+              246 LOAD_CONST               0 (None)
+              248 LOAD_CONST               0 (None)
+              250 LOAD_CONST               7 (-1)
+              252 BUILD_SLICE              3
+              254 BINARY_SUBSCR
+              256 CALL_FUNCTION_EX         0
+              258 LOAD_FAST                0 (self)
+              260 STORE_ATTR              21 (prefix)
+  
+  100         262 LOAD_FAST                0 (self)
+              264 LOAD_ATTR               21 (prefix)
+              266 EXTENDED_ARG             1
+              268 POP_JUMP_IF_FALSE      284
+  
+  101         270 LOAD_FAST                0 (self)
+              272 DUP_TOP
+              274 LOAD_ATTR               21 (prefix)
+              276 LOAD_GLOBAL              7 (path_sep)
+              278 INPLACE_ADD
+              280 ROT_TWO
+              282 STORE_ATTR              21 (prefix)
+          >>  284 LOAD_CONST               0 (None)
+              286 RETURN_VALUE
+  
+

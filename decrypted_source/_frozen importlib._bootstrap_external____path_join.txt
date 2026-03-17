@@ -1,0 +1,186 @@
+============================================================
+CODE: _path_join
+  file: <frozen importlib._bootstrap_external>
+  argcount: 0
+  varnames: ('path_parts', 'root', 'path', 'new_root', 'tail')
+  names: ('len', 'map', '_os', '_path_splitroot', 'startswith', 'path_sep_tuple', 'endswith', 'rstrip', 'path_separators', 'path_sep', 'casefold', 'append', 'join')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Replacement for os.path.join().'", "''", '1', '0', "':'", '<code:<listcomp>>', "'_path_join.<locals>.<listcomp>'"]
+
+   93           0 LOAD_FAST                0 (path_parts)
+                2 POP_JUMP_IF_TRUE         8
+  
+   94           4 LOAD_CONST               1 ('')
+                6 RETURN_VALUE
+  
+   95     >>    8 LOAD_GLOBAL              0 (len)
+               10 LOAD_FAST                0 (path_parts)
+               12 CALL_FUNCTION            1
+               14 LOAD_CONST               2 (1)
+               16 COMPARE_OP               2 (==)
+               18 POP_JUMP_IF_FALSE       28
+  
+   96          20 LOAD_FAST                0 (path_parts)
+               22 LOAD_CONST               3 (0)
+               24 BINARY_SUBSCR
+               26 RETURN_VALUE
+  
+   97     >>   28 LOAD_CONST               1 ('')
+               30 STORE_FAST               1 (root)
+  
+   98          32 BUILD_LIST               0
+               34 STORE_FAST               2 (path)
+  
+   99          36 LOAD_GLOBAL              1 (map)
+               38 LOAD_GLOBAL              2 (_os)
+               40 LOAD_ATTR                3 (_path_splitroot)
+               42 LOAD_FAST                0 (path_parts)
+               44 CALL_FUNCTION            2
+               46 GET_ITER
+          >>   48 FOR_ITER               122 (to 172)
+               50 UNPACK_SEQUENCE          2
+               52 STORE_FAST               3 (new_root)
+               54 STORE_FAST               4 (tail)
+  
+  100          56 LOAD_FAST                3 (new_root)
+               58 LOAD_METHOD              4 (startswith)
+               60 LOAD_GLOBAL              5 (path_sep_tuple)
+               62 CALL_METHOD              1
+               64 POP_JUMP_IF_TRUE        76
+               66 LOAD_FAST                3 (new_root)
+               68 LOAD_METHOD              6 (endswith)
+               70 LOAD_GLOBAL              5 (path_sep_tuple)
+               72 CALL_METHOD              1
+               74 POP_JUMP_IF_FALSE      102
+  
+  101     >>   76 LOAD_FAST                3 (new_root)
+               78 LOAD_METHOD              7 (rstrip)
+               80 LOAD_GLOBAL              8 (path_separators)
+               82 CALL_METHOD              1
+               84 JUMP_IF_TRUE_OR_POP     88
+               86 LOAD_FAST                1 (root)
+          >>   88 STORE_FAST               1 (root)
+  
+  102          90 LOAD_GLOBAL              9 (path_sep)
+               92 LOAD_FAST                4 (tail)
+               94 BINARY_ADD
+               96 BUILD_LIST               1
+               98 STORE_FAST               2 (path)
+              100 JUMP_ABSOLUTE           48
+  
+  103     >>  102 LOAD_FAST                3 (new_root)
+              104 LOAD_METHOD              6 (endswith)
+              106 LOAD_CONST               4 (':')
+              108 CALL_METHOD              1
+              110 POP_JUMP_IF_FALSE      152
+  
+  104         112 LOAD_FAST                1 (root)
+              114 LOAD_METHOD             10 (casefold)
+              116 CALL_METHOD              0
+              118 LOAD_FAST                3 (new_root)
+              120 LOAD_METHOD             10 (casefold)
+              122 CALL_METHOD              0
+              124 COMPARE_OP               3 (!=)
+              126 POP_JUMP_IF_FALSE      140
+  
+  107         128 LOAD_FAST                3 (new_root)
+              130 STORE_FAST               1 (root)
+  
+  108         132 LOAD_FAST                4 (tail)
+              134 BUILD_LIST               1
+              136 STORE_FAST               2 (path)
+              138 JUMP_ABSOLUTE          170
+  
+  110     >>  140 LOAD_FAST                2 (path)
+              142 LOAD_METHOD             11 (append)
+              144 LOAD_FAST                4 (tail)
+              146 CALL_METHOD              1
+              148 POP_TOP
+              150 JUMP_ABSOLUTE           48
+  
+  112     >>  152 LOAD_FAST                3 (new_root)
+              154 JUMP_IF_TRUE_OR_POP    158
+              156 LOAD_FAST                1 (root)
+          >>  158 STORE_FAST               1 (root)
+  
+  113         160 LOAD_FAST                2 (path)
+              162 LOAD_METHOD             11 (append)
+              164 LOAD_FAST                4 (tail)
+              166 CALL_METHOD              1
+              168 POP_TOP
+          >>  170 JUMP_ABSOLUTE           48
+  
+  114     >>  172 LOAD_CONST               5 (<code object <listcomp> at 0x000001A3BA0CE500, file "<frozen importlib._bootstrap_external>", line 114>)
+              174 LOAD_CONST               6 ('_path_join.<locals>.<listcomp>')
+              176 MAKE_FUNCTION            0
+              178 LOAD_FAST                2 (path)
+              180 GET_ITER
+              182 CALL_FUNCTION            1
+              184 STORE_FAST               2 (path)
+  
+  115         186 LOAD_GLOBAL              0 (len)
+              188 LOAD_FAST                2 (path)
+              190 CALL_FUNCTION            1
+              192 LOAD_CONST               2 (1)
+              194 COMPARE_OP               2 (==)
+              196 POP_JUMP_IF_FALSE      214
+              198 LOAD_FAST                2 (path)
+              200 LOAD_CONST               3 (0)
+              202 BINARY_SUBSCR
+              204 POP_JUMP_IF_TRUE       214
+  
+  117         206 LOAD_FAST                1 (root)
+              208 LOAD_GLOBAL              9 (path_sep)
+              210 BINARY_ADD
+              212 RETURN_VALUE
+  
+  118     >>  214 LOAD_FAST                1 (root)
+              216 LOAD_GLOBAL              9 (path_sep)
+              218 LOAD_METHOD             12 (join)
+              220 LOAD_FAST                2 (path)
+              222 CALL_METHOD              1
+              224 BINARY_ADD
+              226 RETURN_VALUE
+  
+  Disassembly of <code object <listcomp> at 0x000001A3BA0CE500, file "<frozen importlib._bootstrap_external>", line 114>:
+  114           0 BUILD_LIST               0
+                2 LOAD_FAST                0 (.0)
+          >>    4 FOR_ITER                18 (to 24)
+                6 STORE_FAST               1 (p)
+                8 LOAD_FAST                1 (p)
+               10 POP_JUMP_IF_FALSE        4
+               12 LOAD_FAST                1 (p)
+               14 LOAD_METHOD              0 (rstrip)
+               16 LOAD_GLOBAL              1 (path_separators)
+               18 CALL_METHOD              1
+               20 LIST_APPEND              2
+               22 JUMP_ABSOLUTE            4
+          >>   24 RETURN_VALUE
+  
+
+  ============================================================
+  CODE: <listcomp>
+    file: <frozen importlib._bootstrap_external>
+    argcount: 1
+    varnames: ('.0', 'p')
+    names: ('rstrip', 'path_separators')
+    freevars: ()
+    cellvars: ()
+    consts: []
+
+    114           0 BUILD_LIST               0
+                  2 LOAD_FAST                0 (.0)
+            >>    4 FOR_ITER                18 (to 24)
+                  6 STORE_FAST               1 (p)
+                  8 LOAD_FAST                1 (p)
+                 10 POP_JUMP_IF_FALSE        4
+                 12 LOAD_FAST                1 (p)
+                 14 LOAD_METHOD              0 (rstrip)
+                 16 LOAD_GLOBAL              1 (path_separators)
+                 18 CALL_METHOD              1
+                 20 LIST_APPEND              2
+                 22 JUMP_ABSOLUTE            4
+            >>   24 RETURN_VALUE
+    
+

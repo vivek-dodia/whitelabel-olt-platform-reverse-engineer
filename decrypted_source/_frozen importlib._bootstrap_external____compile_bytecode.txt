@@ -1,0 +1,60 @@
+============================================================
+CODE: _compile_bytecode
+  file: <frozen importlib._bootstrap_external>
+  argcount: 4
+  varnames: ('data', 'name', 'bytecode_path', 'source_path', 'code')
+  names: ('marshal', 'loads', 'isinstance', '_code_type', '_bootstrap', '_verbose_message', '_imp', '_fix_co_filename', 'ImportError', 'format')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Compile bytecode as found in a pyc.'", "'code object from {!r}'", 'None', "'Non-code object in {!r}'", "('name', 'path')"]
+
+  647           0 LOAD_GLOBAL              0 (marshal)
+                2 LOAD_METHOD              1 (loads)
+                4 LOAD_FAST                0 (data)
+                6 CALL_METHOD              1
+                8 STORE_FAST               4 (code)
+  
+  648          10 LOAD_GLOBAL              2 (isinstance)
+               12 LOAD_FAST                4 (code)
+               14 LOAD_GLOBAL              3 (_code_type)
+               16 CALL_FUNCTION            2
+               18 POP_JUMP_IF_FALSE       56
+  
+  649          20 LOAD_GLOBAL              4 (_bootstrap)
+               22 LOAD_METHOD              5 (_verbose_message)
+               24 LOAD_CONST               1 ('code object from {!r}')
+               26 LOAD_FAST                2 (bytecode_path)
+               28 CALL_METHOD              2
+               30 POP_TOP
+  
+  650          32 LOAD_FAST                3 (source_path)
+               34 LOAD_CONST               2 (None)
+               36 IS_OP                    1
+               38 POP_JUMP_IF_FALSE       52
+  
+  651          40 LOAD_GLOBAL              6 (_imp)
+               42 LOAD_METHOD              7 (_fix_co_filename)
+               44 LOAD_FAST                4 (code)
+               46 LOAD_FAST                3 (source_path)
+               48 CALL_METHOD              2
+               50 POP_TOP
+  
+  652     >>   52 LOAD_FAST                4 (code)
+               54 RETURN_VALUE
+  
+  654     >>   56 LOAD_GLOBAL              8 (ImportError)
+               58 LOAD_CONST               3 ('Non-code object in {!r}')
+               60 LOAD_METHOD              9 (format)
+               62 LOAD_FAST                2 (bytecode_path)
+               64 CALL_METHOD              1
+  
+  655          66 LOAD_FAST                1 (name)
+               68 LOAD_FAST                2 (bytecode_path)
+  
+  654          70 LOAD_CONST               4 (('name', 'path'))
+               72 CALL_FUNCTION_KW         3
+               74 RAISE_VARARGS            1
+               76 LOAD_CONST               2 (None)
+               78 RETURN_VALUE
+  
+

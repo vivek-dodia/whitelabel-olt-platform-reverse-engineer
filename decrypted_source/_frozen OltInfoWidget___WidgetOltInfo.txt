@@ -1,0 +1,22 @@
+============================================================
+CODE: WidgetOltInfo
+  file: <frozen OltInfoWidget>
+  argcount: 0
+  varnames: ()
+  names: ('__name__', '__module__', '__qualname__', '__init__', 'mouseDoubleClickEvent', 'BootCheck', 'pushButton_admin_clicked', 'pyqtSignal', 'QLabel', 'str', 'set_label_StyleSheet_signal', 'set_label_StyleSheet_emit', 'enterEvent', 'leaveEvent', 'copy_dna_clicked', 'get_dna', 'get_image_data', 'set_alias', 'get_alias', 'toolButton_edit_alias_clicked', 'start_upg', 'pushButton_upg_single_clicked', 'toolButton_enable_write_clicked', 'int', 'EnumUpgradeProcess', 'setProcessBar_signal', 'setProcessBar_emit', 'set_label_text_signal', 'set_label_text_emit', 'bool', 'setProtectText_signal', 'setProtectText_emit', 'inc_upg_success_cnt', 'check_image', 'check_image2', 'check_startup', '__classcell__', '__armor_wrap__')
+  freevars: ()
+  cellvars: ('__class__',)
+  consts: ['3']
+
+   39           0 LOAD_GLOBAL             37 (__armor_wrap__)
+                2 CALL_FUNCTION            0
+                4 NOP
+                6 RETURN_VALUE
+  
+   40           8 NOP
+               10 NOP
+               12 <0>
+               14 <0>
+  (failed)
+  
+

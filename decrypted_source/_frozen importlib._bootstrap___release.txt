@@ -1,0 +1,93 @@
+============================================================
+CODE: release
+  file: <frozen importlib._bootstrap>
+  argcount: 1
+  varnames: ('self', 'tid')
+  names: ('_thread', 'get_ident', 'lock', 'owner', 'RuntimeError', 'count', 'waiters', 'wakeup', 'release')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "'cannot release un-acquired lock'", '0', '1']
+
+  113           0 LOAD_GLOBAL              0 (_thread)
+                2 LOAD_METHOD              1 (get_ident)
+                4 CALL_METHOD              0
+                6 STORE_FAST               1 (tid)
+  
+  114           8 LOAD_FAST                0 (self)
+               10 LOAD_ATTR                2 (lock)
+               12 SETUP_WITH             108 (to 122)
+               14 POP_TOP
+  
+  115          16 LOAD_FAST                0 (self)
+               18 LOAD_ATTR                3 (owner)
+               20 LOAD_FAST                1 (tid)
+               22 COMPARE_OP               3 (!=)
+               24 POP_JUMP_IF_FALSE       34
+  
+  116          26 LOAD_GLOBAL              4 (RuntimeError)
+               28 LOAD_CONST               1 ('cannot release un-acquired lock')
+               30 CALL_FUNCTION            1
+               32 RAISE_VARARGS            1
+  
+  117     >>   34 LOAD_FAST                0 (self)
+               36 LOAD_ATTR                5 (count)
+               38 LOAD_CONST               2 (0)
+               40 COMPARE_OP               4 (>)
+               42 POP_JUMP_IF_TRUE        48
+               44 LOAD_ASSERTION_ERROR
+               46 RAISE_VARARGS            1
+  
+  118     >>   48 LOAD_FAST                0 (self)
+               50 DUP_TOP
+               52 LOAD_ATTR                5 (count)
+               54 LOAD_CONST               3 (1)
+               56 INPLACE_SUBTRACT
+               58 ROT_TWO
+               60 STORE_ATTR               5 (count)
+  
+  119          62 LOAD_FAST                0 (self)
+               64 LOAD_ATTR                5 (count)
+               66 LOAD_CONST               2 (0)
+               68 COMPARE_OP               2 (==)
+               70 POP_JUMP_IF_FALSE      108
+  
+  120          72 LOAD_CONST               0 (None)
+               74 LOAD_FAST                0 (self)
+               76 STORE_ATTR               3 (owner)
+  
+  121          78 LOAD_FAST                0 (self)
+               80 LOAD_ATTR                6 (waiters)
+               82 POP_JUMP_IF_FALSE      108
+  
+  122          84 LOAD_FAST                0 (self)
+               86 DUP_TOP
+               88 LOAD_ATTR                6 (waiters)
+               90 LOAD_CONST               3 (1)
+               92 INPLACE_SUBTRACT
+               94 ROT_TWO
+               96 STORE_ATTR               6 (waiters)
+  
+  123          98 LOAD_FAST                0 (self)
+              100 LOAD_ATTR                7 (wakeup)
+              102 LOAD_METHOD              8 (release)
+              104 CALL_METHOD              0
+              106 POP_TOP
+          >>  108 POP_BLOCK
+              110 LOAD_CONST               0 (None)
+              112 DUP_TOP
+              114 DUP_TOP
+              116 CALL_FUNCTION            3
+              118 POP_TOP
+              120 JUMP_FORWARD            16 (to 138)
+          >>  122 WITH_EXCEPT_START
+              124 POP_JUMP_IF_TRUE       128
+              126 RERAISE
+          >>  128 POP_TOP
+              130 POP_TOP
+              132 POP_TOP
+              134 POP_EXCEPT
+              136 POP_TOP
+          >>  138 LOAD_CONST               0 (None)
+              140 RETURN_VALUE
+  
+

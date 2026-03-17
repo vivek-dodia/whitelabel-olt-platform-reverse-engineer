@@ -1,0 +1,72 @@
+============================================================
+CODE: _path_importer_cache
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('cls', 'path', 'finder')
+  names: ('_os', 'getcwd', 'FileNotFoundError', 'sys', 'path_importer_cache', 'KeyError', '_path_hooks')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Get the finder for the path entry from sys.path_importer_cache.\\n\\n        If the path entry is not in the cache, find the appropriate finder\\n        and cache it. If no finder is available, store None.\\n\\n        '", "''", 'None']
+
+  1354           0 LOAD_FAST                1 (path)
+                 2 LOAD_CONST               1 ('')
+                 4 COMPARE_OP               2 (==)
+                 6 POP_JUMP_IF_FALSE       42
+  
+  1355           8 SETUP_FINALLY           12 (to 22)
+  
+  1356          10 LOAD_GLOBAL              0 (_os)
+                12 LOAD_METHOD              1 (getcwd)
+                14 CALL_METHOD              0
+                16 STORE_FAST               1 (path)
+                18 POP_BLOCK
+                20 JUMP_FORWARD            20 (to 42)
+  
+  1357     >>   22 DUP_TOP
+                24 LOAD_GLOBAL              2 (FileNotFoundError)
+                26 JUMP_IF_NOT_EXC_MATCH    40
+                28 POP_TOP
+                30 POP_TOP
+                32 POP_TOP
+  
+  1360          34 POP_EXCEPT
+                36 LOAD_CONST               2 (None)
+                38 RETURN_VALUE
+           >>   40 RERAISE
+  
+  1361     >>   42 SETUP_FINALLY           14 (to 58)
+  
+  1362          44 LOAD_GLOBAL              3 (sys)
+                46 LOAD_ATTR                4 (path_importer_cache)
+                48 LOAD_FAST                1 (path)
+                50 BINARY_SUBSCR
+                52 STORE_FAST               2 (finder)
+                54 POP_BLOCK
+                56 JUMP_FORWARD            38 (to 96)
+  
+  1363     >>   58 DUP_TOP
+                60 LOAD_GLOBAL              5 (KeyError)
+                62 JUMP_IF_NOT_EXC_MATCH    94
+                64 POP_TOP
+                66 POP_TOP
+                68 POP_TOP
+  
+  1364          70 LOAD_FAST                0 (cls)
+                72 LOAD_METHOD              6 (_path_hooks)
+                74 LOAD_FAST                1 (path)
+                76 CALL_METHOD              1
+                78 STORE_FAST               2 (finder)
+  
+  1365          80 LOAD_FAST                2 (finder)
+                82 LOAD_GLOBAL              3 (sys)
+                84 LOAD_ATTR                4 (path_importer_cache)
+                86 LOAD_FAST                1 (path)
+                88 STORE_SUBSCR
+                90 POP_EXCEPT
+                92 JUMP_FORWARD             2 (to 96)
+           >>   94 RERAISE
+  
+  1366     >>   96 LOAD_FAST                2 (finder)
+                98 RETURN_VALUE
+  
+

@@ -1,0 +1,105 @@
+============================================================
+CODE: spec_from_loader
+  file: <frozen importlib._bootstrap>
+  argcount: 2
+  varnames: ('name', 'loader', 'origin', 'is_package', 'spec_from_file_location', 'search')
+  names: ('hasattr', '_bootstrap_external', 'NotImplementedError', 'spec_from_file_location', 'is_package', 'ImportError', 'ModuleSpec')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Return a module spec based on various loader methods.'", "'get_filename'", 'None', "('loader',)", "('loader', 'submodule_search_locations')", "'is_package'", 'False', "('origin', 'is_package')"]
+
+  417           0 LOAD_GLOBAL              0 (hasattr)
+                2 LOAD_FAST                1 (loader)
+                4 LOAD_CONST               1 ('get_filename')
+                6 CALL_FUNCTION            2
+                8 POP_JUMP_IF_FALSE       74
+  
+  418          10 LOAD_GLOBAL              1 (_bootstrap_external)
+               12 LOAD_CONST               2 (None)
+               14 IS_OP                    0
+               16 POP_JUMP_IF_FALSE       22
+  
+  419          18 LOAD_GLOBAL              2 (NotImplementedError)
+               20 RAISE_VARARGS            1
+  
+  420     >>   22 LOAD_GLOBAL              1 (_bootstrap_external)
+               24 LOAD_ATTR                3 (spec_from_file_location)
+               26 STORE_FAST               4 (spec_from_file_location)
+  
+  422          28 LOAD_FAST                3 (is_package)
+               30 LOAD_CONST               2 (None)
+               32 IS_OP                    0
+               34 POP_JUMP_IF_FALSE       48
+  
+  423          36 LOAD_FAST                4 (spec_from_file_location)
+               38 LOAD_FAST                0 (name)
+               40 LOAD_FAST                1 (loader)
+               42 LOAD_CONST               3 (('loader',))
+               44 CALL_FUNCTION_KW         2
+               46 RETURN_VALUE
+  
+  424     >>   48 LOAD_FAST                3 (is_package)
+               50 POP_JUMP_IF_FALSE       56
+               52 BUILD_LIST               0
+               54 JUMP_FORWARD             2 (to 58)
+          >>   56 LOAD_CONST               2 (None)
+          >>   58 STORE_FAST               5 (search)
+  
+  425          60 LOAD_FAST                4 (spec_from_file_location)
+               62 LOAD_FAST                0 (name)
+               64 LOAD_FAST                1 (loader)
+  
+  426          66 LOAD_FAST                5 (search)
+  
+  425          68 LOAD_CONST               4 (('loader', 'submodule_search_locations'))
+               70 CALL_FUNCTION_KW         3
+               72 RETURN_VALUE
+  
+  428     >>   74 LOAD_FAST                3 (is_package)
+               76 LOAD_CONST               2 (None)
+               78 IS_OP                    0
+               80 POP_JUMP_IF_FALSE      136
+  
+  429          82 LOAD_GLOBAL              0 (hasattr)
+               84 LOAD_FAST                1 (loader)
+               86 LOAD_CONST               5 ('is_package')
+               88 CALL_FUNCTION            2
+               90 POP_JUMP_IF_FALSE      132
+  
+  430          92 SETUP_FINALLY           14 (to 108)
+  
+  431          94 LOAD_FAST                1 (loader)
+               96 LOAD_METHOD              4 (is_package)
+               98 LOAD_FAST                0 (name)
+              100 CALL_METHOD              1
+              102 STORE_FAST               3 (is_package)
+              104 POP_BLOCK
+              106 JUMP_ABSOLUTE          136
+  
+  432     >>  108 DUP_TOP
+              110 LOAD_GLOBAL              5 (ImportError)
+              112 JUMP_IF_NOT_EXC_MATCH   128
+              114 POP_TOP
+              116 POP_TOP
+              118 POP_TOP
+  
+  433         120 LOAD_CONST               2 (None)
+              122 STORE_FAST               3 (is_package)
+              124 POP_EXCEPT
+              126 JUMP_ABSOLUTE          136
+          >>  128 RERAISE
+              130 JUMP_FORWARD             4 (to 136)
+  
+  436     >>  132 LOAD_CONST               6 (False)
+              134 STORE_FAST               3 (is_package)
+  
+  438     >>  136 LOAD_GLOBAL              6 (ModuleSpec)
+              138 LOAD_FAST                0 (name)
+              140 LOAD_FAST                1 (loader)
+              142 LOAD_FAST                2 (origin)
+              144 LOAD_FAST                3 (is_package)
+              146 LOAD_CONST               7 (('origin', 'is_package'))
+              148 CALL_FUNCTION_KW         4
+              150 RETURN_VALUE
+  
+

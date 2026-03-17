@@ -1,0 +1,9 @@
+# Claude Code workspace
+.claude/
+
+# Python embeddable (downloadable, not project-specific)
+python39_64/
+python39_embed.zip
+
+# Third party tool (downloadable)
+pyinstxtractor.py

@@ -1,0 +1,79 @@
+============================================================
+CODE: get_data
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('self', 'path', 'file')
+  names: ('isinstance', 'SourceLoader', 'ExtensionFileLoader', '_io', 'open_code', 'str', 'read', 'FileIO')
+  freevars: ()
+  cellvars: ()
+  consts: ["'Return the data from path as raw bytes.'", 'None', "'r'"]
+
+  1038           0 LOAD_GLOBAL              0 (isinstance)
+                 2 LOAD_FAST                0 (self)
+                 4 LOAD_GLOBAL              1 (SourceLoader)
+                 6 LOAD_GLOBAL              2 (ExtensionFileLoader)
+                 8 BUILD_TUPLE              2
+                10 CALL_FUNCTION            2
+                12 POP_JUMP_IF_FALSE       70
+  
+  1039          14 LOAD_GLOBAL              3 (_io)
+                16 LOAD_METHOD              4 (open_code)
+                18 LOAD_GLOBAL              5 (str)
+                20 LOAD_FAST                1 (path)
+                22 CALL_FUNCTION            1
+                24 CALL_METHOD              1
+                26 SETUP_WITH              24 (to 52)
+                28 STORE_FAST               2 (file)
+  
+  1040          30 LOAD_FAST                2 (file)
+                32 LOAD_METHOD              6 (read)
+                34 CALL_METHOD              0
+                36 POP_BLOCK
+                38 ROT_TWO
+                40 LOAD_CONST               1 (None)
+                42 DUP_TOP
+                44 DUP_TOP
+                46 CALL_FUNCTION            3
+                48 POP_TOP
+                50 RETURN_VALUE
+           >>   52 WITH_EXCEPT_START
+                54 POP_JUMP_IF_TRUE        58
+                56 RERAISE
+           >>   58 POP_TOP
+                60 POP_TOP
+                62 POP_TOP
+                64 POP_EXCEPT
+                66 POP_TOP
+                68 JUMP_FORWARD            52 (to 122)
+  
+  1042     >>   70 LOAD_GLOBAL              3 (_io)
+                72 LOAD_METHOD              7 (FileIO)
+                74 LOAD_FAST                1 (path)
+                76 LOAD_CONST               2 ('r')
+                78 CALL_METHOD              2
+                80 SETUP_WITH              24 (to 106)
+                82 STORE_FAST               2 (file)
+  
+  1043          84 LOAD_FAST                2 (file)
+                86 LOAD_METHOD              6 (read)
+                88 CALL_METHOD              0
+                90 POP_BLOCK
+                92 ROT_TWO
+                94 LOAD_CONST               1 (None)
+                96 DUP_TOP
+                98 DUP_TOP
+               100 CALL_FUNCTION            3
+               102 POP_TOP
+               104 RETURN_VALUE
+           >>  106 WITH_EXCEPT_START
+               108 POP_JUMP_IF_TRUE       112
+               110 RERAISE
+           >>  112 POP_TOP
+               114 POP_TOP
+               116 POP_TOP
+               118 POP_EXCEPT
+               120 POP_TOP
+           >>  122 LOAD_CONST               1 (None)
+               124 RETURN_VALUE
+  
+

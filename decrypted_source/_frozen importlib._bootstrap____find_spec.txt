@@ -1,0 +1,182 @@
+============================================================
+CODE: _find_spec
+  file: <frozen importlib._bootstrap>
+  argcount: 3
+  varnames: ('name', 'path', 'target', 'meta_path', 'is_reload', 'finder', 'find_spec', 'spec', 'module', '__spec__')
+  names: ('sys', 'meta_path', 'ImportError', '_warnings', 'warn', 'ImportWarning', 'modules', '_ImportLockContext', 'find_spec', 'AttributeError', '_find_spec_legacy', '__spec__')
+  freevars: ()
+  cellvars: ()
+  consts: ['"Find a module\'s spec."', 'None', "'sys.meta_path is None, Python is likely shutting down'", "'sys.meta_path is empty'"]
+
+  903           0 LOAD_GLOBAL              0 (sys)
+                2 LOAD_ATTR                1 (meta_path)
+                4 STORE_FAST               3 (meta_path)
+  
+  904           6 LOAD_FAST                3 (meta_path)
+                8 LOAD_CONST               1 (None)
+               10 IS_OP                    0
+               12 POP_JUMP_IF_FALSE       22
+  
+  906          14 LOAD_GLOBAL              2 (ImportError)
+               16 LOAD_CONST               2 ('sys.meta_path is None, Python is likely shutting down')
+               18 CALL_FUNCTION            1
+               20 RAISE_VARARGS            1
+  
+  909     >>   22 LOAD_FAST                3 (meta_path)
+               24 POP_JUMP_IF_TRUE        38
+  
+  910          26 LOAD_GLOBAL              3 (_warnings)
+               28 LOAD_METHOD              4 (warn)
+               30 LOAD_CONST               3 ('sys.meta_path is empty')
+               32 LOAD_GLOBAL              5 (ImportWarning)
+               34 CALL_METHOD              2
+               36 POP_TOP
+  
+  915     >>   38 LOAD_FAST                0 (name)
+               40 LOAD_GLOBAL              0 (sys)
+               42 LOAD_ATTR                6 (modules)
+               44 CONTAINS_OP              0
+               46 STORE_FAST               4 (is_reload)
+  
+  916          48 LOAD_FAST                3 (meta_path)
+               50 GET_ITER
+          >>   52 FOR_ITER               230 (to 284)
+               54 STORE_FAST               5 (finder)
+  
+  917          56 LOAD_GLOBAL              7 (_ImportLockContext)
+               58 CALL_FUNCTION            0
+               60 SETUP_WITH              94 (to 156)
+               62 POP_TOP
+  
+  918          64 SETUP_FINALLY           10 (to 76)
+  
+  919          66 LOAD_FAST                5 (finder)
+               68 LOAD_ATTR                8 (find_spec)
+               70 STORE_FAST               6 (find_spec)
+               72 POP_BLOCK
+               74 JUMP_FORWARD            54 (to 130)
+  
+  920     >>   76 DUP_TOP
+               78 LOAD_GLOBAL              9 (AttributeError)
+               80 JUMP_IF_NOT_EXC_MATCH   128
+               82 POP_TOP
+               84 POP_TOP
+               86 POP_TOP
+  
+  921          88 LOAD_GLOBAL             10 (_find_spec_legacy)
+               90 LOAD_FAST                5 (finder)
+               92 LOAD_FAST                0 (name)
+               94 LOAD_FAST                1 (path)
+               96 CALL_FUNCTION            3
+               98 STORE_FAST               7 (spec)
+  
+  922         100 LOAD_FAST                7 (spec)
+              102 LOAD_CONST               1 (None)
+              104 IS_OP                    0
+              106 POP_JUMP_IF_FALSE      124
+  
+  923         108 POP_EXCEPT
+              110 POP_BLOCK
+              112 LOAD_CONST               1 (None)
+              114 DUP_TOP
+              116 DUP_TOP
+              118 CALL_FUNCTION            3
+              120 POP_TOP
+              122 JUMP_ABSOLUTE           52
+          >>  124 POP_EXCEPT
+              126 JUMP_FORWARD            14 (to 142)
+          >>  128 RERAISE
+  
+  925     >>  130 LOAD_FAST                6 (find_spec)
+              132 LOAD_FAST                0 (name)
+              134 LOAD_FAST                1 (path)
+              136 LOAD_FAST                2 (target)
+              138 CALL_FUNCTION            3
+              140 STORE_FAST               7 (spec)
+          >>  142 POP_BLOCK
+              144 LOAD_CONST               1 (None)
+              146 DUP_TOP
+              148 DUP_TOP
+              150 CALL_FUNCTION            3
+              152 POP_TOP
+              154 JUMP_FORWARD            16 (to 172)
+          >>  156 WITH_EXCEPT_START
+              158 POP_JUMP_IF_TRUE       162
+              160 RERAISE
+          >>  162 POP_TOP
+              164 POP_TOP
+              166 POP_TOP
+              168 POP_EXCEPT
+              170 POP_TOP
+  
+  926     >>  172 LOAD_FAST                7 (spec)
+              174 LOAD_CONST               1 (None)
+              176 IS_OP                    1
+              178 POP_JUMP_IF_FALSE       52
+  
+  928         180 LOAD_FAST                4 (is_reload)
+              182 EXTENDED_ARG             1
+              184 POP_JUMP_IF_TRUE       274
+              186 LOAD_FAST                0 (name)
+              188 LOAD_GLOBAL              0 (sys)
+              190 LOAD_ATTR                6 (modules)
+              192 CONTAINS_OP              0
+              194 EXTENDED_ARG             1
+              196 POP_JUMP_IF_FALSE      274
+  
+  929         198 LOAD_GLOBAL              0 (sys)
+              200 LOAD_ATTR                6 (modules)
+              202 LOAD_FAST                0 (name)
+              204 BINARY_SUBSCR
+              206 STORE_FAST               8 (module)
+  
+  930         208 SETUP_FINALLY           10 (to 220)
+  
+  931         210 LOAD_FAST                8 (module)
+              212 LOAD_ATTR               11 (__spec__)
+              214 STORE_FAST               9 (__spec__)
+              216 POP_BLOCK
+              218 JUMP_FORWARD            26 (to 246)
+  
+  932     >>  220 DUP_TOP
+              222 LOAD_GLOBAL              9 (AttributeError)
+              224 JUMP_IF_NOT_EXC_MATCH   244
+              226 POP_TOP
+              228 POP_TOP
+              230 POP_TOP
+  
+  936         232 LOAD_FAST                7 (spec)
+              234 ROT_FOUR
+              236 POP_EXCEPT
+              238 ROT_TWO
+              240 POP_TOP
+              242 RETURN_VALUE
+          >>  244 RERAISE
+  
+  938     >>  246 LOAD_FAST                9 (__spec__)
+              248 LOAD_CONST               1 (None)
+              250 IS_OP                    0
+              252 EXTENDED_ARG             1
+              254 POP_JUMP_IF_FALSE      264
+  
+  939         256 LOAD_FAST                7 (spec)
+              258 ROT_TWO
+              260 POP_TOP
+              262 RETURN_VALUE
+  
+  941     >>  264 LOAD_FAST                9 (__spec__)
+              266 ROT_TWO
+              268 POP_TOP
+              270 RETURN_VALUE
+              272 JUMP_ABSOLUTE           52
+  
+  943     >>  274 LOAD_FAST                7 (spec)
+              276 ROT_TWO
+              278 POP_TOP
+              280 RETURN_VALUE
+              282 JUMP_ABSOLUTE           52
+  
+  945     >>  284 LOAD_CONST               1 (None)
+              286 RETURN_VALUE
+  
+

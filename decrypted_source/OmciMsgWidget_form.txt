@@ -1,0 +1,8 @@
+# Decrypted module: OmciMsgWidget_form
+# Keys: ['__builtins__', '__file__', '__loader__', '__name__', '__spec__', 'pyarmor']
+
+
+VAR: pyarmor = <built-in function pyarmor>
+
+
+# End of OmciMsgWidget_form

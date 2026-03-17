@@ -1,0 +1,113 @@
+============================================================
+CODE: __init__
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('self', 'path', 'loader_details', 'loaders', 'suffixes')
+  names: ('extend', '_loaders', 'path', '_path_isabs', '_path_join', '_os', 'getcwd', '_path_mtime', 'set', '_path_cache', '_relaxed_path_cache')
+  freevars: ()
+  cellvars: ('loader',)
+  consts: ["'Initialize with the path to search on and a variable number of\\n        2-tuples containing the loader and the file suffixes the loader\\n        recognizes.'", '<code:<genexpr>>', "'FileFinder.__init__.<locals>.<genexpr>'", "'.'", '-1', 'None']
+
+  1479           0 BUILD_LIST               0
+                 2 STORE_FAST               3 (loaders)
+  
+  1480           4 LOAD_FAST                2 (loader_details)
+                 6 GET_ITER
+           >>    8 FOR_ITER                32 (to 42)
+                10 UNPACK_SEQUENCE          2
+                12 STORE_DEREF              0 (loader)
+                14 STORE_FAST               4 (suffixes)
+  
+  1481          16 LOAD_FAST                3 (loaders)
+                18 LOAD_METHOD              0 (extend)
+                20 LOAD_CLOSURE             0 (loader)
+                22 BUILD_TUPLE              1
+                24 LOAD_CONST               1 (<code object <genexpr> at 0x000001A3BA50C710, file "<frozen importlib._bootstrap_external>", line 1481>)
+                26 LOAD_CONST               2 ('FileFinder.__init__.<locals>.<genexpr>')
+                28 MAKE_FUNCTION            8 (closure)
+                30 LOAD_FAST                4 (suffixes)
+                32 GET_ITER
+                34 CALL_FUNCTION            1
+                36 CALL_METHOD              1
+                38 POP_TOP
+                40 JUMP_ABSOLUTE            8
+  
+  1482     >>   42 LOAD_FAST                3 (loaders)
+                44 LOAD_FAST                0 (self)
+                46 STORE_ATTR               1 (_loaders)
+  
+  1484          48 LOAD_FAST                1 (path)
+                50 JUMP_IF_TRUE_OR_POP     54
+                52 LOAD_CONST               3 ('.')
+           >>   54 LOAD_FAST                0 (self)
+                56 STORE_ATTR               2 (path)
+  
+  1485          58 LOAD_GLOBAL              3 (_path_isabs)
+                60 LOAD_FAST                0 (self)
+                62 LOAD_ATTR                2 (path)
+                64 CALL_FUNCTION            1
+                66 POP_JUMP_IF_TRUE        86
+  
+  1486          68 LOAD_GLOBAL              4 (_path_join)
+                70 LOAD_GLOBAL              5 (_os)
+                72 LOAD_METHOD              6 (getcwd)
+                74 CALL_METHOD              0
+                76 LOAD_FAST                0 (self)
+                78 LOAD_ATTR                2 (path)
+                80 CALL_FUNCTION            2
+                82 LOAD_FAST                0 (self)
+                84 STORE_ATTR               2 (path)
+  
+  1487     >>   86 LOAD_CONST               4 (-1)
+                88 LOAD_FAST                0 (self)
+                90 STORE_ATTR               7 (_path_mtime)
+  
+  1488          92 LOAD_GLOBAL              8 (set)
+                94 CALL_FUNCTION            0
+                96 LOAD_FAST                0 (self)
+                98 STORE_ATTR               9 (_path_cache)
+  
+  1489         100 LOAD_GLOBAL              8 (set)
+               102 CALL_FUNCTION            0
+               104 LOAD_FAST                0 (self)
+               106 STORE_ATTR              10 (_relaxed_path_cache)
+               108 LOAD_CONST               5 (None)
+               110 RETURN_VALUE
+  
+  Disassembly of <code object <genexpr> at 0x000001A3BA50C710, file "<frozen importlib._bootstrap_external>", line 1481>:
+  1481           0 LOAD_FAST                0 (.0)
+           >>    2 FOR_ITER                14 (to 18)
+                 4 STORE_FAST               1 (suffix)
+                 6 LOAD_FAST                1 (suffix)
+                 8 LOAD_DEREF               0 (loader)
+                10 BUILD_TUPLE              2
+                12 YIELD_VALUE
+                14 POP_TOP
+                16 JUMP_ABSOLUTE            2
+           >>   18 LOAD_CONST               0 (None)
+                20 RETURN_VALUE
+  
+
+  ============================================================
+  CODE: <genexpr>
+    file: <frozen importlib._bootstrap_external>
+    argcount: 1
+    varnames: ('.0', 'suffix')
+    names: ()
+    freevars: ('loader',)
+    cellvars: ()
+    consts: ['None']
+
+    1481           0 LOAD_FAST                0 (.0)
+             >>    2 FOR_ITER                14 (to 18)
+                   4 STORE_FAST               1 (suffix)
+                   6 LOAD_FAST                1 (suffix)
+                   8 LOAD_DEREF               0 (loader)
+                  10 BUILD_TUPLE              2
+                  12 YIELD_VALUE
+                  14 POP_TOP
+                  16 JUMP_ABSOLUTE            2
+             >>   18 LOAD_CONST               0 (None)
+                  20 RETURN_VALUE
+    
+

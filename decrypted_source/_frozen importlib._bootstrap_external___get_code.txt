@@ -1,0 +1,56 @@
+============================================================
+CODE: get_code
+  file: <frozen importlib._bootstrap_external>
+  argcount: 2
+  varnames: ('self', 'fullname', 'path', 'data', 'exc_details')
+  names: ('get_filename', 'get_data', '_classify_pyc', '_compile_bytecode', 'memoryview')
+  freevars: ()
+  cellvars: ()
+  consts: ['None', "('name', 'path')", '16', "('name', 'bytecode_path')"]
+
+  1123           0 LOAD_FAST                0 (self)
+                 2 LOAD_METHOD              0 (get_filename)
+                 4 LOAD_FAST                1 (fullname)
+                 6 CALL_METHOD              1
+                 8 STORE_FAST               2 (path)
+  
+  1124          10 LOAD_FAST                0 (self)
+                12 LOAD_METHOD              1 (get_data)
+                14 LOAD_FAST                2 (path)
+                16 CALL_METHOD              1
+                18 STORE_FAST               3 (data)
+  
+  1128          20 LOAD_FAST                1 (fullname)
+  
+  1129          22 LOAD_FAST                2 (path)
+  
+  1127          24 LOAD_CONST               1 (('name', 'path'))
+                26 BUILD_CONST_KEY_MAP      2
+                28 STORE_FAST               4 (exc_details)
+  
+  1131          30 LOAD_GLOBAL              2 (_classify_pyc)
+                32 LOAD_FAST                3 (data)
+                34 LOAD_FAST                1 (fullname)
+                36 LOAD_FAST                4 (exc_details)
+                38 CALL_FUNCTION            3
+                40 POP_TOP
+  
+  1132          42 LOAD_GLOBAL              3 (_compile_bytecode)
+  
+  1133          44 LOAD_GLOBAL              4 (memoryview)
+                46 LOAD_FAST                3 (data)
+                48 CALL_FUNCTION            1
+                50 LOAD_CONST               2 (16)
+                52 LOAD_CONST               0 (None)
+                54 BUILD_SLICE              2
+                56 BINARY_SUBSCR
+  
+  1134          58 LOAD_FAST                1 (fullname)
+  
+  1135          60 LOAD_FAST                2 (path)
+  
+  1132          62 LOAD_CONST               3 (('name', 'bytecode_path'))
+                64 CALL_FUNCTION_KW         3
+                66 RETURN_VALUE
+  
+
