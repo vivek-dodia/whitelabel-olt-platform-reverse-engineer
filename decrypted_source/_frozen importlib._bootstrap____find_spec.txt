@@ -1,11 +1,9 @@
 ============================================================
 CODE: _find_spec
-  file: <frozen importlib._bootstrap>
   argcount: 3
   varnames: ('name', 'path', 'target', 'meta_path', 'is_reload', 'finder', 'find_spec', 'spec', 'module', '__spec__')
   names: ('sys', 'meta_path', 'ImportError', '_warnings', 'warn', 'ImportWarning', 'modules', '_ImportLockContext', 'find_spec', 'AttributeError', '_find_spec_legacy', '__spec__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"Find a module\'s spec."', 'None', "'sys.meta_path is None, Python is likely shutting down'", "'sys.meta_path is empty'"]
 
   903           0 LOAD_GLOBAL              0 (sys)

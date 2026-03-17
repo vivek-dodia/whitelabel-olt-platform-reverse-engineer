@@ -1,11 +1,9 @@
 ============================================================
 CODE: <listcomp>
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('.0', 'p')
   names: ('rstrip', 'path_separators')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: []
 
   114           0 BUILD_LIST               0

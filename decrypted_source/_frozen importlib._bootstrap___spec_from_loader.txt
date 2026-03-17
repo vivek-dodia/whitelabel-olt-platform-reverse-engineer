@@ -1,11 +1,9 @@
 ============================================================
 CODE: spec_from_loader
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('name', 'loader', 'origin', 'is_package', 'spec_from_file_location', 'search')
   names: ('hasattr', '_bootstrap_external', 'NotImplementedError', 'spec_from_file_location', 'is_package', 'ImportError', 'ModuleSpec')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Return a module spec based on various loader methods.'", "'get_filename'", 'None', "('loader',)", "('loader', 'submodule_search_locations')", "'is_package'", 'False', "('origin', 'is_package')"]
 
   417           0 LOAD_GLOBAL              0 (hasattr)

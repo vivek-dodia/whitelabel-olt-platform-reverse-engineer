@@ -1,11 +1,9 @@
 ============================================================
 CODE: is_package
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('self', 'fullname', 'filename', 'filename_base', 'tail_name')
   names: ('_path_split', 'get_filename', 'rsplit', 'rpartition')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"Concrete implementation of InspectLoader.is_package by checking if\\n        the path returned by get_filename has a filename of \'__init__.py\'."', '1', "'.'", '0', '2', "'__init__'"]
 
   836           0 LOAD_GLOBAL              0 (_path_split)

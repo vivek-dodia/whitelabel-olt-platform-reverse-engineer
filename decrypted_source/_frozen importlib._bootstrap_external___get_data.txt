@@ -1,11 +1,9 @@
 ============================================================
 CODE: get_data
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('self', 'path', 'file')
   names: ('isinstance', 'SourceLoader', 'ExtensionFileLoader', '_io', 'open_code', 'str', 'read', 'FileIO')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Return the data from path as raw bytes.'", 'None', "'r'"]
 
   1038           0 LOAD_GLOBAL              0 (isinstance)

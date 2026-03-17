@@ -1,11 +1,9 @@
 ============================================================
 CODE: get_code
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('self', 'fullname', 'path', 'data', 'exc_details')
   names: ('get_filename', 'get_data', '_classify_pyc', '_compile_bytecode', 'memoryview')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "('name', 'path')", '16', "('name', 'bytecode_path')"]
 
   1123           0 LOAD_FAST                0 (self)

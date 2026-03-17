@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_data
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('archive', 'toc_entry', 'datapath', 'compress', 'data_size', 'file_size', 'file_offset', 'time', 'date', 'crc', 'fp', 'buffer', 'name_size', 'extra_size', 'header_size', 'raw_data', 'decompress')
   names: ('ZipImportError', '_io', 'open_code', 'seek', 'OSError', 'read', 'len', 'EOFError', '_unpack_uint16', '_get_decompress_func', 'Exception')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', '0', "'negative data size'", '"can\'t read Zip file: "', "('path',)", '30', "'EOF read where not expected'", '4', "b'PK\\x03\\x04'", "'bad local file header: '", '26', '28', '"zipimport: can\'t read data"', '"can\'t decompress data; zlib not available"', '-15']
 
   532           0 LOAD_FAST                1 (toc_entry)

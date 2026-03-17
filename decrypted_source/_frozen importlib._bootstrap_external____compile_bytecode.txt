@@ -1,11 +1,9 @@
 ============================================================
 CODE: _compile_bytecode
-  file: <frozen importlib._bootstrap_external>
   argcount: 4
   varnames: ('data', 'name', 'bytecode_path', 'source_path', 'code')
   names: ('marshal', 'loads', 'isinstance', '_code_type', '_bootstrap', '_verbose_message', '_imp', '_fix_co_filename', 'ImportError', 'format')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Compile bytecode as found in a pyc.'", "'code object from {!r}'", 'None', "'Non-code object in {!r}'", "('name', 'path')"]
 
   647           0 LOAD_GLOBAL              0 (marshal)

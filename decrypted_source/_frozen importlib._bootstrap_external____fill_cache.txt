@@ -1,11 +1,9 @@
 ============================================================
 CODE: _fill_cache
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('self', 'path', 'contents', 'lower_suffix_contents', 'item', 'name', 'dot', 'suffix', 'new_name')
   names: ('path', '_os', 'listdir', 'getcwd', 'FileNotFoundError', 'PermissionError', 'NotADirectoryError', 'sys', 'platform', 'startswith', 'set', '_path_cache', 'partition', 'format', 'lower', 'add', '_CASE_INSENSITIVE_PLATFORMS', '_relaxed_path_cache')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Fill the cache of potential modules and packages for this directory.'", "'win'", "'.'", "'{}.{}'", '<code:<setcomp>>', "'FileFinder._fill_cache.<locals>.<setcomp>'", 'None']
 
   1567           0 LOAD_FAST                0 (self)
@@ -108,7 +106,7 @@ CODE: _fill_cache
                164 CALL_METHOD              1
                166 POP_JUMP_IF_FALSE      184
   
-  1594         168 LOAD_CONST               4 (<code object <setcomp> at 0x000001A3BA50CB30, file "<frozen importlib._bootstrap_external>", line 1594>)
+  1594         168 LOAD_CONST               4 (<code object <setcomp> at 0x000001B09FACCB30, file "<frozen importlib._bootstrap_external>", line 1594>)
                170 LOAD_CONST               5 ('FileFinder._fill_cache.<locals>.<setcomp>')
                172 MAKE_FUNCTION            0
                174 LOAD_FAST                2 (contents)
@@ -119,7 +117,7 @@ CODE: _fill_cache
            >>  184 LOAD_CONST               6 (None)
                186 RETURN_VALUE
   
-  Disassembly of <code object <setcomp> at 0x000001A3BA50CB30, file "<frozen importlib._bootstrap_external>", line 1594>:
+  Disassembly of <code object <setcomp> at 0x000001B09FACCB30, file "<frozen importlib._bootstrap_external>", line 1594>:
   1594           0 BUILD_SET                0
                  2 LOAD_FAST                0 (.0)
            >>    4 FOR_ITER                12 (to 18)
@@ -134,12 +132,10 @@ CODE: _fill_cache
 
   ============================================================
   CODE: <setcomp>
-    file: <frozen importlib._bootstrap_external>
     argcount: 1
     varnames: ('.0', 'fn')
     names: ('lower',)
-    freevars: ()
-    cellvars: ()
+    freevars: (), cellvars: ()
     consts: []
 
     1594           0 BUILD_SET                0

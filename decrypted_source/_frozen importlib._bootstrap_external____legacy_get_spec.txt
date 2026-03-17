@@ -1,11 +1,9 @@
 ============================================================
 CODE: _legacy_get_spec
-  file: <frozen importlib._bootstrap_external>
   argcount: 3
   varnames: ('cls', 'fullname', 'finder', 'loader', 'portions', 'spec')
   names: ('hasattr', 'find_loader', 'find_module', '_bootstrap', 'spec_from_loader', 'ModuleSpec', 'submodule_search_locations')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'find_loader'"]
 
   1372           0 LOAD_GLOBAL              0 (hasattr)

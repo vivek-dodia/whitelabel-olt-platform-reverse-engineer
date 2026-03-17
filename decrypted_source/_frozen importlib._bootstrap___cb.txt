@@ -1,11 +1,9 @@
 ============================================================
 CODE: cb
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('ref', 'name')
   names: ('_imp', 'acquire_lock', '_module_locks', 'get', 'release_lock')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   186           0 LOAD_GLOBAL              0 (_imp)

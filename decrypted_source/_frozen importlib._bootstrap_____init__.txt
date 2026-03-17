@@ -1,11 +1,9 @@
 ============================================================
 CODE: __init__
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('self', 'name')
   names: ('_name', '_lock')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   153           0 LOAD_FAST                1 (name)

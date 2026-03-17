@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumOmciManagedEntity
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'ONU_Data', 'Cardholder', 'Circuit_Pack', 'Software_Image', 'MAC_Bridge_Service_Profile', 'MAC_Bridge_Configuration_Data', 'MAC_Bridge_Port_Configuration_Data', 'ONU_G', 'ANI_G', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['20']
 
   256           0 LOAD_GLOBAL             12 (__armor_wrap__)

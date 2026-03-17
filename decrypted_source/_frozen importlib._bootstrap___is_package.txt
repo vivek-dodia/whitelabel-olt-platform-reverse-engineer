@@ -1,11 +1,9 @@
 ============================================================
 CODE: is_package
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('cls', 'fullname')
   names: ()
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Return False as built-in modules are never packages.'", 'False']
 
   786           0 LOAD_CONST               1 (False)

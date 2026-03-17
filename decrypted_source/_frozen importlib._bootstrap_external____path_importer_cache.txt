@@ -1,11 +1,9 @@
 ============================================================
 CODE: _path_importer_cache
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('cls', 'path', 'finder')
   names: ('_os', 'getcwd', 'FileNotFoundError', 'sys', 'path_importer_cache', 'KeyError', '_path_hooks')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Get the finder for the path entry from sys.path_importer_cache.\\n\\n        If the path entry is not in the cache, find the appropriate finder\\n        and cache it. If no finder is available, store None.\\n\\n        '", "''", 'None']
 
   1354           0 LOAD_FAST                1 (path)

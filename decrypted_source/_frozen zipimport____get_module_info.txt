@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_module_info
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'fullname', 'path', 'suffix', 'isbytecode', 'ispackage', 'fullpath')
   names: ('_get_module_path', '_zip_searchorder', '_files')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   322           0 LOAD_GLOBAL              0 (_get_module_path)

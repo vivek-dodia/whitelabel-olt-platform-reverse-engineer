@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_module_lock
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('name', 'lock', 'cb')
   names: ('_imp', 'acquire_lock', '_module_locks', 'KeyError', '_thread', '_DummyModuleLock', '_ModuleLock', '_weakref', 'ref', 'release_lock')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Get or create the module lock for a given module name.\\n\\n    Acquire/release internally the global import lock to protect\\n    _module_locks.'", 'None', '<code:cb>', "'_get_module_lock.<locals>.cb'"]
 
   172           0 LOAD_GLOBAL              0 (_imp)
@@ -61,7 +59,7 @@ CODE: _get_module_lock
   
   185     >>   82 LOAD_FAST                0 (name)
                84 BUILD_TUPLE              1
-               86 LOAD_CONST               2 (<code object cb at 0x000001A3BA0BA9D0, file "<frozen importlib._bootstrap>", line 185>)
+               86 LOAD_CONST               2 (<code object cb at 0x000001B09FA9A9D0, file "<frozen importlib._bootstrap>", line 185>)
                88 LOAD_CONST               3 ('_get_module_lock.<locals>.cb')
                90 MAKE_FUNCTION            1 (defaults)
                92 STORE_FAST               2 (cb)
@@ -90,7 +88,7 @@ CODE: _get_module_lock
   200     >>  132 LOAD_FAST                1 (lock)
               134 RETURN_VALUE
   
-  Disassembly of <code object cb at 0x000001A3BA0BA9D0, file "<frozen importlib._bootstrap>", line 185>:
+  Disassembly of <code object cb at 0x000001B09FA9A9D0, file "<frozen importlib._bootstrap>", line 185>:
   186           0 LOAD_GLOBAL              0 (_imp)
                 2 LOAD_METHOD              1 (acquire_lock)
                 4 CALL_METHOD              0
@@ -127,12 +125,10 @@ CODE: _get_module_lock
 
   ============================================================
   CODE: cb
-    file: <frozen importlib._bootstrap>
     argcount: 2
     varnames: ('ref', 'name')
     names: ('_imp', 'acquire_lock', '_module_locks', 'get', 'release_lock')
-    freevars: ()
-    cellvars: ()
+    freevars: (), cellvars: ()
     consts: ['None']
 
     186           0 LOAD_GLOBAL              0 (_imp)

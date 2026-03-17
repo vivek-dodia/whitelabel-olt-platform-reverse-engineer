@@ -1,11 +1,9 @@
 ============================================================
 CODE: _new_module
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('name',)
   names: ('type', 'sys')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
    36           0 LOAD_GLOBAL              0 (type)

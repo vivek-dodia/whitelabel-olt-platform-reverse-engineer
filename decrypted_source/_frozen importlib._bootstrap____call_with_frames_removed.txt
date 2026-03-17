@@ -1,12 +1,10 @@
 ============================================================
 CODE: _call_with_frames_removed
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('f', 'args', 'kwds')
   names: ()
-  freevars: ()
-  cellvars: ()
-  consts: ["'remove_importlib_frames in import.c will always remove sequences\\n    of importlib frames that end with a call to this function\\n\\n    Use it instead of a normal call in places where including the importlib\\n    frames introduces unwanted noise into the traceback (e.g. when executing\\n    module co"]
+  freevars: (), cellvars: ()
+  consts: ["'remove_importlib_frames in import.c will always remove sequences\\n    of importlib frames that end with a call to this function\\n\\n    Use it instead of a normal call in places where including the importlib\\n    frames introduces unwanted noise into the traceback (e.g. when executing\\n    module code)\\n    '"]
 
   228           0 LOAD_FAST                0 (f)
                 2 LOAD_FAST                1 (args)

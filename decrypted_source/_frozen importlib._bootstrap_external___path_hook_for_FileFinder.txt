@@ -1,11 +1,9 @@
 ============================================================
 CODE: path_hook_for_FileFinder
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('path',)
   names: ('_path_isdir', 'ImportError')
-  freevars: ('cls', 'loader_details')
-  cellvars: ()
+  freevars: ('cls', 'loader_details'), cellvars: ()
   consts: ["'Path hook for importlib.machinery.FileFinder.'", "'only directories are supported'", "('path',)"]
 
   1608           0 LOAD_GLOBAL              0 (_path_isdir)

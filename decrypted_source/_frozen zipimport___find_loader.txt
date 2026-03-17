@@ -1,12 +1,10 @@
 ============================================================
 CODE: find_loader
-  file: <frozen zipimport>
   argcount: 3
   varnames: ('self', 'fullname', 'path', 'mi', 'modpath')
   names: ('_get_module_info', '_get_module_path', '_is_dir', 'archive', 'path_sep')
-  freevars: ()
-  cellvars: ()
-  consts: ['"find_loader(fullname, path=None) -> self, str or None.\\n\\n        Search for a module specified by \'fullname\'. \'fullname\' must be the\\n        fully qualified (dotted) module name. It returns the zipimporter\\n        instance itself if the module was found, a string containing the\\n        full pat', 'None']
+  freevars: (), cellvars: ()
+  consts: ['"find_loader(fullname, path=None) -> self, str or None.\\n\\n        Search for a module specified by \'fullname\'. \'fullname\' must be the\\n        fully qualified (dotted) module name. It returns the zipimporter\\n        instance itself if the module was found, a string containing the\\n        full path name if it\'s possibly a portion of a namespace package,\\n        or None otherwise. The optional \'path\' argument is ignored -- it\'s\\n        there for compatibility with the importer protocol.\\n    ', 'None']
 
   119           0 LOAD_GLOBAL              0 (_get_module_info)
                 2 LOAD_FAST                0 (self)

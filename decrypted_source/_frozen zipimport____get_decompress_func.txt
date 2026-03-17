@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_decompress_func
-  file: <frozen zipimport>
   argcount: 0
   varnames: ('decompress',)
   names: ('_importing_zlib', '_bootstrap', '_verbose_message', 'ZipImportError', 'zlib', 'decompress', 'Exception')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'zipimport: zlib UNAVAILABLE'", '"can\'t decompress data; zlib not available"', 'True', '0', "('decompress',)", 'False', "'zipimport: zlib available'"]
 
   512           0 LOAD_GLOBAL              0 (_importing_zlib)

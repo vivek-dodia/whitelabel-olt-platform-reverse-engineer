@@ -1,11 +1,9 @@
 ============================================================
 CODE: _find_and_load
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('name', 'import_', 'module', 'message')
   names: ('_ModuleLockManager', 'sys', 'modules', 'get', '_NEEDS_LOADING', '_find_and_load_unlocked', 'format', 'ModuleNotFoundError', '_lock_unlock_module')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Find and load the module.'", 'None', "'import of {} halted; None in sys.modules'", "('name',)"]
 
   1004           0 LOAD_GLOBAL              0 (_ModuleLockManager)

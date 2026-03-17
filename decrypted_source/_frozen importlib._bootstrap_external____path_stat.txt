@@ -1,11 +1,9 @@
 ============================================================
 CODE: _path_stat
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('path',)
   names: ('_os', 'stat')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Stat the path.\\n\\n    Made a separate function to make it easier to override in experiments\\n    (e.g. cache stat results).\\n\\n    '"]
 
   142           0 LOAD_GLOBAL              0 (_os)

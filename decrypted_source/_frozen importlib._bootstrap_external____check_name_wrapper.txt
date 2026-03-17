@@ -1,11 +1,9 @@
 ============================================================
 CODE: _check_name_wrapper
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('self', 'name', 'args', 'kwargs')
   names: ('name', 'ImportError')
-  freevars: ('method',)
-  cellvars: ()
+  freevars: ('method',), cellvars: ()
   consts: ['None', "'loader for %s cannot handle %s'", "('name',)"]
 
   524           0 LOAD_FAST                1 (name)

@@ -1,11 +1,9 @@
 ============================================================
 CODE: exec_module
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('self', 'module')
   names: ('_call_with_frames_removed', '_imp', 'exec_builtin')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Exec a built-in module'", 'None']
 
   768           0 LOAD_GLOBAL              0 (_call_with_frames_removed)

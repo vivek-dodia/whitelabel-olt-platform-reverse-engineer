@@ -1,11 +1,9 @@
 ============================================================
 CODE: <genexpr>
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('.0', 'suffix')
   names: ()
-  freevars: ('loader',)
-  cellvars: ()
+  freevars: ('loader',), cellvars: ()
   consts: ['None']
 
   1481           0 LOAD_FAST                0 (.0)

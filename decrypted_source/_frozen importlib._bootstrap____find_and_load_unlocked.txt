@@ -1,11 +1,9 @@
 ============================================================
 CODE: _find_and_load_unlocked
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('name', 'import_', 'path', 'parent', 'parent_module', 'msg', 'spec', 'module', 'child')
   names: ('rpartition', 'sys', 'modules', '_call_with_frames_removed', '__path__', 'AttributeError', '_ERR_MSG', 'format', 'ModuleNotFoundError', '_find_spec', '_load_unlocked', 'setattr', '_warnings', 'warn', 'ImportWarning')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'.'", '0', "'; {!r} is not a package'", "('name',)", '2', "'Cannot set an attribute on '", "' for child module '"]
 
   968           0 LOAD_CONST               0 (None)

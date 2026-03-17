@@ -1,11 +1,9 @@
 ============================================================
 CODE: module_from_spec
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('spec', 'module')
   names: ('hasattr', 'loader', 'create_module', 'ImportError', '_new_module', 'name', '_init_module_attrs')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Create a module based on the provided spec.'", 'None', "'create_module'", "'exec_module'", "'loaders that define exec_module() must also define create_module()'"]
 
   561           0 LOAD_CONST               1 (None)

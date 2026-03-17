@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumTabFocus
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'OnuInfo', 'Notify', 'BoB', 'OMCI', 'Upgrade', 'Config', 'Debug', 'About', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['5']
 
    26           0 LOAD_GLOBAL             11 (__armor_wrap__)

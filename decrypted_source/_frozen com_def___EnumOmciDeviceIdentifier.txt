@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumOmciDeviceIdentifier
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'Base', 'Ext', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['19']
 
   251           0 LOAD_GLOBAL              5 (__armor_wrap__)

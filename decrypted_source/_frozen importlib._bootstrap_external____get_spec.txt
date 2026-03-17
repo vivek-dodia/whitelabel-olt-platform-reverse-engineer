@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_spec
-  file: <frozen importlib._bootstrap_external>
   argcount: 4
   varnames: ('cls', 'fullname', 'path', 'target', 'namespace_path', 'entry', 'finder', 'spec', 'portions')
   names: ('isinstance', 'str', 'bytes', '_path_importer_cache', 'hasattr', 'find_spec', '_legacy_get_spec', 'loader', 'submodule_search_locations', 'ImportError', 'extend', '_bootstrap', 'ModuleSpec')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Find the loader or namespace_path for this module/package name.'", 'None', "'find_spec'", "'spec missing loader'"]
 
   1388           0 BUILD_LIST               0

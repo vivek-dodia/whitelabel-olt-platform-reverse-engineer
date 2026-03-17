@@ -1,11 +1,9 @@
 ============================================================
 CODE: is_package
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'fullname', 'mi')
   names: ('_get_module_info', 'ZipImportError')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"is_package(fullname) -> bool.\\n\\n        Return True if the module specified by fullname is a package.\\n        Raise ZipImportError if the module couldn\'t be found.\\n        "', 'None', '"can\'t find module "', "('name',)"]
 
   227           0 LOAD_GLOBAL              0 (_get_module_info)

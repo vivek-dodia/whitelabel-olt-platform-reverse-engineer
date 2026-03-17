@@ -1,11 +1,9 @@
 ============================================================
 CODE: _load_backward_compatible
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('spec', 'module')
   names: ('loader', 'load_module', 'name', 'sys', 'modules', 'pop', 'getattr', '__loader__', 'AttributeError', '__name__', '__package__', 'hasattr', 'rpartition', '__spec__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'__loader__'", "'__package__'", "'__path__'", "'.'", '0', "'__spec__'"]
 
   626           0 SETUP_FINALLY           18 (to 20)

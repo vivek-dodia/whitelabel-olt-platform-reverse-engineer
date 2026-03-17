@@ -1,11 +1,9 @@
 ============================================================
 CODE: <module>
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('datetime', 'enum', 'Enum', 'IntEnum', 'GdtVersion', 'AesKey', 'timedelta', 'ResponseTimeout', 'EnumCustomer', 'EnumSpeedMode', 'EnumTabFocus', 'EnumBobTabFocus', 'EnumFlashOpt', 'EnumUpgradeProcess', 'EnumUpgradeResult', 'EnumOltImageStatus', 'EnumImageAddress', 'EnumMagicCode', 'EnumMessageType', 'EnumMessageId', 'EnumChangePasswordResult', 'EnumOnuStatus', 'EnumOnuOfflineReason', 'EnumOmciMessageType', 'EnumOmciDeviceIdentifier', 'EnumOmciManagedEntity', 'object', 'StPackageInfo', 'StIicInfo', 'StOltConfig', 'StPasswordInfo', 'char2hex', 'hex2char', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['2']
 
     1           0 LOAD_GLOBAL             33 (__armor_wrap__)

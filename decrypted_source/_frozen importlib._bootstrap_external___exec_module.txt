@@ -1,11 +1,9 @@
 ============================================================
 CODE: exec_module
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('self', 'module')
   names: ('_bootstrap', '_call_with_frames_removed', '_imp', 'exec_dynamic', '_verbose_message', 'name', 'path')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Initialize an extension module'", "'extension module {!r} executed from {!r}'", 'None']
 
   1181           0 LOAD_GLOBAL              0 (_bootstrap)

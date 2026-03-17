@@ -1,12 +1,10 @@
 ============================================================
 CODE: _classify_pyc
-  file: <frozen importlib._bootstrap_external>
   argcount: 3
   varnames: ('data', 'name', 'exc_details', 'magic', 'message', 'flags')
   names: ('MAGIC_NUMBER', '_bootstrap', '_verbose_message', 'ImportError', 'len', 'EOFError', '_unpack_uint32')
-  freevars: ()
-  cellvars: ()
-  consts: ["'Perform basic validity checking of a pyc header and return the flags field,\\n    which determines how the pyc should be further validated against the source.\\n\\n    *data* is the contents of the pyc file. (Only the first 16 bytes are\\n    required, though.)\\n\\n    *name* is the name of the module b", 'None', '4', "'bad magic number in '", "': '", "'{}'", '16', "'reached EOF while reading pyc header of '", '8', '-4', "'invalid flags '", "' in '"]
+  freevars: (), cellvars: ()
+  consts: ["'Perform basic validity checking of a pyc header and return the flags field,\\n    which determines how the pyc should be further validated against the source.\\n\\n    *data* is the contents of the pyc file. (Only the first 16 bytes are\\n    required, though.)\\n\\n    *name* is the name of the module being imported. It is used for logging.\\n\\n    *exc_details* is a dictionary passed to ImportError if it raised for\\n    improved debugging.\\n\\n    ImportError is raised when the magic number is incorr", 'None', '4', "'bad magic number in '", "': '", "'{}'", '16', "'reached EOF while reading pyc header of '", '8', '-4', "'invalid flags '", "' in '"]
 
   576           0 LOAD_FAST                0 (data)
                 2 LOAD_CONST               1 (None)

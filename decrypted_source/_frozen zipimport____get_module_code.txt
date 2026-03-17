@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_module_code
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'fullname', 'path', 'suffix', 'isbytecode', 'ispackage', 'fullpath', 'toc_entry', 'modpath', 'data', 'code')
   names: ('_get_module_path', '_zip_searchorder', '_bootstrap', '_verbose_message', 'archive', 'path_sep', '_files', 'KeyError', '_get_data', '_unmarshal_code', '_compile_source', 'ZipImportError')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'trying {}{}{}'", '2', "('verbosity',)", '0', '"can\'t find module "', "('name',)"]
 
   699           0 LOAD_GLOBAL              0 (_get_module_path)

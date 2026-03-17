@@ -1,11 +1,9 @@
 ============================================================
 CODE: _path_hooks
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('cls', 'path', 'hook')
   names: ('sys', 'path_hooks', '_warnings', 'warn', 'ImportWarning', 'ImportError')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"Search sys.path_hooks for a finder for \'path\'."', 'None', "'sys.path_hooks is empty'"]
 
   1336           0 LOAD_GLOBAL              0 (sys)

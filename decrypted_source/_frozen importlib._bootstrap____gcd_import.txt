@@ -1,12 +1,10 @@
 ============================================================
 CODE: _gcd_import
-  file: <frozen importlib._bootstrap>
   argcount: 3
   varnames: ('name', 'package', 'level')
   names: ('_sanity_check', '_resolve_name', '_find_and_load', '_gcd_import')
-  freevars: ()
-  cellvars: ()
-  consts: ["'Import and return the module based on its name, the package the call is\\n    being made from, and the level adjustment.\\n\\n    This function represents the greatest common denominator of functionality\\n    between import_module and __import__. This includes setting __package__ if\\n    the loader di", '0']
+  freevars: (), cellvars: ()
+  consts: ["'Import and return the module based on its name, the package the call is\\n    being made from, and the level adjustment.\\n\\n    This function represents the greatest common denominator of functionality\\n    between import_module and __import__. This includes setting __package__ if\\n    the loader did not.\\n\\n    '", '0']
 
   1027           0 LOAD_GLOBAL              0 (_sanity_check)
                  2 LOAD_FAST                0 (name)

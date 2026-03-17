@@ -1,11 +1,9 @@
 ============================================================
 CODE: _path_isdir
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('path',)
   names: ('_os', 'getcwd', '_path_is_mode_type')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Replacement for os.path.isdir.'", '16384']
 
   161           0 LOAD_FAST                0 (path)

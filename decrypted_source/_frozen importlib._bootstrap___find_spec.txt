@@ -1,11 +1,9 @@
 ============================================================
 CODE: find_spec
-  file: <frozen importlib._bootstrap>
   argcount: 4
   varnames: ('cls', 'fullname', 'path', 'target')
   names: ('_imp', 'is_builtin', 'spec_from_loader', '_ORIGIN')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "('origin',)"]
 
   738           0 LOAD_FAST                2 (path)

@@ -1,11 +1,9 @@
 ============================================================
 CODE: _is_dir
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'path', 'dirpath')
   names: ('path_sep', '_files')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   316           0 LOAD_FAST                1 (path)

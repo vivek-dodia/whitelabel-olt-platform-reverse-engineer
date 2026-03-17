@@ -1,11 +1,9 @@
 ============================================================
 CODE: get_filename
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'fullname', 'code', 'ispackage', 'modpath')
   names: ('_get_module_code',)
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'get_filename(fullname) -> filename string.\\n\\n        Return the filename for the specified module.\\n        '"]
 
   191           0 LOAD_GLOBAL              0 (_get_module_code)

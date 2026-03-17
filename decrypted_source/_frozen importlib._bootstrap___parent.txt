@@ -1,11 +1,9 @@
 ============================================================
 CODE: parent
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('self',)
   names: ('submodule_search_locations', 'name', 'rpartition')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"The name of the module\'s parent."', 'None', "'.'", '0']
 
   401           0 LOAD_FAST                0 (self)

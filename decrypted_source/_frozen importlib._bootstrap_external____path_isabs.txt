@@ -1,11 +1,9 @@
 ============================================================
 CODE: _path_isabs
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('path', 'root')
   names: ('_os', '_path_splitroot', 'replace', 'len', 'startswith', 'endswith')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Replacement for os.path.isabs.'", 'False', '0', "'/'", "'\\\\'", '1', "'\\\\\\\\'"]
 
   169           0 LOAD_FAST                0 (path)

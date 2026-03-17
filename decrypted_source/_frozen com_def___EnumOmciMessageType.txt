@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumOmciMessageType
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'Create', 'Delete', 'Set', 'Get', 'GetAllAlarms', 'GetAllAlarmsNext', 'MibUpload', 'MibUploadNext', 'MibReset', 'Alarm', 'AttributeValueChange', 'Test', 'StartSoftwareDownload', 'DownloadSection', 'EndSoftwareDownload', 'ActivateSoftware', 'CommitSoftware', 'SynchronizeTime', 'Reboot', 'GetNext', 'TestResult', 'GetCurrentData', 'SetTable', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['18']
 
   225           0 LOAD_GLOBAL             26 (__armor_wrap__)

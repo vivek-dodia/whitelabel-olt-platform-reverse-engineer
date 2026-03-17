@@ -1,11 +1,9 @@
 ============================================================
 CODE: release
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('self', 'tid')
   names: ('_thread', 'get_ident', 'lock', 'owner', 'RuntimeError', 'count', 'waiters', 'wakeup', 'release')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'cannot release un-acquired lock'", '0', '1']
 
   113           0 LOAD_GLOBAL              0 (_thread)

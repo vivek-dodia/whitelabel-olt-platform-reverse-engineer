@@ -1,11 +1,9 @@
 ============================================================
 CODE: get_filename
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('self', 'fullname')
   names: ('path',)
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Return the path to the source file as found by the finder.'"]
 
   1034           0 LOAD_FAST                0 (self)

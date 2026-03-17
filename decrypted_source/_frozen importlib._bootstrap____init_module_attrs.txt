@@ -1,11 +1,9 @@
 ============================================================
 CODE: _init_module_attrs
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('spec', 'module', 'override', 'loader', '_NamespaceLoader')
   names: ('getattr', 'name', '__name__', 'AttributeError', 'loader', 'submodule_search_locations', '_bootstrap_external', 'NotImplementedError', '_NamespaceLoader', '__new__', '_path', '__file__', '__loader__', 'parent', '__package__', '__spec__', '__path__', 'has_location', 'origin', 'cached', '__cached__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'__name__'", "'__loader__'", "'__package__'", "'__path__'", "'__file__'", "'__cached__'"]
 
   490           0 LOAD_FAST                2 (override)

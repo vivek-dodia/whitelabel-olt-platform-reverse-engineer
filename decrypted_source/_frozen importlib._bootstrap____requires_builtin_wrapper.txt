@@ -1,11 +1,9 @@
 ============================================================
 CODE: _requires_builtin_wrapper
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('self', 'fullname')
   names: ('sys', 'builtin_module_names', 'ImportError', 'format')
-  freevars: ('fxn',)
-  cellvars: ()
+  freevars: ('fxn',), cellvars: ()
   consts: ['None', "'{!r} is not a built-in module'", "('name',)"]
 
   242           0 LOAD_FAST                1 (fullname)

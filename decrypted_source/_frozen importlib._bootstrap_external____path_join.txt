@@ -1,11 +1,9 @@
 ============================================================
 CODE: _path_join
-  file: <frozen importlib._bootstrap_external>
   argcount: 0
   varnames: ('path_parts', 'root', 'path', 'new_root', 'tail')
   names: ('len', 'map', '_os', '_path_splitroot', 'startswith', 'path_sep_tuple', 'endswith', 'rstrip', 'path_separators', 'path_sep', 'casefold', 'append', 'join')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Replacement for os.path.join().'", "''", '1', '0', "':'", '<code:<listcomp>>', "'_path_join.<locals>.<listcomp>'"]
 
    93           0 LOAD_FAST                0 (path_parts)
@@ -111,7 +109,7 @@ CODE: _path_join
               168 POP_TOP
           >>  170 JUMP_ABSOLUTE           48
   
-  114     >>  172 LOAD_CONST               5 (<code object <listcomp> at 0x000001A3BA0CE500, file "<frozen importlib._bootstrap_external>", line 114>)
+  114     >>  172 LOAD_CONST               5 (<code object <listcomp> at 0x000001B09FAAE500, file "<frozen importlib._bootstrap_external>", line 114>)
               174 LOAD_CONST               6 ('_path_join.<locals>.<listcomp>')
               176 MAKE_FUNCTION            0
               178 LOAD_FAST                2 (path)
@@ -143,7 +141,7 @@ CODE: _path_join
               224 BINARY_ADD
               226 RETURN_VALUE
   
-  Disassembly of <code object <listcomp> at 0x000001A3BA0CE500, file "<frozen importlib._bootstrap_external>", line 114>:
+  Disassembly of <code object <listcomp> at 0x000001B09FAAE500, file "<frozen importlib._bootstrap_external>", line 114>:
   114           0 BUILD_LIST               0
                 2 LOAD_FAST                0 (.0)
           >>    4 FOR_ITER                18 (to 24)
@@ -161,12 +159,10 @@ CODE: _path_join
 
   ============================================================
   CODE: <listcomp>
-    file: <frozen importlib._bootstrap_external>
     argcount: 1
     varnames: ('.0', 'p')
     names: ('rstrip', 'path_separators')
-    freevars: ()
-    cellvars: ()
+    freevars: (), cellvars: ()
     consts: []
 
     114           0 BUILD_LIST               0

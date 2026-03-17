@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_cached
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('filename',)
   names: ('endswith', 'tuple', 'SOURCE_SUFFIXES', 'cache_from_source', 'NotImplementedError', 'BYTECODE_SUFFIXES')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   492           0 LOAD_FAST                0 (filename)

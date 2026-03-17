@@ -1,11 +1,9 @@
 ============================================================
 CODE: _lock_unlock_module
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('name', 'lock')
   names: ('_get_module_lock', 'acquire', '_DeadlockError', 'release')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Acquires then releases the module lock for a given module name.\\n\\n    This is used to ensure a module is completely initialized, in the\\n    event it is being imported by another thread.\\n    '", 'None']
 
   209           0 LOAD_GLOBAL              0 (_get_module_lock)

@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumMessageType
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'Init', 'Get', 'GetResponse', 'Set', 'SetResponse', 'Notify', 'OMCI', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['13']
 
    91           0 LOAD_GLOBAL             10 (__armor_wrap__)

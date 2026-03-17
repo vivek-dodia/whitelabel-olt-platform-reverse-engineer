@@ -1,11 +1,9 @@
 ============================================================
 CODE: acquire
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('self', 'tid')
   names: ('_thread', 'get_ident', '_blocking_on', 'lock', 'count', 'owner', 'has_deadlock', '_DeadlockError', 'wakeup', 'acquire', 'waiters', 'release')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'\\n        Acquire the module lock.  If a potential deadlock is detected,\\n        a _DeadlockError is raised.\\n        Otherwise, the lock is always acquired and True is returned.\\n        '", '0', '1', 'None', 'True', "'deadlock detected by %r'", 'False']
 
    93           0 LOAD_GLOBAL              0 (_thread)

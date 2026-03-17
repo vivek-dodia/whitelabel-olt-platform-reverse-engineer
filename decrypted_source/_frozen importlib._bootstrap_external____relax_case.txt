@@ -1,11 +1,9 @@
 ============================================================
 CODE: _relax_case
-  file: <frozen importlib._bootstrap_external>
   argcount: 0
   varnames: ()
   names: ('sys', 'flags', 'ignore_environment', '_os', 'environ')
-  freevars: ('key',)
-  cellvars: ()
+  freevars: ('key',), cellvars: ()
   consts: ["'True if filenames must be checked case-insensitively and ignore environment flags are not set.'"]
 
    66           0 LOAD_GLOBAL              0 (sys)

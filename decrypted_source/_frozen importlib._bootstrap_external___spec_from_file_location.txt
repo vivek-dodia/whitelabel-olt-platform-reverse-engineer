@@ -1,12 +1,10 @@
 ============================================================
 CODE: spec_from_file_location
-  file: <frozen importlib._bootstrap_external>
   argcount: 2
   varnames: ('name', 'location', 'loader', 'submodule_search_locations', 'spec', 'loader_class', 'suffixes', 'is_package', 'dirname')
   names: ('hasattr', 'get_filename', 'ImportError', '_os', 'fspath', '_bootstrap', 'ModuleSpec', '_set_fileattr', '_get_supported_file_loaders', 'endswith', 'tuple', 'loader', '_POPULATE', 'is_package', 'submodule_search_locations', '_path_split', 'append')
-  freevars: ()
-  cellvars: ()
-  consts: ["'Return a module spec based on a file location.\\n\\n    To indicate that the module is a package, set\\n    submodule_search_locations to a list of directory paths.  An\\n    empty list is sufficient, though its not otherwise useful to the\\n    import system.\\n\\n    The loader must take a spec as its o", 'None', "'<unknown>'", "'get_filename'", "('origin',)", 'True', "'is_package'", '0']
+  freevars: (), cellvars: ()
+  consts: ["'Return a module spec based on a file location.\\n\\n    To indicate that the module is a package, set\\n    submodule_search_locations to a list of directory paths.  An\\n    empty list is sufficient, though its not otherwise useful to the\\n    import system.\\n\\n    The loader must take a spec as its only __init__() arg.\\n\\n    '", 'None', "'<unknown>'", "'get_filename'", "('origin',)", 'True', "'is_package'", '0']
 
   708           0 LOAD_FAST                1 (location)
                 2 LOAD_CONST               1 (None)

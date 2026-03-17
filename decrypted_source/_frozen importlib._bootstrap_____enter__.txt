@@ -1,11 +1,9 @@
 ============================================================
 CODE: __enter__
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('self',)
   names: ('_get_module_lock', '_name', '_lock', 'acquire')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   157           0 LOAD_GLOBAL              0 (_get_module_lock)

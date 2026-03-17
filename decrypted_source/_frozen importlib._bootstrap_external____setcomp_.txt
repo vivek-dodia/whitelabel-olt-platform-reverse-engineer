@@ -1,11 +1,9 @@
 ============================================================
 CODE: <setcomp>
-  file: <frozen importlib._bootstrap_external>
   argcount: 1
   varnames: ('.0', 'fn')
   names: ('lower',)
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: []
 
   1594           0 BUILD_SET                0

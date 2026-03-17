@@ -1,11 +1,9 @@
 ============================================================
 CODE: load_module
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'fullname', 'code', 'ispackage', 'modpath', 'mod', 'path', 'fullpath')
   names: ('_get_module_code', 'sys', 'modules', 'get', 'isinstance', '_module_type', '__loader__', '_get_module_path', '_bootstrap_external', '_path_join', 'archive', '__path__', 'hasattr', '__builtins__', '_fix_up_module', '__dict__', 'exec', 'KeyError', 'ImportError', '_bootstrap', '_verbose_message')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"load_module(fullname) -> module.\\n\\n        Load the module specified by \'fullname\'. \'fullname\' must be the\\n        fully qualified (dotted) module name. It returns the imported\\n        module, or raises ZipImportError if it wasn\'t found.\\n        "', 'None', "'__builtins__'", "'Loaded module '", "' not found in sys.modules'", "'import {} # loaded from Zip {}'"]
 
   241           0 LOAD_GLOBAL              0 (_get_module_code)

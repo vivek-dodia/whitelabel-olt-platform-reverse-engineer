@@ -1,11 +1,9 @@
 ============================================================
 CODE: _handle_fromlist
-  file: <frozen importlib._bootstrap>
   argcount: 3
   varnames: ('module', 'fromlist', 'import_', 'recursive', 'x', 'where', 'from_name', 'exc')
   names: ('isinstance', 'str', '__name__', 'TypeError', 'type', 'hasattr', '_handle_fromlist', '__all__', 'format', '_call_with_frames_removed', 'ModuleNotFoundError', 'name', 'sys', 'modules', 'get', '_NEEDS_LOADING')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"Figure out what __import__ should return.\\n\\n    The import_ parameter is a callable which takes the name of module to\\n    import. It is required to decouple the function from assuming importlib\'s\\n    import implementation is desired.\\n\\n    "', "'.__all__'", '"``from list\'\'"', "'Item in '", "' must be str, not '", "'*'", "'__all__'", 'True', "('recursive',)", "'{}.{}'", 'None']
 
   1043           0 LOAD_FAST                1 (fromlist)

@@ -1,11 +1,9 @@
 ============================================================
 CODE: find_spec
-  file: <frozen importlib._bootstrap_external>
   argcount: 4
   varnames: ('cls', 'fullname', 'path', 'target', 'spec', 'namespace_path')
   names: ('sys', 'path', '_get_spec', 'loader', 'submodule_search_locations', 'origin', '_NamespacePath')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['"Try to find a spec for \'fullname\' on sys.path or \'path\'.\\n\\n        The search is based on sys.path_hooks and sys.path_importer_cache.\\n        "', 'None']
 
   1421           0 LOAD_FAST                2 (path)

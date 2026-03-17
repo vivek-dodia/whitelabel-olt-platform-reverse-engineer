@@ -1,11 +1,9 @@
 ============================================================
 CODE: _unmarshal_code
-  file: <frozen zipimport>
   argcount: 5
   varnames: ('self', 'pathname', 'fullpath', 'fullname', 'data', 'exc_details', 'flags', 'hash_based', 'check_source', 'source_bytes', 'source_hash', 'source_mtime', 'source_size', 'code')
   names: ('_bootstrap_external', '_classify_pyc', 'ImportError', '_imp', 'check_hash_based_pycs', '_get_pyc_source', 'source_hash', '_RAW_MAGIC_NUMBER', '_validate_hash_pyc', '_get_mtime_and_size_of_source', '_eq_mtime', '_unpack_uint32', '_bootstrap', '_verbose_message', 'marshal', 'loads', 'isinstance', '_code_type', 'TypeError')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "('name', 'path')", '1', '0', '2', "'never'", "'always'", '8', '12', '16', "'bytecode is stale for '", "'compiled module '", "' is not a code object'"]
 
   589           0 LOAD_FAST                3 (fullname)

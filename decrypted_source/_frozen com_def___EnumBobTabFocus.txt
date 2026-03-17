@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumBobTabFocus
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'Base', 'GN25L99', 'NRG6533', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['6']
 
    37           0 LOAD_GLOBAL              6 (__armor_wrap__)

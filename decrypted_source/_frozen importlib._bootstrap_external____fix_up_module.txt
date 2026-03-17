@@ -1,11 +1,9 @@
 ============================================================
 CODE: _fix_up_module
-  file: <frozen importlib._bootstrap_external>
   argcount: 4
   varnames: ('ns', 'name', 'pathname', 'cpathname', 'loader', 'spec')
   names: ('get', 'loader', 'SourcelessFileLoader', 'SourceFileLoader', 'spec_from_file_location', 'Exception')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'__loader__'", "'__spec__'", "('loader',)", "'__file__'", "'__cached__'"]
 
   1622           0 LOAD_FAST                0 (ns)

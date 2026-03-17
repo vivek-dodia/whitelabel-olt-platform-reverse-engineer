@@ -1,11 +1,9 @@
 ============================================================
 CODE: _load_unlocked
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('spec', 'module')
   names: ('loader', 'hasattr', '_load_backward_compatible', 'module_from_spec', '_initializing', 'sys', 'modules', 'name', 'submodule_search_locations', 'ImportError', 'exec_module', 'KeyError', 'pop', '_verbose_message')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'exec_module'", 'True', "'missing loader'", "('name',)", "'import {!r} # {!r}'", 'False']
 
   661           0 LOAD_FAST                0 (spec)

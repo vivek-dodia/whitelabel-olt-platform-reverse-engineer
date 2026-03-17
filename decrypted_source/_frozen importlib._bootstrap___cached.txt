@@ -1,11 +1,9 @@
 ============================================================
 CODE: cached
-  file: <frozen importlib._bootstrap>
   argcount: 1
   varnames: ('self',)
   names: ('_cached', 'origin', '_set_fileattr', '_bootstrap_external', 'NotImplementedError', '_get_cached')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None']
 
   387           0 LOAD_FAST                0 (self)

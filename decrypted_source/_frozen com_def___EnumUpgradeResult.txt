@@ -1,11 +1,9 @@
 ============================================================
 CODE: EnumUpgradeResult
-  file: <frozen com_def>
   argcount: 0
   varnames: ()
   names: ('__name__', '__module__', '__qualname__', 'Success', 'Fail', 'Latest', 'Mismatch', 'Timeout', 'RebootCheckOK', 'MismatchOnuNum', '__armor_wrap__')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['9']
 
    67           0 LOAD_GLOBAL             10 (__armor_wrap__)

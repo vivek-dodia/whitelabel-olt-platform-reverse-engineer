@@ -1,11 +1,9 @@
 ============================================================
 CODE: _sanity_check
-  file: <frozen importlib._bootstrap>
   argcount: 3
   varnames: ('name', 'package', 'level')
   names: ('isinstance', 'str', 'TypeError', 'format', 'type', 'ValueError', 'ImportError')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['\'Verify arguments are "sane".\'', "'module name must be str, not {}'", '0', "'level must be >= 0'", "'__package__ not set to a string'", "'attempted relative import with no known parent package'", "'Empty module name'", 'None']
 
   950           0 LOAD_GLOBAL              0 (isinstance)

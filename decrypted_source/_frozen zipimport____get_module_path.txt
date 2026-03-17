@@ -1,11 +1,9 @@
 ============================================================
 CODE: _get_module_path
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'fullname')
   names: ('prefix', 'rpartition')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', "'.'", '2']
 
   309           0 LOAD_FAST                0 (self)

@@ -1,11 +1,9 @@
 ============================================================
 CODE: __init__
-  file: <frozen zipimport>
   argcount: 2
   varnames: ('self', 'path', 'os', 'prefix', 'st', 'dirname', 'basename', 'files')
   names: ('isinstance', 'str', 'os', 'fsdecode', 'ZipImportError', 'alt_path_sep', 'replace', 'path_sep', '_bootstrap_external', '_path_stat', 'OSError', 'ValueError', '_path_split', 'append', 'st_mode', '_zip_directory_cache', 'KeyError', '_read_directory', '_files', 'archive', '_path_join', 'prefix')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ['None', '0', "'archive path is empty'", "('path',)", "'not a Zip file'", '61440', '32768', '-1']
 
    64           0 LOAD_GLOBAL              0 (isinstance)

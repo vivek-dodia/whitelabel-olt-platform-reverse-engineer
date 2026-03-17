@@ -1,11 +1,9 @@
 ============================================================
 CODE: create_module
-  file: <frozen importlib._bootstrap>
   argcount: 2
   varnames: ('self', 'spec')
   names: ('name', 'sys', 'builtin_module_names', 'ImportError', 'format', '_call_with_frames_removed', '_imp', 'create_builtin')
-  freevars: ()
-  cellvars: ()
+  freevars: (), cellvars: ()
   consts: ["'Create a built-in module'", "'{!r} is not a built-in module'", "('name',)"]
 
   760           0 LOAD_FAST                1 (spec)
