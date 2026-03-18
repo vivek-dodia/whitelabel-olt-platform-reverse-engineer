@@ -77,11 +77,37 @@ Tried ~500+ packet combinations from the Linux box:
 #### Hypothesis
 The VOLT management protocol likely works at the **SFP electrical interface level**, not through the switch fabric. The management frames may need to be sent directly from a host NIC's SFP port to the OLT SFP, bypassing the switch entirely. The CRS354's switch ASIC (even with HW offload disabled and software bridging) may still not forward the specific frame type the OLT expects.
 
+### Phase 2.5: VLAN 4090 Discovery (Tibit MCMS)
+
+Juniper Unified PON / Tibit MCMS documentation revealed:
+- Management VLAN is **4090** (not 4091)
+- Protocol is **IEEE 1904.2** (EtherType `0xA8C8`)
+- PON Controller interface config: `"interface": "eno1.4090"`
+- The VOLT OLT SFP is likely a **Tibit MicroPlug OLT clone**
+- See `TIBIT_MCMS_FINDINGS.md` for full details
+
+#### VLAN 4090 Setup
+Configured VLAN 4090 across all devices (same pattern as 4091).
+Probed with IEEE 1904.2 frames — still no response through the multi-hop path.
+
+#### RouterOS Upgrade Issue
+- Upgraded SW02 from RouterOS 7.11 to latest
+- **Broke sfp-sfpplus1 link** — auto-negotiation behavior changed
+- **Fix:** `/interface/ethernet/set sfp-sfpplus1 auto-negotiation=no speed=1G-baseX`
+- Link restored: `status: link-ok`, 1Gbps full-duplex, `sfp-rx-loss: no`
+- Important: the OLT SFP requires **forced 1G-baseX, no auto-negotiation**
+
+#### Results After Link Restore
+- cAP at 192.168.10.19 not yet pingable (ONU re-registration pending)
+- VLAN 4090 probes: 0 responses from OLT through multi-hop path
+- 1 captured packet was a Docker container ARP, not from OLT
+
 ### Phase 3: Next Steps
 1. **Patch Linux box directly into SW02** — eliminate the SW01 and R01 hops
-2. If that doesn't work, try **direct SFP-to-SFP connection** (USB SFP adapter on Linux)
-3. If direct works, capture the exact packet format with Wireshark
-4. Build the Linux-native management tool using the captured protocol
+2. Try both **VLAN 4090** and **untagged** on the same bridge as sfp-sfpplus1
+3. If CRS354 bridge still doesn't work, try **direct SFP-to-SFP connection**
+4. If direct works, capture the exact packet format with Wireshark
+5. Build the Linux-native management tool using the captured protocol
 
 ## Files in This Repo
 

@@ -6,6 +6,8 @@ Reverse engineering of the VOLT GPON OLT management platform (GDT v6.6) and firm
 
 VOLT is a white-label GPON OLT (Optical Line Terminal) sold under multiple brands — Ainopol, Nislight, Sirivision, Middle, Wowgrup. The management software communicates with OLT hardware over **raw Layer 2 Ethernet** using a custom protocol. There is no public documentation for the protocol.
 
+The platform appears to be closely related to (or a clone of) the **Tibit MicroPlug OLT** architecture used by Juniper's Unified PON / MicroClimate Management System (MCMS). See the [Juniper MCMS Installation Guide](https://www.juniper.net/documentation/us/en/software/unified-pon/unified-pon-microclimate-installation-guide.pdf) and [TIBIT_MCMS_FINDINGS.md](TIBIT_MCMS_FINDINGS.md) for details on the management protocol (IEEE 1904.2 over VLAN 4090).
+
 This repo cracks open the entire stack:
 - Protocol message format (7 message types, 84 message IDs)
 - OMCI support (ITU-T G.988 compliant, 23 message types)
