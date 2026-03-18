@@ -134,13 +134,70 @@ The video shows the PC on the **same MikroTik** as the SFP — one bridge, one d
 Our setup has the Linux box going through SW01 → R01 → SW02 (three hops, two additional
 switch fabrics). Tomorrow's direct patch into SW02 replicates the video's topology.
 
-### Phase 3: Next Steps
-1. **Patch Linux box directly into SW02** — same bridge as OLT SFP, no intermediate hops
-2. Run tcpdump/Wireshark in promiscuous mode to capture all L2 traffic
-3. Try our existing probe scripts (LLC, EtherType variants, VLAN 4090)
-4. If probes work, build the Linux-native management tool
-5. If probes still fail, run actual VOLT tool via Wine on MacBook (same SW02 bridge)
-   while capturing on Linux to see exact frame format
+### Phase 3: On-Site Testing (Day 2)
+
+#### Tests Performed
+1. **CRS354-48G-4S+2Q+** — Standard bridge, HW offload disabled, VLAN filtering off,
+   isolated bridge (protocol-mode=none, only ether48 + sfp1) — all failed
+2. **Ubiquiti EdgeRouter** (1G SFP port) — failed
+3. **Media converter** — failed
+4. **CCR2004-1G-12S+2XS** — Pure CPU bridging, no switch ASIC, sfp-sfpplus10 + sfp-sfpplus11,
+   olt-mgmt bridge with protocol-mode=none, hw-offload=false — failed
+5. **Second CCR2004** — swapped to rule out hardware — same result
+
+#### Wireshark Captures (volt.pcapng, volt2.pcapng)
+- **volt.pcapng:** 21,710 VOLT protocol packets captured from Windows VOLT tool
+- **volt2.pcapng:** 1,456 packets on CCR2004
+- Confirmed: VOLT tool sends correctly formatted discovery frames
+- **EtherType: 0x88B6** (IEEE 802.1 Local Experimental EtherType 2)
+- **Magic: 0xB958D63A** confirmed in every packet
+- Only responses captured: CRS354 CDP/LLDP/MNDP — zero from OLT SFP
+
+#### Conclusion
+Both VOLT-32 OLT SFP sticks are **defective**. They are optically and electrically alive
+(link-ok, normal power levels, valid EEPROM) but their embedded management firmware does
+not respond to discovery frames. Proven across five different host devices including the
+CCR2004 where no hardware filtering is possible. Replacement units ordered.
+
+### Phase 4: Protocol Fully Decoded (from Wireshark captures)
+
+#### Frame Format
+```
+Ethernet Frame:
+  DST: ff:ff:ff:ff:ff:ff (broadcast)
+  SRC: <PC MAC>
+  EtherType: 0x88B6
+
+Payload (50 bytes):
+  [0:4]   Magic:      0xB958D63A (uint32 big-endian)
+  [4:6]   Sequence:   uint16 BE (increments +1 per packet)
+  [6:8]   Length:      0x000C (uint16 BE, payload data length = 12)
+  [8:10]  Message ID:  uint16 BE (maps to EnumMessageId values)
+  [10]    Sub-field:   byte (message type/flags or ONU index)
+  [11]    Target:      byte (0xFF = broadcast/all, 0x00-0x1F = ONU index)
+  [12:50] Data:        payload data (zeros for Get requests)
+```
+
+#### Discovery Cycle
+The VOLT tool sends continuous **Get** (byte8=0x00) requests in a repeating cycle:
+1. `OltVersion` (0x0000) with various sub-fields (0x00, 0x10, 0x08, 0x01, 0x0F, etc.)
+2. `OltUpTime` (0x0001) with sub-fields (0x18, 0x19)
+3. `OnuStatus` queries (0x0201/0x0209) for each ONU slot 0-31
+4. Cycle repeats with incrementing sequence numbers
+
+#### Statistics from volt.pcapng
+- 21,710 total VOLT packets (EtherType 0x88B6)
+- All broadcast to ff:ff:ff:ff:ff:ff
+- All from single source MAC (b0:4f:13:15:71:74)
+- Sequence range: 0x0001 to 0x51C2 (incrementing by 1)
+- Message ID distribution: OltVersion (4,650), OltUpTime (1,395), OnuStatus queries (15,665)
+- byte8 = 0x00 for all packets (Get message type)
+
+### Phase 5: Next Steps
+1. **Receive replacement OLT SFP sticks** (1-2 days)
+2. **TP-Link MC220L media converter** arriving for simplest test setup
+3. **Build Linux management tool** using decoded protocol — ready to test immediately
+4. **Test FS.com GPON-SFP-OLT-MAC-I** when it arrives (128 ONU, Class C+)
 
 ## Files in This Repo
 

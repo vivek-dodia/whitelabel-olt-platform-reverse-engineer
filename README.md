@@ -39,19 +39,33 @@ This repo cracks open the entire stack:
 
 ## Protocol Overview
 
-Communication happens over **raw Ethernet frames** (Layer 2, not TCP/IP) using Scapy's `Ether` + `LLC` layers. The tool broadcasts to discover OLTs on the local network segment.
+Communication happens over **raw Ethernet frames** (Layer 2, not TCP/IP) using **EtherType 0x88B6** (IEEE 802.1 Local Experimental). The tool broadcasts to `ff:ff:ff:ff:ff:ff` to discover OLTs on the local network segment.
+
+### Wire Format (confirmed via Wireshark capture)
+
+```
+Ethernet: DST=ff:ff:ff:ff:ff:ff SRC=<host> Type=0x88B6
+Payload (50 bytes):
+  [0:4]   Magic:      0xB958D63A (uint32 BE, constant)
+  [4:6]   Sequence:   uint16 BE (auto-incrementing)
+  [6:8]   Length:      uint16 BE (data length, typically 0x000C)
+  [8:10]  Message ID:  uint16 BE (see EnumMessageId)
+  [10]    Sub-field:   byte (type/flags)
+  [11]    Target:      byte (0xFF=broadcast, 0x00-0x1F=ONU index)
+  [12:50] Data:        request/response payload
+```
 
 ### Message Types
 
 | Value | Type        | Description              |
 |-------|-------------|--------------------------|
-| 0     | Init        | Discovery/initialization |
-| 1     | Get         | Query a parameter        |
-| 2     | GetResponse | Response to query        |
-| 3     | Set         | Set a parameter          |
-| 4     | SetResponse | Response to set          |
-| 5     | Notify      | Async event notification |
-| 6     | OMCI        | OMCI message passthrough |
+| -1    | Init        | Discovery/initialization |
+| 0     | Get         | Query a parameter        |
+| 1     | GetResponse | Response to query        |
+| 2     | Set         | Set a parameter          |
+| 3     | SetResponse | Response to set          |
+| 4     | Notify      | Async event notification |
+| 5     | OMCI        | OMCI message passthrough |
 
 ### Key Message IDs
 
@@ -103,7 +117,7 @@ The `names` list tells you every symbol the code references. The `consts` list h
 
 ### Building on top of this
 
-1. **Reconstruct the protocol** — `com_def` gives you all the enums. The message format is: `Ether(dst=broadcast) / LLC() / payload` where payload contains message type + message ID + data. Use `protocol_capture.py` with a real OLT to capture actual packets and map out the exact byte layout.
+1. **Reconstruct the protocol** — The wire format is now fully decoded from Wireshark captures (`pcap/volt.pcapng`). Frame is `Ether(dst=broadcast, type=0x88B6) / payload` where payload is: magic (4B) + sequence (2B) + length (2B) + message_id (2B) + sub_field (1B) + target (1B) + data (38B). Use `parse_protocol.py` to analyze captures.
 
 2. **Replicate the socket layer** — `olt_socket` uses Scapy's `sendp()`/`srp()` for Layer 2 communication. The `OltListenThread` listens for incoming frames, `oltSocketThread` handles sends. Key helpers: `twos_comp()` for signed optical power values, `char2hex()`/`hex2char()` for encoding.
 
@@ -127,3 +141,6 @@ The `names` list tells you every symbol the code references. The `consts` list h
 3. Downloaded Python 3.9 64-bit to match `pytransform.pyd` ABI
 4. Used `sys.settrace()` to hook into PyArmor's runtime decryption
 5. Captured 161 decrypted code objects with full symbol tables and bytecode
+6. Extracted all runtime enum values by importing `com_def` through pytransform
+7. Captured actual VOLT tool traffic via Wireshark (pcap/volt.pcapng)
+8. Decoded wire format: EtherType 0x88B6, magic 0xB958D63A, 50-byte payload

@@ -86,19 +86,28 @@ WidgetMessage(QDialog)              <- Message display
 
 ### Transport Layer
 - **Layer 2 Ethernet** (NOT TCP/IP) via Scapy
-- Uses `Ether` + `LLC` frame types from `scapy.layers.l2`
-- Broadcast discovery to find OLT devices on the local network
+- **EtherType: 0x88B6** (IEEE 802.1 Local Experimental EtherType 2)
+- Broadcast discovery to `ff:ff:ff:ff:ff:ff`
 - Direct Ethernet communication (requires NIC in same broadcast domain)
+- Confirmed via Wireshark capture of actual VOLT tool traffic
 
-### Protocol Stack
+### Wire Format (confirmed from pcap analysis)
 ```
-+------------------+
-| Application Data |  <- com_def message format
-+------------------+
-| LLC              |  <- Logical Link Control sublayer
-+------------------+
-| Ethernet (L2)    |  <- Raw Ethernet frame (Scapy Ether)
-+------------------+
++-----------------------------------------------------------+
+| Ethernet Header                                           |
+|   DST: ff:ff:ff:ff:ff:ff (broadcast)                      |
+|   SRC: <host MAC>                                         |
+|   EtherType: 0x88B6                                       |
++-----------------------------------------------------------+
+| VOLT Payload (50 bytes)                                   |
+|   [0:4]   Magic:     0xB958D63A (uint32 BE)               |
+|   [4:6]   Sequence:  uint16 BE (auto-increment)           |
+|   [6:8]   Length:    uint16 BE (payload data length)       |
+|   [8:10]  Message ID: uint16 BE (EnumMessageId)           |
+|   [10]    Sub-field: byte (msg type/flags)                |
+|   [11]    Target:    byte (0xFF=all, 0x00-0x1F=ONU idx)   |
+|   [12:50] Data:      payload (zeros for Get requests)     |
++-----------------------------------------------------------+
 ```
 
 ### Security
