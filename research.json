@@ -1,0 +1,252 @@
+{
+  "project": "VOLT OLT SFP Stick — Reverse Engineering & Protocol Research",
+  "last_updated": "2026-03-18",
+
+  "protocol": {
+    "name": "VOLT Management Protocol",
+    "type": "Proprietary L2 (based on IEEE 1904.2 concepts)",
+    "ethertype": "0x88B6",
+    "ethertype_description": "IEEE 802.1 Local Experimental EtherType 2 (public use, not registered)",
+    "magic": "0xB958D63A",
+    "transport": "Raw Ethernet broadcast, no IP, no VLAN required",
+    "frame_format": {
+      "ethernet": {
+        "dst": "ff:ff:ff:ff:ff:ff",
+        "src": "<host NIC MAC>",
+        "ethertype": "0x88B6"
+      },
+      "payload": {
+        "total_size": 50,
+        "fields": [
+          { "offset": "0:4", "name": "magic", "type": "uint32 BE", "value": "0xB958D63A", "description": "Protocol identifier, constant" },
+          { "offset": "4:6", "name": "sequence", "type": "uint16 BE", "description": "Auto-incrementing sequence number" },
+          { "offset": "6:8", "name": "length", "type": "uint16 BE", "value": "0x000C", "description": "Payload data length (typically 12)" },
+          { "offset": "8:10", "name": "message_id", "type": "uint16 BE", "description": "Maps to EnumMessageId" },
+          { "offset": "10", "name": "sub_field", "type": "uint8", "description": "Message type, flags, or sub-command" },
+          { "offset": "11", "name": "target", "type": "uint8", "description": "0xFF=broadcast/all, 0x00-0x1F=ONU index" },
+          { "offset": "12:50", "name": "data", "type": "bytes", "description": "Request/response payload (zeros for Get)" }
+        ]
+      }
+    },
+    "discovery_cycle": {
+      "description": "VOLT tool sends continuous Get requests in a repeating cycle",
+      "message_type": "Get (byte at offset 8 high nibble = 0x00)",
+      "cycle_pattern": [
+        "OltVersion (0x0000) with sub-fields 0x00, 0x10, 0x08, 0x01, 0x0F, 0x03, 0x04",
+        "OltUpTime (0x0001) with sub-fields 0x00, 0x18, 0x19",
+        "OltUpTime (0x0001) with sub-field 0x05, 0x06",
+        "OnuStatus queries (0x0201/0x0209) for each ONU slot 0x00-0x1F"
+      ],
+      "cycle_stats": {
+        "packets_per_cycle": "~46 unique queries",
+        "sequence_increment": 1,
+        "observed_rate": "~1456 packets per capture session"
+      }
+    },
+    "message_types": {
+      "-1": "Init",
+      "0": "Get",
+      "1": "GetResponse",
+      "2": "Set",
+      "3": "SetResponse",
+      "4": "Notify",
+      "5": "OMCI"
+    },
+    "encryption": {
+      "aes_key": "D53C068D406B3BD55C0CE444DEBF74C9",
+      "aes_mode": "AES (PyCryptodome)",
+      "auth": "CMAC (Crypto.Hash.CMAC)",
+      "firmware_integrity": "Reed-Solomon (reedsolo.RSCodec)"
+    }
+  },
+
+  "hardware": {
+    "manufacturer": {
+      "name": "AINOPOL (智慧光迅)",
+      "company": "Sichuan Zhongguan Xinxin Technology",
+      "website": "sczhgx.com",
+      "location": "Sichuan, China"
+    },
+    "model": "ZH-VOLT32",
+    "oem_variants": ["HT-VOLT32", "VOLT-32 (CatvScope)", "GPON OLT Stick"],
+    "resellers": ["CatvScope (catvscope.com, Portland OR)", "AliExpress (multiple)", "Zhaoyong Optics"],
+    "specs": {
+      "form_factor": "SFP+",
+      "connector": "SC/UPC",
+      "downstream": "2.488 Gbps",
+      "upstream": "1.244 Gbps",
+      "max_onus": 32,
+      "class": "B+",
+      "max_distance_km": 8,
+      "wavelength_tx_nm": 1490,
+      "wavelength_rx_nm": 1310,
+      "power_consumption_w": 2.5,
+      "supply_voltage_v": 3.3,
+      "temperature_range_c": "-40 to 85",
+      "shutdown_temp_c": 95,
+      "dimensions_mm": "75 x 14 x 12",
+      "vlan_support": "SVLAN and CVLAN transparent transmission"
+    },
+    "fpga": {
+      "config_interface": "Xilinx 7-series compatible",
+      "idcode": "0x0222C143",
+      "manufacturer_id": "0x0A1 (non-standard, Chinese PON ASIC)",
+      "bitstream_sync_word": "0xAA995566",
+      "firmware_size_mb": 1.5
+    },
+    "optical_transceiver_chips": ["GN25L99", "NRG6533", "UX3326"],
+    "sfp_eeprom": {
+      "vendor": "OEM",
+      "part_number": "SFP-GE-T",
+      "revision": "V2",
+      "serial_example": "2211140134",
+      "wavelength_reported_nm": 850,
+      "note": "EEPROM is spoofed/generic — reports as 850nm copper SFP despite being a 1310/1490nm GPON OLT"
+    }
+  },
+
+  "software": {
+    "management_tool": {
+      "name": "VOLT Tool / GDT (GPON Debug Tool)",
+      "version": "6.6",
+      "platform": "Windows only",
+      "language": "Python 3.9",
+      "gui_framework": "PyQt5 (with qdarkstyle dark theme)",
+      "bundling": "PyInstaller",
+      "protection": "PyArmor v52.6.11",
+      "packet_library": "Scapy (raw L2 Ethernet)",
+      "crypto_library": "PyCryptodome (AES, CMAC, MD5, SHA256)",
+      "error_correction": "reedsolo (Reed-Solomon)"
+    },
+    "firmware": {
+      "version": "9.1",
+      "format": "Xilinx FPGA bitstream",
+      "variants": [
+        "VOLT16-9.1-1G.bin",
+        "VOLT16-9.1-2.5G.bin",
+        "VOLT32-9.1-1G.bin",
+        "VOLT32-9.1-2.5G.bin"
+      ]
+    },
+    "oem_customers": {
+      "0": "Nislight",
+      "1": "Ainopol",
+      "2": "Sirivision",
+      "3": "Middle",
+      "4": "Wowgrup"
+    }
+  },
+
+  "related_projects": {
+    "closest_match": {
+      "name": "VOLTHA Tibit OLT Adapter",
+      "url": "https://github.com/opencord/voltha/tree/master/voltha/adapters/tibit_olt",
+      "relevance": "HIGH — same architecture (Scapy L2 to SFP OLT stick) but different protocol",
+      "differences": {
+        "ethertype": "0xA8C8 (standard IEEE 1904.2) vs 0x88B6 (experimental)",
+        "vlan": "4090 with prio 7 vs no VLAN required",
+        "protocol": "EOAM/DPoE TLVs vs proprietary magic+msg_id format",
+        "tibit_oui": "0x2AEA15"
+      },
+      "useful_files": [
+        "voltha/adapters/tibit_olt/tibit_olt.py",
+        "voltha/extensions/eoam/EOAM_Layers.py",
+        "voltha/extensions/eoam/EOAM_TLV.py"
+      ]
+    },
+    "other_references": [
+      {
+        "name": "VOLTHA EPON OLT Adapter (Go)",
+        "url": "https://github.com/opencord/voltha-eponolt-adapter",
+        "relevance": "MEDIUM — Go implementation for Tibit, different protocol"
+      },
+      {
+        "name": "OMCI for SFP Stick",
+        "url": "https://github.com/tdmadam/OMCI-for-SFP-Stick",
+        "relevance": "MEDIUM — OMCI decoder using EtherType 0x88B5"
+      },
+      {
+        "name": "fs_xgspon_mod",
+        "url": "https://github.com/rssor/fs_xgspon_mod",
+        "relevance": "MEDIUM — raw L2 socket pattern for SFP stick management"
+      },
+      {
+        "name": "Hack GPON",
+        "url": "https://hack-gpon.org/",
+        "relevance": "MEDIUM — community wiki for GPON stick hacking"
+      },
+      {
+        "name": "RTL960x ONU RE",
+        "url": "https://github.com/Anime4000/RTL960x",
+        "relevance": "LOW — ONU side reverse engineering"
+      },
+      {
+        "name": "OMCI Wireshark Dissector",
+        "url": "https://github.com/0liv1er/omci-wireshark-dissector",
+        "relevance": "LOW — OMCI analysis only"
+      }
+    ],
+    "commercial_alternatives": [
+      {
+        "name": "Tibit MCMS",
+        "vendor": "Juniper/HPE (acquired Tibit)",
+        "url": "https://www.juniper.net/documentation/us/en/software/unified-pon/unified-pon-microclimate-installation-guide.pdf",
+        "price": "~$100/year license",
+        "note": "Standard IEEE 1904.2, not compatible with VOLT protocol"
+      },
+      {
+        "name": "Exaware",
+        "note": "Commercial PON management OS with Tibit integration"
+      },
+      {
+        "name": "FS PON Manager",
+        "vendor": "FS.com",
+        "note": "Management app for FS.com OLT SFP sticks, protocol unknown"
+      }
+    ]
+  },
+
+  "ieee_1904_2": {
+    "standard_name": "IEEE 1904.2 — Standard for Control and Management of EPON",
+    "standard_ethertype": "0xA8C8",
+    "experimental_ethertypes": {
+      "0x88B5": "IEEE 802.1 Local Experimental EtherType 1",
+      "0x88B6": "IEEE 802.1 Local Experimental EtherType 2 (used by VOLT)"
+    },
+    "management_vlan": 4090,
+    "management_priority": 7,
+    "volt_relationship": "VOLT uses 0x88B6 (experimental) instead of 0xA8C8 (standard). Custom frame format instead of EOAM/DPoE TLVs. No VLAN tagging required. Likely a proprietary Chinese implementation inspired by IEEE 1904.2 concepts."
+  },
+
+  "mikrotik_integration": {
+    "confirmed_working": "MikroTik Hex S (1G SFP) — from video tutorials",
+    "sfp_settings": {
+      "auto_negotiation": "no (must be disabled on SFP+ ports)",
+      "speed": "1G-baseX",
+      "note": "CRS354 and CCR2004 SFP+ ports need forced 1G-baseX. Simple 1G SFP ports auto-negotiate fine."
+    },
+    "bridge_config": "SFP port + Ethernet ports in same bridge, VOLT tool on any bridged Ethernet port",
+    "thermal": "OLT SFP runs hot, 95C shutdown threshold, heatsink recommended"
+  },
+
+  "testing_results": {
+    "defective_units": {
+      "count": 2,
+      "symptoms": "link-ok, valid EEPROM, normal optical power, but zero management response",
+      "tested_on": [
+        "CRS354-48G-4S+2Q+ (various bridge configs, HW offload disabled)",
+        "Ubiquiti EdgeRouter (1G SFP)",
+        "Media converter (direct SFP-to-RJ45)",
+        "CCR2004-1G-12S+2XS (pure CPU bridging, no switch ASIC)",
+        "Second CCR2004-1G-12S+2XS (to rule out host device)"
+      ],
+      "wireshark_captures": ["pcap/volt.pcapng (21,710 VOLT packets)", "pcap/volt2.pcapng (1,456 packets)"],
+      "conclusion": "Both units confirmed defective — management firmware non-responsive"
+    },
+    "replacement_orders": [
+      "2x VOLT-32 OLT SFP sticks (replacement, ETA 1-2 days)",
+      "TP-Link MC220L media converter (simplest test setup)",
+      "FS.com GPON-SFP-OLT-MAC-I (128 ONU, Class C+, separate vendor)"
+    ]
+  }
+}
