@@ -102,12 +102,45 @@ Probed with IEEE 1904.2 frames — still no response through the multi-hop path.
 - VLAN 4090 probes: 0 responses from OLT through multi-hop path
 - 1 captured packet was a Docker container ARP, not from OLT
 
+### Phase 2.6: Vendor & Video Research
+
+#### Vendor Identified
+- **Manufacturer:** AINOPOL (智慧光迅 / sczhgx.com), Sichuan, China
+- **Model:** ZH-VOLT32 (also sold as HT-VOLT32 by other OEMs)
+- **SFP Label:** `ZH-VOLT-16 (插拔型VOLT)` = "pluggable VOLT"
+- **Ecosystem:** Core switch ZH-CS5228P-PWR, ONU ZH-F4P, Cloud AP ZH-AP30006S-M
+- **Key spec:** SVLAN/CVLAN transparent transmission
+
+#### Video Walkthrough Findings (Spanish tutorial, MikroTik Hex S + VOLT SFP)
+A 33-minute video of someone configuring the exact same SFP OLT in a MikroTik confirmed:
+
+1. **Discovery works through a MikroTik bridge** — SFP port + Ethernet ports bridged,
+   Windows PC on one of the bridged ports, VOLT tool discovers OLT through the bridge.
+2. **Interface selection by NIC MAC address** — Tool scans interfaces, user picks by MAC.
+   Pure L2 discovery, no IP or VLAN needed.
+3. **"OLT TX enable" is critical** — Must be toggled in the software on first use before
+   the OLT communicates with ONUs. Maps to our RE: `OpticalTxEnable` (Message ID 256).
+4. **Works through a bridge, not direct** — "The OLT doesn't necessarily have to show as
+   connected to our computer" — the bridge forwards the management frames.
+5. **Simple media converter works** — No special host device, just L2 connectivity.
+6. **PPPoE setup on MikroTik** — Bridge created with SFP + Ethernet ports, PPPoE server
+   on the bridge, NAT masquerade for internet, ONUs configured in PPPoE mode.
+7. **ONU management via web UI** — ONUs accessed at 192.168.1.1, configured for PPPoE.
+8. **Real-time monitoring** — Temperature, uptime, online/offline per ONU, remote
+   activate/deactivate individual ONUs from the VOLT tool.
+
+#### Key Insight: Why Our Probes Failed
+The video shows the PC on the **same MikroTik** as the SFP — one bridge, one device.
+Our setup has the Linux box going through SW01 → R01 → SW02 (three hops, two additional
+switch fabrics). Tomorrow's direct patch into SW02 replicates the video's topology.
+
 ### Phase 3: Next Steps
-1. **Patch Linux box directly into SW02** — eliminate the SW01 and R01 hops
-2. Try both **VLAN 4090** and **untagged** on the same bridge as sfp-sfpplus1
-3. If CRS354 bridge still doesn't work, try **direct SFP-to-SFP connection**
-4. If direct works, capture the exact packet format with Wireshark
-5. Build the Linux-native management tool using the captured protocol
+1. **Patch Linux box directly into SW02** — same bridge as OLT SFP, no intermediate hops
+2. Run tcpdump/Wireshark in promiscuous mode to capture all L2 traffic
+3. Try our existing probe scripts (LLC, EtherType variants, VLAN 4090)
+4. If probes work, build the Linux-native management tool
+5. If probes still fail, run actual VOLT tool via Wine on MacBook (same SW02 bridge)
+   while capturing on Linux to see exact frame format
 
 ## Files in This Repo
 

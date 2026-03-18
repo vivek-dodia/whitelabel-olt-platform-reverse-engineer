@@ -8,6 +8,8 @@ VOLT is a white-label GPON OLT (Optical Line Terminal) sold under multiple brand
 
 The platform appears to be closely related to (or a clone of) the **Tibit MicroPlug OLT** architecture used by Juniper's Unified PON / MicroClimate Management System (MCMS). See the [Juniper MCMS Installation Guide](https://www.juniper.net/documentation/us/en/software/unified-pon/unified-pon-microclimate-installation-guide.pdf) and [TIBIT_MCMS_FINDINGS.md](TIBIT_MCMS_FINDINGS.md) for details on the management protocol (IEEE 1904.2 over VLAN 4090).
 
+**Manufacturer:** AINOPOL (智慧光迅 / sczhgx.com), Sichuan, China. Model ZH-VOLT32. Also sold as HT-VOLT32 and other OEM rebrandings. Comes with the free Windows VOLT management tool. The SFP stick works in any switch/router with an SFP port — management is done via L2 Ethernet frames through the host device's bridge.
+
 This repo cracks open the entire stack:
 - Protocol message format (7 message types, 84 message IDs)
 - OMCI support (ITU-T G.988 compliant, 23 message types)
