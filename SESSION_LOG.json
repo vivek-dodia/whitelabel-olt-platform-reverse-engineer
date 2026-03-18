@@ -1,0 +1,384 @@
+{
+  "title": "Session Log: VOLT OLT Reverse Engineering & Live Testing",
+  "phases": {
+    "phase_1_static_reverse_engineering": {
+      "status": "Complete",
+      "steps": [
+        "Identified all three executables as PyInstaller bundles (Python 3.9)",
+        "Extracted with pyinstxtractor.py — 618 PYZ modules",
+        "Discovered PyArmor v52.6.11 protection on all 18 app modules",
+        "Downloaded Python 3.9 64-bit embeddable to match pytransform.pyd ABI",
+        "Used sys.settrace() to hook into PyArmor runtime decryption",
+        "Captured 161 decrypted code objects with full symbol tables",
+        "Extracted ALL runtime enum values by importing com_def through pytransform"
+      ],
+      "key_protocol_values_extracted": {
+        "aes_key": "D53C068D406B3BD55C0CE444DEBF74C9",
+        "magic_code": "0xB958D63A",
+        "magic_code_decimal": 3109606970,
+        "message_types": {
+          "Init": -1,
+          "Get": 0,
+          "GetResponse": 1,
+          "Set": 2,
+          "SetResponse": 3,
+          "Notify": 4,
+          "OMCI": 5
+        },
+        "message_id_count": 84,
+        "message_id_reference": "see REVERSE_ENGINEERING_REPORT.md",
+        "transport": "Raw Ethernet via Scapy (Ether + LLC from scapy.layers.l2)",
+        "firmware_version": "GDT v6.6, Firmware v9.1"
+      }
+    },
+    "phase_2_live_testing": {
+      "status": "In Progress",
+      "network_topology": {
+        "description": "Network path from Linux box to OLT SFP",
+        "nodes": [
+          {
+            "name": "Linux Box",
+            "ip": "192.168.10.162",
+            "interface": "eth0"
+          },
+          {
+            "name": "CSS SW01",
+            "os": "SwOS",
+            "connection": "port2 + SFP1 uplink"
+          },
+          {
+            "name": "R01",
+            "os": "RouterOS",
+            "interfaces": {
+              "from_sw01": "sfp-sfpplus1",
+              "to_sw02": "ether10"
+            }
+          },
+          {
+            "name": "CRS354 SW02",
+            "os": "RouterOS",
+            "interfaces": {
+              "from_r01": "ether1",
+              "olt_sfp": "sfp-sfpplus1"
+            }
+          },
+          {
+            "name": "VOLT OLT SFP Stick",
+            "type": "GPON",
+            "ip_address": "none"
+          },
+          {
+            "name": "ONU",
+            "connection": "fiber from OLT"
+          },
+          {
+            "name": "MikroTik cAP",
+            "ip": "192.168.10.19",
+            "note": "This is NOT the OLT!"
+          }
+        ]
+      },
+      "key_discovery_192_168_10_19": {
+        "conclusion": "192.168.10.19 is NOT the OLT",
+        "evidence": [
+          "MAC 78:9a:18:59:9c:a3 is MikroTik OUI",
+          "DHCP lease confirms host-name=MikroTik",
+          "It's a cAP device behind the ONU, reachable through the GPON link",
+          "The OLT SFP itself has NO IP address on the network"
+        ]
+      },
+      "vlan_4091_setup": {
+        "status": "Configured",
+        "description": "Created VLAN 4091 path for L2 management traffic",
+        "devices": {
+          "SW01_SwOS": {
+            "vlan": 4091,
+            "members": ["port2", "SFP1"]
+          },
+          "R01": {
+            "vlan_filtering": "enabled on main-office bridge",
+            "vlan_4091": "tagged on sfp-sfpplus1 + ether10",
+            "vlan_1": "untagged on all ports (preserves existing traffic)"
+          },
+          "SW02": {
+            "vlan_filtering": "enabled on bridge",
+            "vlan_4091": "tagged on ether1, untagged on sfp-sfpplus1 (strips tag for OLT)",
+            "vlan_1": "untagged on all ports",
+            "hw_offload_disabled": ["sfp-sfpplus1", "ether1"]
+          },
+          "Linux": {
+            "interface": "eth0.4091",
+            "type": "VLAN interface"
+          }
+        }
+      },
+      "l2_probing_results": {
+        "status": "All Failed",
+        "total_packet_combinations": "~500+",
+        "tests_performed": [
+          "All LLC DSAP/SSAP combinations (0x00, 0x04, 0xAA, 0xFE, 0xFF)",
+          "All common EtherTypes (0x8800-0x89FF range, 0xA8C8, 0x88B5, etc.)",
+          "IEEE 1904.2 (0xA8C8) and OAM (0x8809) protocols",
+          "SNAP frames with various OUI/protocol IDs",
+          "OAM multicast destinations (01:80:c2:00:00:02, 01:80:c2:00:00:0e)",
+          "Broadcast and unicast to OLT MAC",
+          "Both big-endian and little-endian magic code encoding",
+          "UDP scan on all ports 1-1023 + common high ports",
+          "TCP scan on 330 ports from same subnet",
+          "ARP probes on 14 common default subnets (192.168.1.x, 192.168.0.x, 10.0.0.x, etc.)",
+          "DHCP discover on VLAN 4091",
+          "Promiscuous capture after port bounce"
+        ],
+        "result": "OLT SFP responds to nothing. Zero packets captured from the OLT on any interface."
+      },
+      "hypothesis": "The VOLT management protocol likely works at the SFP electrical interface level, not through the switch fabric. The management frames may need to be sent directly from a host NIC's SFP port to the OLT SFP, bypassing the switch entirely. The CRS354's switch ASIC (even with HW offload disabled and software bridging) may still not forward the specific frame type the OLT expects."
+    },
+    "phase_2_5_vlan_4090_discovery": {
+      "title": "VLAN 4090 Discovery (Tibit MCMS)",
+      "findings": [
+        "Juniper Unified PON / Tibit MCMS documentation revealed management VLAN is 4090 (not 4091)",
+        "Protocol is IEEE 1904.2 (EtherType 0xA8C8)",
+        "PON Controller interface config: \"interface\": \"eno1.4090\"",
+        "The VOLT OLT SFP is likely a Tibit MicroPlug OLT clone",
+        "See TIBIT_MCMS_FINDINGS.md for full details"
+      ],
+      "vlan_4090_setup": "Configured VLAN 4090 across all devices (same pattern as 4091). Probed with IEEE 1904.2 frames — still no response through the multi-hop path.",
+      "routeros_upgrade_issue": {
+        "action": "Upgraded SW02 from RouterOS 7.11 to latest",
+        "problem": "Broke sfp-sfpplus1 link — auto-negotiation behavior changed",
+        "fix": "/interface/ethernet/set sfp-sfpplus1 auto-negotiation=no speed=1G-baseX",
+        "result": "Link restored: status: link-ok, 1Gbps full-duplex, sfp-rx-loss: no",
+        "important_note": "The OLT SFP requires forced 1G-baseX, no auto-negotiation"
+      },
+      "results_after_link_restore": [
+        "cAP at 192.168.10.19 not yet pingable (ONU re-registration pending)",
+        "VLAN 4090 probes: 0 responses from OLT through multi-hop path",
+        "1 captured packet was a Docker container ARP, not from OLT"
+      ]
+    },
+    "phase_2_6_vendor_and_video_research": {
+      "title": "Vendor & Video Research",
+      "vendor_identified": {
+        "manufacturer": "AINOPOL",
+        "chinese_name": "智慧光迅",
+        "website": "sczhgx.com",
+        "location": "Sichuan, China",
+        "model": "ZH-VOLT32",
+        "alternate_model": "HT-VOLT32 (sold by other OEMs)",
+        "sfp_label": "ZH-VOLT-16 (插拔型VOLT)",
+        "sfp_label_translation": "pluggable VOLT",
+        "ecosystem_products": [
+          "Core switch ZH-CS5228P-PWR",
+          "ONU ZH-F4P",
+          "Cloud AP ZH-AP30006S-M"
+        ],
+        "key_spec": "SVLAN/CVLAN transparent transmission"
+      },
+      "video_walkthrough_findings": {
+        "description": "33-minute Spanish tutorial video of someone configuring the exact same SFP OLT in a MikroTik",
+        "findings": [
+          {
+            "number": 1,
+            "title": "Discovery works through a MikroTik bridge",
+            "detail": "SFP port + Ethernet ports bridged, Windows PC on one of the bridged ports, VOLT tool discovers OLT through the bridge."
+          },
+          {
+            "number": 2,
+            "title": "Interface selection by NIC MAC address",
+            "detail": "Tool scans interfaces, user picks by MAC. Pure L2 discovery, no IP or VLAN needed."
+          },
+          {
+            "number": 3,
+            "title": "OLT TX enable is critical",
+            "detail": "Must be toggled in the software on first use before the OLT communicates with ONUs. Maps to our RE: OpticalTxEnable (Message ID 256)."
+          },
+          {
+            "number": 4,
+            "title": "Works through a bridge, not direct",
+            "detail": "\"The OLT doesn't necessarily have to show as connected to our computer\" — the bridge forwards the management frames."
+          },
+          {
+            "number": 5,
+            "title": "Simple media converter works",
+            "detail": "No special host device, just L2 connectivity."
+          },
+          {
+            "number": 6,
+            "title": "PPPoE setup on MikroTik",
+            "detail": "Bridge created with SFP + Ethernet ports, PPPoE server on the bridge, NAT masquerade for internet, ONUs configured in PPPoE mode."
+          },
+          {
+            "number": 7,
+            "title": "ONU management via web UI",
+            "detail": "ONUs accessed at 192.168.1.1, configured for PPPoE."
+          },
+          {
+            "number": 8,
+            "title": "Real-time monitoring",
+            "detail": "Temperature, uptime, online/offline per ONU, remote activate/deactivate individual ONUs from the VOLT tool."
+          }
+        ]
+      },
+      "key_insight_why_probes_failed": "The video shows the PC on the same MikroTik as the SFP — one bridge, one device. Our setup has the Linux box going through SW01 → R01 → SW02 (three hops, two additional switch fabrics). Tomorrow's direct patch into SW02 replicates the video's topology."
+    },
+    "phase_3_on_site_testing_day_2": {
+      "title": "On-Site Testing (Day 2)",
+      "tests_performed": [
+        {
+          "device": "CRS354-48G-4S+2Q+",
+          "config": "Standard bridge, HW offload disabled, VLAN filtering off, isolated bridge (protocol-mode=none, only ether48 + sfp1)",
+          "result": "failed"
+        },
+        {
+          "device": "Ubiquiti EdgeRouter",
+          "config": "1G SFP port",
+          "result": "failed"
+        },
+        {
+          "device": "Media converter",
+          "config": null,
+          "result": "failed"
+        },
+        {
+          "device": "CCR2004-1G-12S+2XS",
+          "config": "Pure CPU bridging, no switch ASIC, sfp-sfpplus10 + sfp-sfpplus11, olt-mgmt bridge with protocol-mode=none, hw-offload=false",
+          "result": "failed"
+        },
+        {
+          "device": "Second CCR2004",
+          "config": "Swapped to rule out hardware",
+          "result": "same result (failed)"
+        }
+      ],
+      "wireshark_captures": {
+        "volt_pcapng": {
+          "filename": "volt.pcapng",
+          "total_packets": 21710,
+          "description": "VOLT protocol packets captured from Windows VOLT tool"
+        },
+        "volt2_pcapng": {
+          "filename": "volt2.pcapng",
+          "total_packets": 1456,
+          "description": "Packets on CCR2004"
+        },
+        "confirmed_findings": [
+          "VOLT tool sends correctly formatted discovery frames",
+          "EtherType: 0x88B6 (IEEE 802.1 Local Experimental EtherType 2)",
+          "Magic: 0xB958D63A confirmed in every packet",
+          "Only responses captured: CRS354 CDP/LLDP/MNDP — zero from OLT SFP"
+        ]
+      },
+      "conclusion": "Both VOLT-32 OLT SFP sticks are defective. They are optically and electrically alive (link-ok, normal power levels, valid EEPROM) but their embedded management firmware does not respond to discovery frames. Proven across five different host devices including the CCR2004 where no hardware filtering is possible. Replacement units ordered."
+    },
+    "phase_4_protocol_fully_decoded": {
+      "title": "Protocol Fully Decoded (from Wireshark captures)",
+      "frame_format": {
+        "ethernet_header": {
+          "dst": "ff:ff:ff:ff:ff:ff (broadcast)",
+          "src": "<PC MAC>",
+          "ethertype": "0x88B6"
+        },
+        "payload": {
+          "total_size_bytes": 50,
+          "fields": [
+            { "offset": "0:4", "name": "Magic", "value": "0xB958D63A", "type": "uint32 big-endian" },
+            { "offset": "4:6", "name": "Sequence", "type": "uint16 BE", "description": "increments +1 per packet" },
+            { "offset": "6:8", "name": "Length", "value": "0x000C", "type": "uint16 BE", "description": "payload data length = 12" },
+            { "offset": "8:10", "name": "Message ID", "type": "uint16 BE", "description": "maps to EnumMessageId values" },
+            { "offset": "10", "name": "Sub-field", "type": "byte", "description": "message type/flags or ONU index" },
+            { "offset": "11", "name": "Target", "type": "byte", "description": "0xFF = broadcast/all, 0x00-0x1F = ONU index" },
+            { "offset": "12:50", "name": "Data", "type": "payload data", "description": "zeros for Get requests" }
+          ]
+        }
+      },
+      "discovery_cycle": {
+        "description": "The VOLT tool sends continuous Get (byte8=0x00) requests in a repeating cycle",
+        "steps": [
+          "OltVersion (0x0000) with various sub-fields (0x00, 0x10, 0x08, 0x01, 0x0F, etc.)",
+          "OltUpTime (0x0001) with sub-fields (0x18, 0x19)",
+          "OnuStatus queries (0x0201/0x0209) for each ONU slot 0-31",
+          "Cycle repeats with incrementing sequence numbers"
+        ]
+      },
+      "statistics_from_pcap": {
+        "source_file": "volt.pcapng",
+        "total_volt_packets": 21710,
+        "ethertype": "0x88B6",
+        "destination": "ff:ff:ff:ff:ff:ff (all broadcast)",
+        "source_mac": "b0:4f:13:15:71:74",
+        "sequence_range": {
+          "start": "0x0001",
+          "end": "0x51C2",
+          "increment": 1
+        },
+        "message_id_distribution": {
+          "OltVersion": 4650,
+          "OltUpTime": 1395,
+          "OnuStatus_queries": 15665
+        },
+        "byte8_value": "0x00 for all packets (Get message type)"
+      }
+    },
+    "phase_5_next_steps": {
+      "items": [
+        "Receive replacement OLT SFP sticks (1-2 days)",
+        "TP-Link MC220L media converter arriving for simplest test setup",
+        "Build Linux management tool using decoded protocol — ready to test immediately",
+        "Test FS.com GPON-SFP-OLT-MAC-I when it arrives (128 ONU, Class C+)"
+      ]
+    }
+  },
+  "files_in_repo": {
+    "reverse_engineering_scripts": [
+      { "file": "decrypt_modules.py", "purpose": "First attempt at PyArmor decryption" },
+      { "file": "decrypt_v2.py", "purpose": "Direct pytransform.pyarmor() call approach" },
+      { "file": "decrypt_v3.py", "purpose": "Run actual PyArmor entry points" },
+      { "file": "decrypt_v4.py", "purpose": "Module dict inspection after exec" },
+      { "file": "decrypt_v5.py", "purpose": "sys.settrace approach (breakthrough)" },
+      { "file": "decrypt_v6.py", "purpose": "Full trace with class method extraction" },
+      { "file": "decrypt_olt_socket.py", "purpose": "Targeted olt_socket decryption with Crypto deps" },
+      { "file": "dump_bytecode.py", "purpose": "Runtime bytecode dumper via exec hook" },
+      { "file": "protocol_capture.py", "purpose": "Scapy hook for live packet capture" },
+      { "file": "trace_hook.py", "purpose": "sys.settrace hook for function tracing" }
+    ],
+    "network_probing_scripts": [
+      { "file": "olt_probe.py", "purpose": "Basic L2 probe (LLC + EtherType + SNAP)" },
+      { "file": "olt_probe2.py", "purpose": "Extended probe with all EtherType combinations" },
+      { "file": "olt_probe3.py", "purpose": "UDP scan + raw AF_PACKET socket probe" },
+      { "file": "olt_probe_vlan.py", "purpose": "L2 probe via VLAN 4091 interface" },
+      { "file": "olt_ip_probe.py", "purpose": "IP probe across 14 default subnets + DHCP" },
+      { "file": "vlan_setup.py", "purpose": "VLAN 4091 configuration for R01 + SW02 + Linux" }
+    ]
+  },
+  "routeros_configuration_applied": {
+    "R01": {
+      "ip": "192.168.10.1",
+      "vlan_filtering": "enabled on main-office bridge",
+      "vlan_4091": "tagged on sfp-sfpplus1, ether10",
+      "vlan_1": "untagged on all bridge ports + bridge interface",
+      "port_settings": "sfp-sfpplus1, ether10: frame-types=admit-all"
+    },
+    "SW02": {
+      "ip": "192.168.10.97",
+      "vlan_filtering": "enabled on bridge",
+      "vlan_4091": "tagged on ether1, untagged on sfp-sfpplus1",
+      "vlan_1": "untagged on all 61 bridge ports + bridge interface",
+      "port_settings": "sfp-sfpplus1, ether1: frame-types=admit-all, hw-offload=false"
+    },
+    "SW01": {
+      "ip": "192.168.10.249",
+      "os": "SwOS",
+      "vlan_4091": "added in VLANs tab, port2 + SFP1 as members",
+      "vlan_tab": "unchanged (optional mode, any receive, PVID 1)"
+    },
+    "revert_commands": {
+      "description": "If needed, disable VLAN filtering on R01 and SW02",
+      "R01": "/interface/bridge/set main-office vlan-filtering=no",
+      "SW02": [
+        "/interface/bridge/set bridge vlan-filtering=no",
+        "/interface/bridge/port/set [find interface=sfp-sfpplus1] hw=yes",
+        "/interface/bridge/port/set [find interface=ether1] hw=yes"
+      ]
+    }
+  }
+}

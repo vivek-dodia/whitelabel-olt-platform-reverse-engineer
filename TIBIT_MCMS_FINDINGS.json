@@ -1,0 +1,107 @@
+{
+  "title": "Tibit MCMS / Juniper Unified PON — Key Findings",
+  "hypothesis": "The VOLT OLT SFP is likely a Tibit MicroPlug OLT (or clone)",
+  "source": "Juniper \"MicroClimate Management System\" (MCMS) documentation",
+  "critical_discovery": {
+    "title": "Management VLAN 4090",
+    "source_file": "PonCntlInit.json",
+    "config_snippet": {
+      "interface": "eno1.4090"
+    },
+    "description": "The PON Controller communicates with OLT devices on VLAN 4090 using a Linux VLAN subinterface (e.g., enp0s8.4090). This is the management plane VLAN."
+  },
+  "protocol": {
+    "name": "IEEE 1904.2",
+    "full_name": "Standard for Control and Management of EPON",
+    "ethertype": "0xA8C8",
+    "transport": "Layer 2 Ethernet, NOT IP-based",
+    "management_vlan": 4090,
+    "quote": "The MCMS PON Controller uses IEEE 1904.2 packets (L2) to communicate with the OLT and ONU devices."
+  },
+  "architecture": {
+    "layers": [
+      {
+        "name": "MCMS PON Manager",
+        "description": "Angular Web UI, Django REST API"
+      },
+      {
+        "name": "MongoDB",
+        "description": "Central datastore"
+      },
+      {
+        "name": "MCMS PON Controller",
+        "description": "L2 device driver, IEEE 1904.2"
+      },
+      {
+        "name": "MicroPlug OLT",
+        "description": "SFP form factor",
+        "connectivity": "Ethernet VLAN 4090, EtherType 0xA8C8"
+      },
+      {
+        "name": "MicroPlug ONU / Third-party ONUs",
+        "connectivity": "GPON/XGS-PON fiber"
+      }
+    ]
+  },
+  "mcms_stack_components": [
+    {
+      "name": "PON Manager",
+      "description": "Angular web app + Django REST API (Apache2, port 80/443)"
+    },
+    {
+      "name": "PON Controller",
+      "description": "Stateless L2 device driver (IEEE 1904.2 packets)"
+    },
+    {
+      "name": "MongoDB",
+      "description": "Central datastore for config, state, stats, alarms"
+    },
+    {
+      "name": "Netconf Server",
+      "description": "YANG models (BBF TR-383, TR-385) via Netopeer2/Sysrepo"
+    }
+  ],
+  "tibit_specific_details": {
+    "databases": {
+      "main": "tibit_pon_controller",
+      "users": "tibit_users"
+    },
+    "default_users": [
+      "pdmPonController",
+      "pdmPonManager",
+      "pdmNetconf",
+      "pdmUserAdmin"
+    ],
+    "default_password": "pdmPass",
+    "paths": {
+      "install": ["/opt/tibit/poncntl/", "/etc/tibit/poncntl/"],
+      "logs": "/var/log/tibit/"
+    },
+    "service_name": "tibit-poncntl.service",
+    "virtual_interface_pair": ["tibitvirteap", "tibitvirtumt"],
+    "virtual_interface_purpose": "802.1X auth",
+    "supported_features": [
+      "DHCPv4 relay",
+      "DHCPv6 relay",
+      "802.1X authentication engine"
+    ]
+  },
+  "scaling": {
+    "per_instance": {
+      "subscribers": 3072,
+      "olts": 48,
+      "onus_per_olt": 64
+    },
+    "latency_requirement": "<=5ms round-trip to OLTs",
+    "large_scale_example": {
+      "subscribers": 100000,
+      "pon_controller_instances": 32
+    }
+  },
+  "next_steps": [
+    "Try VLAN 4090 instead of 4091 — this is the standard Tibit management VLAN",
+    "Send IEEE 1904.2 frames (EtherType 0xA8C8) on VLAN 4090",
+    "If VOLT OLT is truly a Tibit clone, it should respond on this VLAN",
+    "Consider deploying the actual Tibit MCMS PON Controller (it's a .deb package) to manage the OLT natively"
+  ]
+}

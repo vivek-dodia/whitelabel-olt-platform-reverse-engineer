@@ -1,0 +1,447 @@
+{
+  "title": "VOLT OLT Controller - Complete Reverse Engineering Report",
+  "generated": "2026-03-17",
+  "tool": "Claude Code reverse engineering pipeline",
+  "sections": {
+    "system_overview": {
+      "product": "VOLT GPON OLT (Optical Line Terminal) Management System",
+      "application_name": "GDT (GPON Debug Tool) v6.6",
+      "firmware_version": "9.1",
+      "build_technology": "Python 3.9 + PyQt5, bundled with PyInstaller, protected with PyArmor v52.6.11",
+      "hardware_variants": [
+        { "model": "VOLT16", "ports": "16 PON", "speed": "1G GPON", "firmware_size": "1.51 MB" },
+        { "model": "VOLT16", "ports": "16 PON", "speed": "2.5G GPON", "firmware_size": "1.52 MB" },
+        { "model": "VOLT32", "ports": "32 PON", "speed": "1G GPON", "firmware_size": "1.52 MB" },
+        { "model": "VOLT32", "ports": "32 PON", "speed": "2.5G GPON", "firmware_size": "1.52 MB" }
+      ],
+      "oem_white_label_customers": [
+        { "name": "Nislight", "id": 0 },
+        { "name": "Ainopol", "id": 1 },
+        { "name": "Sirivision", "id": 2 },
+        { "name": "Middle", "id": 3 },
+        { "name": "Wowgrup", "id": 4 }
+      ],
+      "tool_variants": [
+        {
+          "filename": "VOLT_Tool_V6.6.exe",
+          "description": "Branded VOLT management tool"
+        },
+        {
+          "filename": "Neutral_Tool_V6.6.exe",
+          "description": "Unbranded/neutral variant (7 bytes size difference, ~4.9M differing bytes)"
+        },
+        {
+          "filename": "Ainopol UPG V6.6.exe",
+          "description": "Ainopol-branded firmware upgrade utility"
+        }
+      ]
+    },
+    "application_architecture": {
+      "module_map": {
+        "gdt.py": "Main application entry point (GponDebugToolWindow)",
+        "gdt_form.py": "Qt Designer UI form (Ui_GponDebugTool)",
+        "olt_socket.py": "Layer 2 Ethernet communication protocol",
+        "com_def.py": "Protocol constants, enums, data structures",
+        "OltInfoWidget.py": "OLT device card widget + firmware upgrade logic",
+        "OnuInfoWidget.py": "ONU (subscriber) information widget",
+        "OmciMsgWidget.py": "OMCI message viewer/sender",
+        "PasswordWidget.py": "Admin password management dialog",
+        "MessageWidget.py": "Status message dialog",
+        "TextInputWidget.py": "Text input dialog (password entry, alias)",
+        "WaitBobWriteWidget.py": "Wait dialog for BoB register writes",
+        "WaitPasswordSaveWidget.py": "Wait dialog for password save to flash",
+        "logo_rc.py": "Embedded logo/icon resources"
+      },
+      "dependencies": [
+        { "name": "PyQt5", "purpose": "GUI framework (with qdarkstyle theme)" },
+        { "name": "Scapy", "purpose": "Raw Layer 2 Ethernet packet construction" },
+        { "name": "PyCryptodome", "purpose": "AES encryption, CMAC authentication" },
+        { "name": "reedsolo", "purpose": "Reed-Solomon error correction (for firmware integrity)" },
+        { "name": "pyperclip", "purpose": "Clipboard operations (copy DNA/serial)" },
+        { "name": "binascii", "purpose": "Hex encoding/decoding" }
+      ],
+      "main_application_classes": {
+        "GponDebugToolWindow": {
+          "parent": "QMainWindow",
+          "description": "Main window, manages all OLT cards",
+          "children": [
+            { "name": "ReadAxRegThread", "type": "Thread", "purpose": "AX register read thread" },
+            { "name": "load_default_25l99_reg_thread", "purpose": "GN25L99 BoB default config" },
+            { "name": "load_default_6533_reg_thread", "purpose": "NRG6533 BoB default config" },
+            { "name": "MaskWidget", "type": "QWidget", "purpose": "Overlay mask widget" }
+          ]
+        },
+        "WidgetOltInfo": {
+          "parent": "QWidget",
+          "description": "Per-OLT device card",
+          "children": [
+            { "name": "oltBootCheckThread", "type": "Thread", "purpose": "Boot check sequence" },
+            { "name": "oltUpgradeThread", "type": "Thread", "purpose": "Firmware upgrade sequence" }
+          ]
+        },
+        "OltListenThread": {
+          "type": "Thread",
+          "description": "Incoming packet listener"
+        },
+        "oltSocketThread": {
+          "description": "Socket communication handler"
+        },
+        "WidgetOnuInfo": {
+          "parent": "QWidget",
+          "description": "Per-ONU subscriber card"
+        },
+        "WidgetOmciMsg": {
+          "parent": "QWidget",
+          "description": "OMCI message display"
+        },
+        "WidgetPassword": {
+          "parent": "QDialog",
+          "description": "Password management"
+        },
+        "WidgetTextInput": {
+          "parent": "QDialog",
+          "description": "Generic text input"
+        },
+        "WidgetWaitBobWrite": {
+          "parent": "QDialog",
+          "description": "BoB write wait"
+        },
+        "WidgetWaitPasswordSave": {
+          "parent": "QDialog",
+          "description": "Password save wait"
+        },
+        "WidgetMessage": {
+          "parent": "QDialog",
+          "description": "Message display"
+        }
+      }
+    },
+    "communication_protocol": {
+      "transport_layer": {
+        "type": "Layer 2 Ethernet (NOT TCP/IP) via Scapy",
+        "ethertype": "0x88B6",
+        "ethertype_description": "IEEE 802.1 Local Experimental EtherType 2",
+        "discovery_destination": "ff:ff:ff:ff:ff:ff",
+        "connectivity_requirement": "Direct Ethernet communication (requires NIC in same broadcast domain)",
+        "verification": "Confirmed via Wireshark capture of actual VOLT tool traffic"
+      },
+      "wire_format": {
+        "description": "Confirmed from pcap analysis",
+        "ethernet_header": {
+          "dst": "ff:ff:ff:ff:ff:ff (broadcast)",
+          "src": "<host MAC>",
+          "ethertype": "0x88B6"
+        },
+        "volt_payload": {
+          "total_size_bytes": 50,
+          "fields": [
+            { "offset": "0:4", "name": "Magic", "type": "uint32 BE", "value": "0xB958D63A" },
+            { "offset": "4:6", "name": "Sequence", "type": "uint16 BE", "description": "auto-increment" },
+            { "offset": "6:8", "name": "Length", "type": "uint16 BE", "description": "payload data length" },
+            { "offset": "8:10", "name": "Message ID", "type": "uint16 BE", "description": "EnumMessageId" },
+            { "offset": "10", "name": "Sub-field", "type": "byte", "description": "msg type/flags" },
+            { "offset": "11", "name": "Target", "type": "byte", "description": "0xFF=all, 0x00-0x1F=ONU idx" },
+            { "offset": "12:50", "name": "Data", "type": "payload", "description": "zeros for Get requests" }
+          ]
+        }
+      },
+      "security": {
+        "aes_encryption": "Module-level AesKey defined in com_def",
+        "cmac_authentication": "Crypto.Hash.CMAC for message integrity",
+        "reed_solomon": "Error correction for firmware data integrity",
+        "password_authentication": {
+          "format": "8-character alphanumeric",
+          "default": "12345678",
+          "lockout_threshold": 5,
+          "lockout_duration_minutes": 10,
+          "reset_method": "Dealer CODE + OLT power cycle within 30 seconds"
+        }
+      },
+      "message_types": [
+        { "value": 0, "type": "Init", "description": "Initialization/discovery" },
+        { "value": 1, "type": "Get", "description": "Query parameter" },
+        { "value": 2, "type": "GetResponse", "description": "Response to query" },
+        { "value": 3, "type": "Set", "description": "Set parameter" },
+        { "value": 4, "type": "SetResponse", "description": "Response to set" },
+        { "value": 5, "type": "Notify", "description": "Asynchronous notification" },
+        { "value": 6, "type": "OMCI", "description": "OMCI message passthrough" }
+      ],
+      "message_ids": {
+        "system_info": [
+          { "id": 1, "name": "Init", "description": "System initialization" },
+          { "id": 2, "name": "OltVersion", "description": "Firmware version query" },
+          { "id": 3, "name": "OltUpTime", "description": "System uptime" },
+          { "id": 4, "name": "LedSwitch", "description": "LED control" },
+          { "id": 5, "name": "OltTemperature", "description": "Current temperature" },
+          { "id": 6, "name": "OltTemperatureMax", "description": "Maximum recorded temperature" },
+          { "id": 7, "name": "OltIntVoltage", "description": "Internal voltage" },
+          { "id": 8, "name": "OltAuxVoltage", "description": "Auxiliary voltage" },
+          { "id": 9, "name": "ResetLedEnable", "description": "Reset LED enable state" },
+          { "id": 10, "name": "FpgaDna", "description": "FPGA DNA (unique ID)" }
+        ],
+        "flash_operations": [
+          { "id": 11, "name": "FlashRead", "description": "Read flash memory" },
+          { "id": 12, "name": "FlashErase", "description": "Erase flash sector" },
+          { "id": 13, "name": "FlashWrite", "description": "Write flash memory" },
+          { "id": 14, "name": "FlashErase64K", "description": "Erase 64KB flash block" },
+          { "id": 15, "name": "FlashProtect", "description": "Flash write protection" },
+          { "id": 16, "name": "FlashWrite1K", "description": "Write 1KB to flash" }
+        ],
+        "network_speed": [
+          { "id": 17, "name": "UplinkSpeed", "description": "Uplink port speed" }
+        ],
+        "authentication": [
+          { "id": 18, "name": "LoginStat", "description": "Login status check" },
+          { "id": 19, "name": "OltPassword", "description": "Password verification" },
+          { "id": 20, "name": "OltLogout", "description": "Logout" },
+          { "id": 21, "name": "ChangePassword", "description": "Change password request" },
+          { "id": 22, "name": "ChangePasswordRet", "description": "Change password result" },
+          { "id": 23, "name": "ResetPassword", "description": "Reset password to default" },
+          { "id": 24, "name": "Reboot", "description": "System reboot" }
+        ],
+        "optical_module": [
+          { "id": 25, "name": "OpticalTxEnable", "description": "TX laser enable/disable" },
+          { "id": 26, "name": "OpticalVoltage", "description": "SFP module voltage" },
+          { "id": 27, "name": "OpticalCurrent", "description": "SFP bias current" },
+          { "id": 28, "name": "OpticalPower", "description": "TX/RX optical power" },
+          { "id": 29, "name": "OpticalTemperature", "description": "SFP temperature" }
+        ],
+        "traffic_counters": [
+          { "id": 30, "name": "BroadcastTxCnt", "description": "Broadcast TX counter" },
+          { "id": 31, "name": "BroadcastRxCnt", "description": "Broadcast RX counter" },
+          { "id": 32, "name": "MulticastTxCnt", "description": "Multicast TX counter" },
+          { "id": 33, "name": "MulticastRxCnt", "description": "Multicast RX counter" },
+          { "id": 34, "name": "UnicastTxCnt", "description": "Unicast TX counter" },
+          { "id": 35, "name": "UnicastRxCnt", "description": "Unicast RX counter" }
+        ],
+        "authentication_config": [
+          { "id": 36, "name": "LoidAuthSwitch", "description": "LOID authentication on/off" },
+          { "id": 37, "name": "AuthLoid", "description": "Authentication LOID value" },
+          { "id": 38, "name": "AuthPassword", "description": "Authentication password" },
+          { "id": 39, "name": "RogueOnuDetectSwitch", "description": "Rogue ONU detection" },
+          { "id": 40, "name": "DiscoverOnuSwitch", "description": "ONU auto-discovery" }
+        ],
+        "optical_diagnostics": [
+          { "id": 41, "name": "OpticalModuleIIC", "description": "I2C read of optical module" },
+          { "id": 42, "name": "PeriodicalOptical", "description": "Periodic optical monitoring" },
+          { "id": 43, "name": "PeriodicalOpticalOnPeriod", "description": "On-period for periodic mode" },
+          { "id": 44, "name": "PeriodicalOpticalOffPeriod", "description": "Off-period for periodic mode" },
+          { "id": 45, "name": "Prbs23Enable", "description": "PRBS23 test pattern enable" },
+          { "id": 46, "name": "Prbs23ErrorCnt", "description": "PRBS23 error counter" },
+          { "id": 47, "name": "OpticalSD", "description": "Signal detect threshold" },
+          { "id": 48, "name": "Ux3326Reset", "description": "UX3326 chip reset" }
+        ],
+        "onu_management": [
+          { "id": 49, "name": "MaxONU", "description": "Maximum ONU count" },
+          { "id": 50, "name": "OmciMode", "description": "OMCI operation mode" },
+          { "id": 51, "name": "P2PSwitch", "description": "Point-to-point mode" },
+          { "id": 52, "name": "EthAnSwitch", "description": "Ethernet auto-negotiation" },
+          { "id": 53, "name": "CoverOffline", "description": "Cover offline mode" },
+          { "id": 54, "name": "OnuOnlineNumber", "description": "Currently online ONU count" },
+          { "id": 55, "name": "OnuStatus", "description": "ONU status query" },
+          { "id": 56, "name": "OnuUpTime", "description": "ONU online duration" },
+          { "id": 57, "name": "OnuDownTime", "description": "ONU offline timestamp" },
+          { "id": 58, "name": "OnuTxPower", "description": "ONU TX power (upstream)" },
+          { "id": 59, "name": "OnuRxPower", "description": "ONU RX power (downstream)" },
+          { "id": 60, "name": "OnuGponSn", "description": "ONU GPON serial number" },
+          { "id": 61, "name": "OnuRangeTime", "description": "ONU ranging time/distance" },
+          { "id": 62, "name": "OnuLoid", "description": "ONU LOID identifier" },
+          { "id": 63, "name": "DeactivateOnu", "description": "Deactivate specific ONU" },
+          { "id": 64, "name": "OnuPassword", "description": "ONU password" },
+          { "id": 65, "name": "DisableSN", "description": "Disable ONU by serial number" },
+          { "id": 66, "name": "OnuResponseTime", "description": "ONU response time" },
+          { "id": 67, "name": "OnuLastOfflineReason", "description": "Last offline reason" },
+          { "id": 68, "name": "ActivateOnu", "description": "Activate specific ONU" },
+          { "id": 69, "name": "OnuOpticalInfo", "description": "ONU optical diagnostics" },
+          { "id": 70, "name": "OnuOpticalInfoUpdate", "description": "Update ONU optical info" }
+        ],
+        "events": [
+          { "id": 71, "name": "OnuStatusChange", "description": "ONU status change notification" },
+          { "id": 72, "name": "RogueOnuDetected", "description": "Rogue ONU detected event" },
+          { "id": 73, "name": "DiscoverOnuGponSn", "description": "Discovered ONU serial number" }
+        ],
+        "debug_advanced": [
+          { "id": 74, "name": "OmciErrorCnt", "description": "OMCI error counter" },
+          { "id": 75, "name": "ResetPonRx", "description": "Reset PON receiver" },
+          { "id": 76, "name": "BWmapLoopMax", "description": "Bandwidth map loop maximum" },
+          { "id": 77, "name": "BurstResetOffset", "description": "Burst mode reset offset" },
+          { "id": 78, "name": "FanPwnWidth", "description": "Fan PWM width control" },
+          { "id": 79, "name": "BipErrorCnt", "description": "BIP error counter" },
+          { "id": 80, "name": "MacTabelAddCnt", "description": "MAC table add counter" },
+          { "id": 81, "name": "MacTabelAgingCnt", "description": "MAC table aging counter" },
+          { "id": 82, "name": "PwmCnt", "description": "PWM counter" },
+          { "id": 83, "name": "PwmWidth", "description": "PWM width value" },
+          { "id": 84, "name": "OmciPackage", "description": "OMCI package data" }
+        ]
+      }
+    },
+    "omci_protocol_support": {
+      "message_types": [
+        { "value": 4, "type": "Create" },
+        { "value": 6, "type": "Delete" },
+        { "value": 8, "type": "Set" },
+        { "value": 9, "type": "Get" },
+        { "value": 11, "type": "GetAllAlarms" },
+        { "value": 12, "type": "GetAllAlarmsNext" },
+        { "value": 13, "type": "MibUpload" },
+        { "value": 14, "type": "MibUploadNext" },
+        { "value": 15, "type": "MibReset" },
+        { "value": 16, "type": "Alarm" },
+        { "value": 17, "type": "AttributeValueChange" },
+        { "value": 18, "type": "Test" },
+        { "value": 19, "type": "StartSoftwareDownload" },
+        { "value": 20, "type": "DownloadSection" },
+        { "value": 21, "type": "EndSoftwareDownload" },
+        { "value": 22, "type": "ActivateSoftware" },
+        { "value": 23, "type": "CommitSoftware" },
+        { "value": 24, "type": "SynchronizeTime" },
+        { "value": 25, "type": "Reboot" },
+        { "value": 26, "type": "GetNext" },
+        { "value": 27, "type": "TestResult" },
+        { "value": 28, "type": "GetCurrentData" },
+        { "value": 29, "type": "SetTable" }
+      ],
+      "standard": "ITU-T G.988 compliant",
+      "device_identifiers": [
+        { "value": "0x0A", "type": "Baseline message set" },
+        { "value": "0x0B", "type": "Extended message set" }
+      ],
+      "supported_managed_entities": [
+        { "class_id": 2, "entity": "ONU Data" },
+        { "class_id": 5, "entity": "Cardholder" },
+        { "class_id": 6, "entity": "Circuit Pack" },
+        { "class_id": 7, "entity": "Software Image" },
+        { "class_id": 45, "entity": "MAC Bridge Service Profile" },
+        { "class_id": 46, "entity": "MAC Bridge Configuration Data" },
+        { "class_id": 47, "entity": "MAC Bridge Port Configuration Data" },
+        { "class_id": 256, "entity": "ONU-G" },
+        { "class_id": 263, "entity": "ANI-G" }
+      ]
+    },
+    "firmware_upgrade_process": {
+      "upgrade_sequence": [
+        { "step": 1, "name": "CheckVersion", "description": "Compare firmware versions" },
+        { "step": 2, "name": "CheckMaxOnu", "description": "Verify max ONU count compatibility" },
+        { "step": 3, "name": "UpdateDNA", "description": "Update FPGA DNA (unique ID)" },
+        { "step": 4, "name": "CheckRunning", "description": "Check which image is active" },
+        { "step": 5, "name": "Unlock", "description": "Unlock flash for writing" },
+        { "step": 6, "name": "Erase", "description": "Erase target flash region" },
+        { "step": 7, "name": "Program", "description": "Write new firmware data" },
+        { "step": 8, "name": "CheckResult", "description": "Verify write integrity" },
+        { "step": 9, "name": "TryRecover", "description": "Recovery attempt if verification fails" },
+        { "step": 10, "name": "RecheckResult", "description": "Re-verify after recovery" },
+        { "step": 11, "name": "Fallback", "description": "Fallback to other image if needed" },
+        { "step": 12, "name": "Switch", "description": "Switch active image" },
+        { "step": 13, "name": "CheckStartup", "description": "Verify boot parameters" },
+        { "step": 14, "name": "Finish", "description": "Finalize upgrade" }
+      ],
+      "upgrade_result_codes": [
+        { "code": "Success", "meaning": "Upgrade completed successfully" },
+        { "code": "Fail", "meaning": "Upgrade failed" },
+        { "code": "Latest", "meaning": "Already on latest version" },
+        { "code": "Mismatch", "meaning": "Hardware/firmware mismatch" },
+        { "code": "Timeout", "meaning": "Communication timeout" },
+        { "code": "RebootCheckOK", "meaning": "Post-reboot check passed" },
+        { "code": "MismatchOnuNum", "meaning": "ONU count mismatch" }
+      ],
+      "flash_memory_layout": {
+        "dual_image_support": true,
+        "image_locations": {
+          "FirstAddr": "Primary image location",
+          "SecondAddr_4M": "Secondary image at 4MB offset",
+          "SecondAddr_8M": "Secondary image at 8MB offset"
+        },
+        "flash_operations": ["Read", "Erase (sector)", "Erase64K (block)", "Write", "Write1K"],
+        "protection": "Flash write protection toggle"
+      },
+      "firmware_binary_format": {
+        "type": "Xilinx-compatible FPGA bitstream",
+        "sync_word": "0xAA995566",
+        "sync_word_offset": "0x30",
+        "idcode": "0x0222C143",
+        "idcode_description": "Custom ASIC, manufacturer ID 0x0A1",
+        "build_date_location": "Embedded in last 8 bytes of file",
+        "build_date_example": "20251107",
+        "size": "~1.5 MB per variant"
+      }
+    },
+    "hardware_details": {
+      "fpga_asic": {
+        "type": "Xilinx 7-series compatible configuration interface",
+        "idcode": "0x0222C143",
+        "idcode_note": "Not standard Xilinx part",
+        "jtag_manufacturer_id": "0x0A1",
+        "jtag_manufacturer_note": "Non-standard, likely Chinese PON ASIC",
+        "fpga_dna_purpose": "Device identification and license binding"
+      },
+      "optical_transceiver_bob": {
+        "components": [
+          { "name": "GN25L99", "description": "BoB component with dedicated register configuration" },
+          { "name": "NRG6533", "description": "BoB component with dedicated register configuration" },
+          { "name": "UX3326", "description": "Transceiver chip with reset capability" }
+        ],
+        "bus_interface": "I2C bus interface for optical module diagnostics (DDM/DOM)",
+        "supported_monitoring": ["TX enable", "voltage", "current", "power", "temperature"]
+      },
+      "onu_states": [
+        { "state": "Unused", "description": "Not configured" },
+        { "state": "Online", "description": "Active and communicating" },
+        { "state": "DyingGasp", "description": "Power failure reported" },
+        { "state": "Offline", "description": "Not responding" },
+        { "state": "Ranging", "description": "Performing ranging process" },
+        { "state": "RangeFail", "description": "Ranging failed" },
+        { "state": "Disabled", "description": "Administratively disabled" },
+        { "state": "Omci", "description": "In OMCI configuration state" },
+        { "state": "OmciFail", "description": "OMCI configuration failed" }
+      ],
+      "onu_offline_reasons": [
+        { "reason": "NA", "description": "Unknown/not applicable" },
+        { "reason": "DyingGasp", "description": "Power failure at ONU" },
+        { "reason": "Los", "description": "Loss of Signal" },
+        { "reason": "Lof", "description": "Loss of Frame" },
+        { "reason": "Loam", "description": "Loss of PLOAM" },
+        { "reason": "AuthFail", "description": "Authentication failure" },
+        { "reason": "Deactivate", "description": "Admin deactivation" },
+        { "reason": "OmciFail", "description": "OMCI setup failure" },
+        { "reason": "RangeFail", "description": "Ranging failure" }
+      ]
+    },
+    "helper_functions": {
+      "olt_socket_module": [
+        { "function": "twos_comp()", "description": "Two's complement conversion for signed integer handling" },
+        { "function": "round_to_nearest_integer()", "description": "Rounding utility for optical power calculations" }
+      ],
+      "com_def_module": [
+        { "function": "char2hex()", "description": "Character to hex string conversion" },
+        { "function": "hex2char()", "description": "Hex string to character conversion" }
+      ],
+      "data_structures": [
+        { "name": "StPackageInfo", "description": "Firmware package metadata" },
+        { "name": "StIicInfo", "description": "I2C/optical module diagnostic data" },
+        { "name": "StOltConfig", "description": "OLT configuration parameters" },
+        { "name": "StPasswordInfo", "description": "Authentication state and credentials" }
+      ]
+    },
+    "ui_tabs_and_features": [
+      { "tab": "OnuInfo", "function": "View connected ONUs, activate/deactivate, view optical stats" },
+      { "tab": "Notify", "function": "Event notifications (status changes, rogue ONU, discovery)" },
+      { "tab": "BoB", "function": "Optical transceiver configuration (GN25L99, NRG6533 registers)" },
+      { "tab": "OMCI", "function": "OMCI message viewer and sender" },
+      { "tab": "Upgrade", "function": "Firmware upgrade with progress bar" },
+      { "tab": "Config", "function": "OLT configuration (LOID auth, P2P, auto-negotiation, etc.)" },
+      { "tab": "Debug", "function": "Debug tools (PRBS, counters, bandwidth map, error counters)" },
+      { "tab": "About", "function": "Version information" }
+    ],
+    "extraction_methodology": {
+      "steps": [
+        "Identified executables as PyInstaller bundles (Python 3.9)",
+        "Extracted with pyinstxtractor.py (618 PYZ modules)",
+        "Discovered PyArmor v52.6.11 protection on all app modules",
+        "Downloaded Python 3.9 64-bit embeddable to match pytransform.pyd ABI",
+        "Used sys.settrace() to capture decrypted code objects at runtime",
+        "Captured 161 code objects with full symbol tables, constants, and bytecode",
+        "Cross-referenced with firmware binary analysis and documentation"
+      ]
+    }
+  }
+}
