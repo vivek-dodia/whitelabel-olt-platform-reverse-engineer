@@ -6,7 +6,7 @@ Reverse engineering of the VOLT GPON OLT management platform (GDT v6.6) and firm
 
 VOLT is a white-label GPON OLT (Optical Line Terminal) sold under multiple brands — Ainopol, Nislight, Sirivision, Middle, Wowgrup. The management software communicates with OLT hardware over **raw Layer 2 Ethernet** using a custom protocol. There is no public documentation for the protocol.
 
-The platform appears to be closely related to (or a clone of) the **Tibit MicroPlug OLT** architecture used by Juniper's Unified PON / MicroClimate Management System (MCMS). See the [Juniper MCMS Installation Guide](https://www.juniper.net/documentation/us/en/software/unified-pon/unified-pon-microclimate-installation-guide.pdf) and [TIBIT_MCMS_FINDINGS.md](TIBIT_MCMS_FINDINGS.md) for details on the management protocol (IEEE 1904.2 over VLAN 4090).
+The platform appears to be closely related to (or a clone of) the **Tibit MicroPlug OLT** architecture used by Juniper's Unified PON / MicroClimate Management System (MCMS). See the [Juniper MCMS Installation Guide](https://www.juniper.net/documentation/us/en/software/unified-pon/unified-pon-microclimate-installation-guide.pdf) and [TIBIT_MCMS_FINDINGS.json](TIBIT_MCMS_FINDINGS.json) for details on the management protocol (IEEE 1904.2 over VLAN 4090).
 
 **Manufacturer:** AINOPOL (智慧光迅 / sczhgx.com), Sichuan, China. Model ZH-VOLT32. Also sold as HT-VOLT32 and other OEM rebrandings. Comes with the free Windows VOLT management tool. The SFP stick works in any switch/router with an SFP port — management is done via L2 Ethernet frames through the host device's bridge.
 
@@ -20,7 +20,7 @@ This repo cracks open the entire stack:
 ## Repo Structure
 
 ```
-├── REVERSE_ENGINEERING_REPORT.md    # Full technical report
+├── REVERSE_ENGINEERING_REPORT.json   # Full technical report
 ├── decrypted_source/                # Decrypted Python bytecode + disassembly
 ├── VOLT_Tool_V6.6.exe_extracted/    # Extracted PyInstaller bundle (main tool)
 ├── Neutral_Tool_V6.6.exe_extracted/ # Extracted neutral/unbranded variant
@@ -80,7 +80,7 @@ Payload (50 bytes):
 - **Config**: LoidAuthSwitch, RogueOnuDetectSwitch, DiscoverOnuSwitch, P2PSwitch, EthAnSwitch, OmciMode
 - **Events**: OnuStatusChange, RogueOnuDetected, DiscoverOnuGponSn
 
-Full list in [REVERSE_ENGINEERING_REPORT.md](REVERSE_ENGINEERING_REPORT.md).
+Full list in [REVERSE_ENGINEERING_REPORT.json](REVERSE_ENGINEERING_REPORT.json).
 
 ## Using the Extracted Source
 
