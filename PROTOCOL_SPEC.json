@@ -1,0 +1,235 @@
+{
+  "protocol_name": "VOLT OLT Management Protocol",
+  "version": "Decoded from firmware B.8.8 / GDT v6.6",
+  "last_updated": "2026-03-19",
+  "status": "FULLY DECODED — confirmed with working OLT SFP stick",
+
+  "transport": {
+    "layer": "Ethernet Layer 2",
+    "ethertype": "0x88B6",
+    "ethertype_description": "IEEE 802.1 Local Experimental EtherType 2",
+    "discovery": "Broadcast to ff:ff:ff:ff:ff:ff",
+    "response": "Unicast back to requesting MAC",
+    "no_vlan_required": true,
+    "no_ip_required": true,
+    "host_requirement": "Must be on same L2 segment. Media converter works. MikroTik switches may filter 0x88B6 frames even with HW offload disabled."
+  },
+
+  "frame_format": {
+    "ethernet_header": {
+      "dst_request": "ff:ff:ff:ff:ff:ff (broadcast for discovery) or OLT MAC (after discovery)",
+      "dst_response": "<requesting PC MAC> (unicast)",
+      "src_request": "<PC NIC MAC>",
+      "src_response": "<OLT MAC>",
+      "ethertype": "0x88B6"
+    },
+    "payload": {
+      "total_size_bytes": "Variable (min 50 for requests, larger for responses)",
+      "fields": [
+        {
+          "offset": "0:4",
+          "name": "magic",
+          "type": "uint32 big-endian",
+          "value": "0xB958D63A",
+          "description": "Protocol identifier, constant in all packets"
+        },
+        {
+          "offset": "4:6",
+          "name": "sequence",
+          "type": "uint16 big-endian",
+          "description": "Auto-incrementing per request. Response echoes the request's sequence number."
+        },
+        {
+          "offset": "6:8",
+          "name": "length",
+          "type": "uint16 big-endian",
+          "description": "Length of the data portion after the header. Requests typically 0x000C (12). Responses vary (13-268+)."
+        },
+        {
+          "offset": "8:10",
+          "name": "message_group",
+          "type": "uint16 big-endian",
+          "description": "Message category/group. For requests this is Get=0x00xx. For responses the high byte is 0x01 (GetResponse offset +0x0100)."
+        },
+        {
+          "offset": "10",
+          "name": "parameter_id",
+          "type": "uint8",
+          "description": "The actual parameter being queried within the message group. This is the real message identifier."
+        },
+        {
+          "offset": "11",
+          "name": "target",
+          "type": "uint8",
+          "description": "0xFF = broadcast/all/OLT-level query. 0x00-0x1F = specific ONU index (0-31)."
+        },
+        {
+          "offset": "12+",
+          "name": "data",
+          "type": "bytes",
+          "description": "Request: zeros for Get operations, values for Set operations. Response: parameter value data."
+        }
+      ]
+    }
+  },
+
+  "message_group_encoding": {
+    "description": "The message_group field (bytes 8-9) encodes both the operation type and a group category.",
+    "request_groups": {
+      "0x0000": "System group (OltVersion, OltUpTime, Temperature, Voltage, DNA, etc.)",
+      "0x0001": "Extended system group (uptime, speed, MaxONU)",
+      "0x0002": "ONU/Config group (OnuStatus, ONU operations, per-ONU queries)"
+    },
+    "response_offset": "+0x0100 (request group 0x0000 → response 0x0100, request 0x0001 → response 0x0101, etc.)"
+  },
+
+  "parameter_map": {
+    "description": "The parameter_id (byte 10) combined with message_group determines what is being queried/set.",
+    "system_group_0x0000": {
+      "0x00": {
+        "name": "OltVersion",
+        "response_format": "ASCII string (null-terminated)",
+        "example_response": "422e382e38 = 'B.8.8'",
+        "response_length": 17
+      },
+      "0x01": {
+        "name": "OltUpTime",
+        "response_format": "uint32 big-endian (seconds)",
+        "example_response": "00000013b3c1 = 1,290,177 seconds",
+        "response_length": 18
+      },
+      "0x03": {
+        "name": "OltTemperature",
+        "response_format": "uint16 big-endian (value / 100 = degrees C)",
+        "example_response": "0a91 = 2705 → 27.05°C",
+        "response_length": 14
+      },
+      "0x04": {
+        "name": "OltTemperatureMax",
+        "response_format": "uint16 big-endian (value / 100 = degrees C)",
+        "example_response": "0a92 = 2706 → 27.06°C",
+        "response_length": 14
+      },
+      "0x05": {
+        "name": "OltIntVoltage",
+        "response_format": "uint16 big-endian",
+        "response_length": 14
+      },
+      "0x06": {
+        "name": "OltAuxVoltage",
+        "response_format": "uint16 big-endian",
+        "response_length": 14
+      },
+      "0x08": {
+        "name": "FpgaDna",
+        "response_format": "8 bytes raw (FPGA unique silicon ID)",
+        "example_response": "8071a8e1ea828922",
+        "response_length": 20
+      },
+      "0x09": {
+        "name": "FpgaBitstream",
+        "response_format": "Raw FPGA configuration header including sync word and IDCODE",
+        "example_response": "Contains AA995566 (Xilinx sync) and 0222C143 (IDCODE)",
+        "response_length": 268,
+        "note": "This is a large response containing the FPGA bitstream header"
+      },
+      "0x0F": {
+        "name": "UplinkSpeed",
+        "response_format": "uint8",
+        "response_length": 13
+      },
+      "0x10": {
+        "name": "LoginStat",
+        "response_format": "uint8 (login status)",
+        "response_length": 13
+      }
+    },
+    "extended_system_group_0x0001": {
+      "0x18": {
+        "name": "MaxONU",
+        "response_format": "uint8",
+        "example_response": "20 = 32 ONUs",
+        "response_length": 13
+      },
+      "0x19": {
+        "name": "FirmwareVersionMajor",
+        "response_format": "uint8",
+        "example_response": "03",
+        "response_length": 13
+      },
+      "0x00": {
+        "name": "ExtUpTime",
+        "response_format": "uint32 big-endian"
+      }
+    },
+    "onu_group_0x0002": {
+      "description": "Per-ONU queries. Target byte (offset 11) specifies ONU index 0x00-0x1F.",
+      "0x00": "OnuOnlineNumber / aggregate status",
+      "0x01": "OnuStatus (per ONU)",
+      "0x09": "OnuGponSn / OnuOpticalInfo (per ONU)"
+    }
+  },
+
+  "discovery_sequence": {
+    "description": "The VOLT tool performs continuous polling in a repeating cycle",
+    "initial_discovery": [
+      "1. Send Get group=0x0000 param=0x00 target=0xFF (OltVersion) to broadcast",
+      "2. OLT responds with firmware version string → tool now knows OLT MAC",
+      "3. Send Get group=0x0000 param=0x09 target=0xFF (FpgaBitstream) to OLT MAC",
+      "4. OLT responds with FPGA header including DNA and IDCODE",
+      "5. Tool displays OLT card with version, temperature, uptime"
+    ],
+    "polling_cycle": [
+      "Get OltVersion (param=0x00) — firmware string",
+      "Get LoginStat (param=0x10) — auth status",
+      "Get OltUpTime (param=0x01, also via group 0x0001 param=0x18/0x19)",
+      "Get OltTemperature (param=0x03)",
+      "Get OltTemperatureMax (param=0x04)",
+      "Get OltIntVoltage (param=0x05)",
+      "Get OltAuxVoltage (param=0x06)",
+      "Get FpgaDna (param=0x08)",
+      "Get UplinkSpeed (param=0x0F)",
+      "Get MaxONU (group=0x0001 param=0x18)",
+      "Iterate ONU slots 0-31: Get OnuStatus + OnuGponSn per slot"
+    ],
+    "cycle_rate": "Continuous, approximately 46 unique queries per cycle"
+  },
+
+  "observed_olt_data": {
+    "olt_mac": "48:E6:63:10:D4:38",
+    "firmware_version": "B.8.8",
+    "fpga_dna": "8071a8e1ea828922",
+    "fpga_idcode": "0x0222C143",
+    "max_onus": 32,
+    "temperature_c": 27.05,
+    "uptime_seconds": 1290177,
+    "note": "This OLT SFP was previously thought defective (no response through MikroTik switches). Works perfectly through a dumb media converter."
+  },
+
+  "key_findings": {
+    "response_encoding": "Response msg_group = Request msg_group + 0x0100",
+    "sequence_echo": "Response echoes the request's sequence number exactly",
+    "sub_field_is_real_param": "The 'sub' byte (offset 10) is the actual parameter ID, not the msg_id field",
+    "first_discovery_broadcast": "First packet is broadcast, subsequent can be unicast to OLT MAC",
+    "media_converter_required": "MikroTik CRS354/CCR2004 do NOT pass 0x88B6 frames even with HW offload disabled. A dumb media converter (L1 PHY) works.",
+    "variable_response_length": "Response length field varies: 13 (simple values), 17 (strings), 20 (DNA), 268 (FPGA bitstream)"
+  },
+
+  "security": {
+    "aes_key": "D53C068D406B3BD55C0CE444DEBF74C9",
+    "auth_mechanism": "AES + CMAC",
+    "default_password": "12345678",
+    "password_length": 8,
+    "lockout_attempts": 5,
+    "lockout_duration_minutes": 10,
+    "reset_method": "Dealer CODE + OLT power cycle within 30 seconds"
+  },
+
+  "pcap_files": {
+    "working_capture": "pcap/working-olt-pcap.pcapng (5,488 VOLT packets, 2,889 requests, 2,599 responses)",
+    "defective_captures": [
+      "pcap/volt.pcapng (21,710 requests, 0 responses — defective OLT or switch filtering)",
+      "pcap/volt2.pcapng (1,456 requests, 0 responses — CCR2004 test)"
+    ]
+  }
+}

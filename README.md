@@ -20,7 +20,10 @@ This repo cracks open the entire stack:
 ## Repo Structure
 
 ```
+├── PROTOCOL_SPEC.json               # Complete decoded wire protocol specification
 ├── REVERSE_ENGINEERING_REPORT.json   # Full technical report
+├── research.json                    # Protocol, hardware, and ecosystem research
+├── pcap/                            # Wireshark captures (request-only + bidirectional)
 ├── decrypted_source/                # Decrypted Python bytecode + disassembly
 ├── VOLT_Tool_V6.6.exe_extracted/    # Extracted PyInstaller bundle (main tool)
 ├── Neutral_Tool_V6.6.exe_extracted/ # Extracted neutral/unbranded variant
@@ -41,19 +44,35 @@ This repo cracks open the entire stack:
 
 Communication happens over **raw Ethernet frames** (Layer 2, not TCP/IP) using **EtherType 0x88B6** (IEEE 802.1 Local Experimental). The tool broadcasts to `ff:ff:ff:ff:ff:ff` to discover OLTs on the local network segment.
 
-### Wire Format (confirmed via Wireshark capture)
+### Wire Format (confirmed via Wireshark capture with working OLT)
 
 ```
-Ethernet: DST=ff:ff:ff:ff:ff:ff SRC=<host> Type=0x88B6
-Payload (50 bytes):
-  [0:4]   Magic:      0xB958D63A (uint32 BE, constant)
-  [4:6]   Sequence:   uint16 BE (auto-incrementing)
-  [6:8]   Length:      uint16 BE (data length, typically 0x000C)
-  [8:10]  Message ID:  uint16 BE (see EnumMessageId)
-  [10]    Sub-field:   byte (type/flags)
-  [11]    Target:      byte (0xFF=broadcast, 0x00-0x1F=ONU index)
-  [12:50] Data:        request/response payload
+REQUEST (PC → OLT):
+  Ethernet: DST=ff:ff:ff:ff:ff:ff (or OLT MAC) SRC=<PC MAC> Type=0x88B6
+  Payload (50 bytes):
+    [0:4]   Magic:        0xB958D63A (uint32 BE, constant)
+    [4:6]   Sequence:     uint16 BE (auto-incrementing)
+    [6:8]   Length:        uint16 BE (data length, typically 0x000C)
+    [8:10]  Message Group: uint16 BE (0x0000=System, 0x0001=Extended, 0x0002=ONU)
+    [10]    Parameter ID:  byte (actual parameter within group)
+    [11]    Target:        byte (0xFF=all/OLT, 0x00-0x1F=ONU index)
+    [12:50] Data:          zeros for Get, values for Set
+
+RESPONSE (OLT → PC):
+  Ethernet: DST=<PC MAC> (unicast) SRC=<OLT MAC> Type=0x88B6
+  Payload (variable length):
+    [0:4]   Magic:        0xB958D63A
+    [4:6]   Sequence:     echoes request sequence
+    [6:8]   Length:        response data length (13-268+)
+    [8:10]  Message Group: request group + 0x0100 (GetResponse offset)
+    [10]    Parameter ID:  echoes request parameter
+    [11]    Target:        echoes request target
+    [12+]   Data:          response value(s)
 ```
+
+Example: Request `group=0x0000 param=0x00` (OltVersion) → Response `group=0x0100 param=0x00` with data `"B.8.8"`.
+
+See [PROTOCOL_SPEC.json](PROTOCOL_SPEC.json) for the complete decoded parameter map.
 
 ### Message Types
 
@@ -142,5 +161,14 @@ The `names` list tells you every symbol the code references. The `consts` list h
 4. Used `sys.settrace()` to hook into PyArmor's runtime decryption
 5. Captured 161 decrypted code objects with full symbol tables and bytecode
 6. Extracted all runtime enum values by importing `com_def` through pytransform
-7. Captured actual VOLT tool traffic via Wireshark (pcap/volt.pcapng)
-8. Decoded wire format: EtherType 0x88B6, magic 0xB958D63A, 50-byte payload
+7. Captured VOLT tool traffic via Wireshark (requests only: `pcap/volt.pcapng`)
+8. Captured **full bidirectional traffic** with working OLT (`pcap/working-olt-pcap.pcapng`)
+9. Decoded complete wire format including response encoding:
+   - EtherType `0x88B6`, magic `0xB958D63A`
+   - Response msg_group = request msg_group + `0x0100`
+   - Sequence echo, variable-length responses
+   - Parameter map decoded (firmware version, DNA, temperature, ONU status, etc.)
+
+## Key Discovery
+
+MikroTik switches (CRS354, CCR2004) **do not forward EtherType 0x88B6 frames** even with HW offload disabled and software bridging. A dumb media converter (L1 PHY, SFP-to-RJ45) works perfectly. This is critical for deployment — the management PC must be connected via media converter or direct SFP, not through a managed switch.
