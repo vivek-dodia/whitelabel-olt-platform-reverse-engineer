@@ -2,8 +2,12 @@ name: Build grid-agent
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'fs/grid-agent/**'
+      - '.github/workflows/grid-agent.yml'
+  create:
     tags:
       - 'v*'
   workflow_dispatch:
