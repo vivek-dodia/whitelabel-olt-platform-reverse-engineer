@@ -1,0 +1,8 @@
+{
+  "listen_addr": ":8420",
+  "interface": "",
+  "auth_token": "grid-agent-secret",
+  "agent_name": "grid-agent",
+  "site_label": "office-lab",
+  "poll_interval_seconds": 5
+}
