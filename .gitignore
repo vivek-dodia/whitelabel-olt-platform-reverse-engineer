@@ -8,3 +8,5 @@ python39_embed.zip
 # Third party tool (downloadable)
 pyinstxtractor.py
 log/
+fs/decompile/bin/
+fs/decompile/obj/
