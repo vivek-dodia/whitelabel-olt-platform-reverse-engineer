@@ -121,21 +121,30 @@ func (s *Server) recover(next http.Handler) http.Handler {
 				writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "internal server error"})
 			}
 		}()
+
+		// Handle CORS preflight before mux routing.
+		// Go 1.22+ ServeMux returns 405 for unregistered methods, so we
+		// short-circuit OPTIONS here so every route gets CORS support.
+		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Max-Age", "86400")
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
 		// Enforce body size limit for every request
 		r.Body = http.MaxBytesReader(w, r.Body, MaxRequestBodyBytes)
 		next.ServeHTTP(w, r)
 	})
 }
 
+// cors sets CORS headers on non-preflight responses. Preflight is handled
+// earlier in the recover middleware before the mux sees the request.
 func (s *Server) cors(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
 		next(w, r)
 	}
 }
