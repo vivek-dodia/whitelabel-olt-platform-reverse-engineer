@@ -10,3 +10,6 @@ pyinstxtractor.py
 log/
 fs/decompile/bin/
 fs/decompile/obj/
+
+# Build artifacts
+fs/grid-agent/dist/

@@ -1,14 +1,14 @@
-FROM golang:1.25-alpine AS builder
-WORKDIR /app
-COPY go.mod ./
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS builder
+ARG TARGETOS
+ARG TARGETARCH
+WORKDIR /src
+COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o grid-agent ./cmd/grid-agent
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
+    go build -trimpath -ldflags="-s -w -buildid=" \
+    -o /out/grid-agent ./cmd/grid-agent
 
-FROM alpine:3.20
-RUN apk --no-cache add ca-certificates
-WORKDIR /app
-COPY --from=builder /app/grid-agent .
-COPY config.json .
-EXPOSE 8420
-ENTRYPOINT ["./grid-agent"]
+FROM scratch
+COPY --from=builder /out/grid-agent /grid-agent
+ENTRYPOINT ["/grid-agent"]
