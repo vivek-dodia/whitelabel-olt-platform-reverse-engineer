@@ -1,17 +1,33 @@
 package olt
 
 import (
+	"context"
+	"crypto/rand"
+	"encoding/binary"
 	"encoding/hex"
+	"errors"
 	"fmt"
+	"log/slog"
 	"net"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
 const (
 	TxPort = 64219
 	RxPort = 64218
+
+	// Resource limits — tuned for RouterOS container deployment
+	MaxPendingRequests = 512      // Hard cap on concurrent in-flight requests
+	MaxTrackedOlts     = 256      // Hard cap on known OLTs
+	UDPReadBufSize     = 2048     // Per-receive buffer; packets are ≤ 300B
+	MaxSerialLen       = 32       // OLT serial strings are ≤ 16 chars
+	MaxOnuSnLen        = 16       // ONU serial numbers
+
+	DefaultTimeout = 3 * time.Second
+	MaxTimeout     = 30 * time.Second
 )
 
 type CommandCode byte
@@ -38,13 +54,35 @@ const (
 	CmdOltSoftreset     CommandCode = 71
 )
 
-var writeAuthKey, _ = hex.DecodeString("5774b87337454200d4d33f80c4663dc5e5")
-var readAuthKey, _ = hex.DecodeString("5274b87337454200d4d33f80c4663dc5e5")
+// IsValidCommand reports whether cmd is a known command code
+func IsValidCommand(cmd int) bool {
+	if cmd < 0 || cmd > 255 {
+		return false
+	}
+	switch CommandCode(cmd) {
+	case CmdShakeHand, CmdIpConfiguration, CmdWhiteListSend, CmdWhiteListReadQty,
+		CmdOnuWlistRpt, CmdIllegalCpeReport, CmdCpeAlarmReport, CmdOltAlarmReport,
+		CmdServiceTypeSend, CmdWhiteListDel, CmdCpeOptParaReport, CmdCpeSnStatus,
+		CmdServiceConfigRpt, CmdPasswordCmd, CmdPasswordCheckCmd, CmdOltUpdateBin,
+		CmdOltResetMaster, CmdOltResetSlave, CmdOltSoftreset:
+		return true
+	}
+	return false
+}
 
-// Whitelist mode bytes from decompiled FS source
-var whitelistModeEnable = []byte{0x57, 0x01} // set_white_list_type(0x57,1)
-var graylistModeEnable = []byte{0x47, 0x01}  // set_white_list_type(0x47,1)
-var whitelistModeQuery = []byte{0x00}        // get_white_list_type()
+var (
+	writeAuthKey, _ = hex.DecodeString("5774b87337454200d4d33f80c4663dc5e5")
+	readAuthKey, _  = hex.DecodeString("5274b87337454200d4d33f80c4663dc5e5")
+
+	whitelistModeEnable = []byte{0x57, 0x01}
+	graylistModeEnable  = []byte{0x47, 0x01}
+
+	ErrClientClosed    = errors.New("olt client closed")
+	ErrTooManyPending  = errors.New("too many pending requests")
+	ErrTooManyOlts     = errors.New("olt tracking limit reached")
+	ErrInvalidResponse = errors.New("invalid response")
+	ErrInvalidIP       = errors.New("invalid ip address")
+)
 
 type OltStatus struct {
 	IP        string `json:"ip"`
@@ -57,171 +95,321 @@ type OltStatus struct {
 }
 
 type OnuInfo struct {
-	SN     string  `json:"sn"`
-	Status int     `json:"status"`
-	TxPwr  float64 `json:"tx_pwr,omitempty"`
-	RxPwr  float64 `json:"rx_pwr,omitempty"`
-	Bias   float64 `json:"bias,omitempty"`
-	Temp   float64 `json:"temperature,omitempty"`
-	Volt   float64 `json:"voltage,omitempty"`
+	SN          string  `json:"sn"`
+	Status      int     `json:"status"`
+	TxPwr       float64 `json:"tx_pwr,omitempty"`
+	RxPwr       float64 `json:"rx_pwr,omitempty"`
+	Bias        float64 `json:"bias,omitempty"`
+	Temperature float64 `json:"temperature,omitempty"`
+	Voltage     float64 `json:"voltage,omitempty"`
 }
 
 type AlarmInfo struct {
-	Raw       string `json:"raw"`
-	HasAlarm  bool   `json:"has_alarm"`
+	Raw      string `json:"raw"`
+	HasAlarm bool   `json:"has_alarm"`
 }
 
 type WhitelistMode struct {
-	Mode string `json:"mode"` // "whitelist" or "graylist"
+	Mode string `json:"mode"`
+}
+
+type pendingRequest struct {
+	ch      chan []byte
+	created time.Time
 }
 
 type Client struct {
-	mu      sync.Mutex
-	rxConn  *net.UDPConn
-	txConn  *net.UDPConn
-	seq     uint16
-	pending map[string]chan []byte
-	olts    map[string]*OltStatus
-	oltsMu  sync.RWMutex
+	rxConn *net.UDPConn
+	txConn *net.UDPConn
+
+	seq atomic.Uint32 // using uint32 to avoid conflict; wraps to uint16 on use
+
+	pendingMu sync.Mutex
+	pending   map[string]*pendingRequest
+
+	oltsMu sync.RWMutex
+	olts   map[string]*OltStatus
+
+	closedFlag atomic.Bool
+	closeOnce  sync.Once
+	doneCh     chan struct{}
+	wg         sync.WaitGroup
+
+	log *slog.Logger
 }
 
-func NewClient() (*Client, error) {
-	rxAddr, _ := net.ResolveUDPAddr("udp4", fmt.Sprintf(":%d", RxPort))
+// NewClient binds the UDP sockets and starts the receive loop
+func NewClient(log *slog.Logger) (*Client, error) {
+	if log == nil {
+		log = slog.Default()
+	}
+
+	rxAddr := &net.UDPAddr{IP: net.IPv4zero, Port: RxPort}
 	rxConn, err := net.ListenUDP("udp4", rxAddr)
 	if err != nil {
-		return nil, fmt.Errorf("listen rx: %w", err)
+		return nil, fmt.Errorf("bind rx :%d: %w", RxPort, err)
 	}
+	// Limit socket kernel buffer to cap memory consumption
+	_ = rxConn.SetReadBuffer(64 * 1024)
 
-	txAddr, _ := net.ResolveUDPAddr("udp4", fmt.Sprintf(":%d", TxPort))
+	txAddr := &net.UDPAddr{IP: net.IPv4zero, Port: TxPort}
 	txConn, err := net.ListenUDP("udp4", txAddr)
 	if err != nil {
-		rxConn.Close()
-		return nil, fmt.Errorf("listen tx: %w", err)
+		_ = rxConn.Close()
+		return nil, fmt.Errorf("bind tx :%d: %w", TxPort, err)
 	}
+	_ = txConn.SetWriteBuffer(64 * 1024)
 
+	// Seed sequence from a random value so restarts don't collide
+	var seed [2]byte
+	_, _ = rand.Read(seed[:])
 	c := &Client{
 		rxConn:  rxConn,
 		txConn:  txConn,
-		pending: make(map[string]chan []byte),
+		pending: make(map[string]*pendingRequest),
 		olts:    make(map[string]*OltStatus),
+		doneCh:  make(chan struct{}),
+		log:     log,
 	}
+	c.seq.Store(uint32(binary.BigEndian.Uint16(seed[:])))
+
+	c.wg.Add(2)
 	go c.receiveLoop()
+	go c.janitorLoop()
+
 	return c, nil
 }
 
-func (c *Client) Close() {
-	c.rxConn.Close()
-	c.txConn.Close()
+// Close stops the receive loop and releases all sockets. Safe to call multiple times.
+func (c *Client) Close() error {
+	c.closeOnce.Do(func() {
+		c.closedFlag.Store(true)
+		close(c.doneCh)
+		_ = c.rxConn.SetReadDeadline(time.Now())
+		_ = c.rxConn.Close()
+		_ = c.txConn.Close()
+
+		// Unblock any pending waiters
+		c.pendingMu.Lock()
+		for k, p := range c.pending {
+			close(p.ch)
+			delete(c.pending, k)
+		}
+		c.pendingMu.Unlock()
+
+		c.wg.Wait()
+	})
+	return nil
 }
 
+func (c *Client) closed() bool { return c.closedFlag.Load() }
+
+// receiveLoop dispatches incoming UDP packets to pending request channels.
 func (c *Client) receiveLoop() {
-	buf := make([]byte, 4096)
+	defer c.wg.Done()
+	buf := make([]byte, UDPReadBufSize)
 	for {
+		if c.closed() {
+			return
+		}
+		// Set a read deadline so we can periodically check closed flag
+		_ = c.rxConn.SetReadDeadline(time.Now().Add(500 * time.Millisecond))
 		n, addr, err := c.rxConn.ReadFromUDP(buf)
 		if err != nil {
-			return
+			if c.closed() {
+				return
+			}
+			var ne net.Error
+			if errors.As(err, &ne) && ne.Timeout() {
+				continue
+			}
+			c.log.Warn("udp receive error", "err", err)
+			continue
 		}
 		if n < 3 {
 			continue
 		}
+
+		// Copy into a fresh slice so the shared buf can be reused
 		data := make([]byte, n)
 		copy(data, buf[:n])
 
 		seq := uint16(data[1])<<8 | uint16(data[2])
 		key := fmt.Sprintf("%s:%d", addr.IP.String(), seq)
 
-		c.mu.Lock()
-		ch, ok := c.pending[key]
+		c.pendingMu.Lock()
+		p, ok := c.pending[key]
 		if ok {
 			delete(c.pending, key)
 		}
-		c.mu.Unlock()
+		c.pendingMu.Unlock()
 
 		if ok {
-			ch <- data
+			select {
+			case p.ch <- data:
+			default: // receiver gave up; drop
+			}
+		}
+	}
+}
+
+// janitorLoop evicts pending entries older than 2× the max timeout, in case
+// a sender leaks (e.g., context cancelled before timeout expired).
+func (c *Client) janitorLoop() {
+	defer c.wg.Done()
+	t := time.NewTicker(5 * time.Second)
+	defer t.Stop()
+	for {
+		select {
+		case <-c.doneCh:
+			return
+		case <-t.C:
+			cutoff := time.Now().Add(-2 * MaxTimeout)
+			c.pendingMu.Lock()
+			for k, p := range c.pending {
+				if p.created.Before(cutoff) {
+					delete(c.pending, k)
+					close(p.ch)
+				}
+			}
+			c.pendingMu.Unlock()
 		}
 	}
 }
 
 func (c *Client) nextSeq() uint16 {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.seq++
-	return c.seq
+	return uint16(c.seq.Add(1) & 0xFFFF)
 }
 
-func (c *Client) buildPacket(cmd CommandCode, seq uint16, data []byte) []byte {
+func buildPacket(cmd CommandCode, seq uint16, data []byte) []byte {
 	pkt := make([]byte, 22)
 	pkt[0] = byte(cmd)
 	pkt[1] = byte(seq >> 8)
 	pkt[2] = byte(seq & 0xff)
-	if data != nil {
-		copy(pkt[3:], data)
+	if len(data) > 0 {
+		n := len(data)
+		if n > 19 {
+			n = 19
+		}
+		copy(pkt[3:], data[:n])
 	}
 	return pkt
 }
 
-func (c *Client) SendAndWait(oltIP string, cmd CommandCode, data []byte, timeout time.Duration) ([]byte, error) {
-	seq := c.nextSeq()
-	pkt := c.buildPacket(cmd, seq, data)
-
-	key := fmt.Sprintf("%s:%d", oltIP, seq)
-	ch := make(chan []byte, 1)
-
-	c.mu.Lock()
-	c.pending[key] = ch
-	c.mu.Unlock()
-
-	dst, _ := net.ResolveUDPAddr("udp4", fmt.Sprintf("%s:%d", oltIP, TxPort))
-	_, err := c.txConn.WriteToUDP(pkt, dst)
-	if err != nil {
-		c.mu.Lock()
-		delete(c.pending, key)
-		c.mu.Unlock()
-		return nil, err
+// SendAndWait sends a command to an OLT and waits for its response.
+// Honors context cancellation and enforces timeout bounds.
+func (c *Client) SendAndWait(ctx context.Context, oltIP string, cmd CommandCode, data []byte, timeout time.Duration) ([]byte, error) {
+	if c.closed() {
+		return nil, ErrClientClosed
+	}
+	if net.ParseIP(oltIP) == nil {
+		return nil, ErrInvalidIP
+	}
+	if timeout <= 0 {
+		timeout = DefaultTimeout
+	}
+	if timeout > MaxTimeout {
+		timeout = MaxTimeout
 	}
 
-	select {
-	case resp := <-ch:
-		return resp, nil
-	case <-time.After(timeout):
-		c.mu.Lock()
+	// Reserve pending slot with cap enforcement
+	seq := c.nextSeq()
+	key := fmt.Sprintf("%s:%d", oltIP, seq)
+
+	c.pendingMu.Lock()
+	if len(c.pending) >= MaxPendingRequests {
+		c.pendingMu.Unlock()
+		return nil, ErrTooManyPending
+	}
+	ch := make(chan []byte, 1)
+	c.pending[key] = &pendingRequest{ch: ch, created: time.Now()}
+	c.pendingMu.Unlock()
+
+	// Always clean up pending entry if we leave without a response
+	cleanup := func() {
+		c.pendingMu.Lock()
 		delete(c.pending, key)
-		c.mu.Unlock()
-		return nil, fmt.Errorf("timeout waiting for response from %s", oltIP)
+		c.pendingMu.Unlock()
+	}
+
+	pkt := buildPacket(cmd, seq, data)
+	dst := &net.UDPAddr{IP: net.ParseIP(oltIP).To4(), Port: TxPort}
+	_ = c.txConn.SetWriteDeadline(time.Now().Add(500 * time.Millisecond))
+	if _, err := c.txConn.WriteToUDP(pkt, dst); err != nil {
+		cleanup()
+		return nil, fmt.Errorf("send to %s: %w", oltIP, err)
+	}
+
+	timer := time.NewTimer(timeout)
+	defer timer.Stop()
+
+	select {
+	case resp, ok := <-ch:
+		if !ok {
+			return nil, ErrClientClosed
+		}
+		return resp, nil
+	case <-timer.C:
+		cleanup()
+		return nil, fmt.Errorf("timeout waiting for %s (cmd=%d)", oltIP, cmd)
+	case <-ctx.Done():
+		cleanup()
+		return nil, ctx.Err()
+	case <-c.doneCh:
+		cleanup()
+		return nil, ErrClientClosed
 	}
 }
 
 // ── Discovery & Status ──
 
-func (c *Client) ShakeHand(oltIP string) (*OltStatus, error) {
-	resp, err := c.SendAndWait(oltIP, CmdShakeHand, nil, 3*time.Second)
+func (c *Client) ShakeHand(ctx context.Context, oltIP string) (*OltStatus, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdShakeHand, nil, DefaultTimeout)
 	if err != nil {
 		return nil, err
 	}
 	if len(resp) < 20 {
-		return nil, fmt.Errorf("response too short: %d bytes", len(resp))
+		return nil, fmt.Errorf("%w: shake_hand too short (%d bytes)", ErrInvalidResponse, len(resp))
 	}
 
 	mac := fmt.Sprintf("00:00:%02x:%02x:%02x:%02x:%02x:%02x",
 		resp[4], resp[5], resp[6], resp[7], resp[8], resp[9])
-	serial := strings.TrimLeft(strings.TrimRight(string(resp[20:]), "\x00 "), "\x00")
+
+	rawSerial := resp[20:]
+	if len(rawSerial) > MaxSerialLen {
+		rawSerial = rawSerial[:MaxSerialLen]
+	}
+	serial := strings.Trim(string(rawSerial), "\x00 ")
 
 	status := &OltStatus{
-		IP: oltIP, MAC: mac, Serial: serial,
-		Status: "online", LastSeen: time.Now().UnixMilli(),
+		IP:       oltIP,
+		MAC:      mac,
+		Serial:   serial,
+		Status:   "online",
+		LastSeen: time.Now().UnixMilli(),
 	}
 
 	c.oltsMu.Lock()
-	c.olts[oltIP] = status
-	c.oltsMu.Unlock()
-	return status, nil
+	defer c.oltsMu.Unlock()
+	existing, ok := c.olts[oltIP]
+	if !ok {
+		if len(c.olts) >= MaxTrackedOlts {
+			return nil, ErrTooManyOlts
+		}
+		c.olts[oltIP] = status
+		return status, nil
+	}
+	existing.MAC = status.MAC
+	existing.Serial = status.Serial
+	existing.Status = "online"
+	existing.LastSeen = status.LastSeen
+	return existing, nil
 }
 
 // ── Auth ──
 
-func (c *Client) EnableWrite(oltIP string) (bool, error) {
-	resp, err := c.SendAndWait(oltIP, CmdPasswordCmd, writeAuthKey, 3*time.Second)
+func (c *Client) EnableWrite(ctx context.Context, oltIP string) (bool, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdPasswordCmd, writeAuthKey, DefaultTimeout)
 	if err != nil {
 		return false, err
 	}
@@ -234,8 +422,8 @@ func (c *Client) EnableWrite(oltIP string) (bool, error) {
 	return granted, nil
 }
 
-func (c *Client) EnableRead(oltIP string) (bool, error) {
-	resp, err := c.SendAndWait(oltIP, CmdPasswordCmd, readAuthKey, 3*time.Second)
+func (c *Client) EnableRead(ctx context.Context, oltIP string) (bool, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdPasswordCmd, readAuthKey, DefaultTimeout)
 	if err != nil {
 		return false, err
 	}
@@ -250,45 +438,41 @@ func (c *Client) EnableRead(oltIP string) (bool, error) {
 
 // ── ONU Management ──
 
-func (c *Client) GetOnuStatus(oltIP string) ([]OnuInfo, error) {
-	resp, err := c.SendAndWait(oltIP, CmdCpeSnStatus, nil, 3*time.Second)
+func (c *Client) GetOnuStatus(ctx context.Context, oltIP string) ([]OnuInfo, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdCpeSnStatus, nil, DefaultTimeout)
 	if err != nil {
 		return nil, err
 	}
-	var onus []OnuInfo
+	onus := []OnuInfo{}
 	if len(resp) > 3 {
 		data := resp[3:]
 		if len(data) >= 11 {
-			sn := strings.TrimRight(string(data[:10]), "\x00 ")
-			status := int(data[10])
-			onus = append(onus, OnuInfo{SN: sn, Status: status})
+			sn := strings.Trim(string(data[:10]), "\x00 ")
+			if sn != "" {
+				onus = append(onus, OnuInfo{SN: sn, Status: int(data[10])})
+			}
 		}
 	}
 	return onus, nil
 }
 
-func (c *Client) GetOnuOptics(oltIP string, onuSN string) (*OnuInfo, error) {
-	// Build get_onu_optics payload: SN as ASCII bytes
+func (c *Client) GetOnuOptics(ctx context.Context, oltIP, onuSN string) (*OnuInfo, error) {
+	if err := validateOnuSN(onuSN); err != nil {
+		return nil, err
+	}
 	snBytes := make([]byte, 16)
 	copy(snBytes, []byte(onuSN))
-	resp, err := c.SendAndWait(oltIP, CmdCpeOptParaReport, snBytes, 3*time.Second)
+	_, err := c.SendAndWait(ctx, oltIP, CmdCpeOptParaReport, snBytes, DefaultTimeout)
 	if err != nil {
 		return nil, err
 	}
-	if len(resp) < 14 {
-		return &OnuInfo{SN: onuSN}, nil
-	}
-	// Parse optical params from response
-	return &OnuInfo{
-		SN:  onuSN,
-		// Raw data — proper parsing depends on exact response format
-	}, nil
+	return &OnuInfo{SN: onuSN}, nil
 }
 
 // ── Whitelist Management ──
 
-func (c *Client) GetWhitelistMode(oltIP string) (*WhitelistMode, error) {
-	resp, err := c.SendAndWait(oltIP, CmdWhiteListReadQty, whitelistModeQuery, 3*time.Second)
+func (c *Client) GetWhitelistMode(ctx context.Context, oltIP string) (*WhitelistMode, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdWhiteListReadQty, []byte{0x00}, DefaultTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -304,38 +488,46 @@ func (c *Client) GetWhitelistMode(oltIP string) (*WhitelistMode, error) {
 	return &WhitelistMode{Mode: mode}, nil
 }
 
-func (c *Client) SetWhitelistMode(oltIP string) error {
-	_, err := c.SendAndWait(oltIP, CmdWhiteListSend, whitelistModeEnable, 3*time.Second)
+func (c *Client) SetWhitelistMode(ctx context.Context, oltIP string) error {
+	_, err := c.SendAndWait(ctx, oltIP, CmdWhiteListSend, whitelistModeEnable, DefaultTimeout)
 	return err
 }
 
-func (c *Client) SetGraylistMode(oltIP string) error {
-	_, err := c.SendAndWait(oltIP, CmdWhiteListSend, graylistModeEnable, 3*time.Second)
+func (c *Client) SetGraylistMode(ctx context.Context, oltIP string) error {
+	_, err := c.SendAndWait(ctx, oltIP, CmdWhiteListSend, graylistModeEnable, DefaultTimeout)
 	return err
 }
 
-func (c *Client) AddOnuToWhitelist(oltIP string, onuSN string, serviceProfile int) error {
-	// Payload: SN (up to 16 bytes) + service profile (1 byte)
+func (c *Client) AddOnuToWhitelist(ctx context.Context, oltIP, onuSN string, serviceProfile int) error {
+	if err := validateOnuSN(onuSN); err != nil {
+		return err
+	}
+	if serviceProfile < 1 || serviceProfile > 5 {
+		return fmt.Errorf("service_profile must be 1-5, got %d", serviceProfile)
+	}
 	data := make([]byte, 17)
 	copy(data, []byte(onuSN))
 	data[16] = byte(serviceProfile)
-	_, err := c.SendAndWait(oltIP, CmdWhiteListSend, data, 3*time.Second)
+	_, err := c.SendAndWait(ctx, oltIP, CmdWhiteListSend, data, DefaultTimeout)
 	return err
 }
 
-func (c *Client) RemoveOnuFromWhitelist(oltIP string, onuSN string) error {
+func (c *Client) RemoveOnuFromWhitelist(ctx context.Context, oltIP, onuSN string) error {
+	if err := validateOnuSN(onuSN); err != nil {
+		return err
+	}
 	data := make([]byte, 16)
 	copy(data, []byte(onuSN))
-	_, err := c.SendAndWait(oltIP, CmdWhiteListDel, data, 3*time.Second)
+	_, err := c.SendAndWait(ctx, oltIP, CmdWhiteListDel, data, DefaultTimeout)
 	return err
 }
 
-func (c *Client) GetWhitelist(oltIP string) ([]byte, error) {
-	return c.SendAndWait(oltIP, CmdOnuWlistRpt, nil, 3*time.Second)
+func (c *Client) GetWhitelist(ctx context.Context, oltIP string) ([]byte, error) {
+	return c.SendAndWait(ctx, oltIP, CmdOnuWlistRpt, nil, DefaultTimeout)
 }
 
-func (c *Client) GetWhitelistCount(oltIP string) (int, error) {
-	resp, err := c.SendAndWait(oltIP, CmdWhiteListReadQty, nil, 3*time.Second)
+func (c *Client) GetWhitelistCount(ctx context.Context, oltIP string) (int, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdWhiteListReadQty, nil, DefaultTimeout)
 	if err != nil {
 		return 0, err
 	}
@@ -347,56 +539,66 @@ func (c *Client) GetWhitelistCount(oltIP string) (int, error) {
 
 // ── Service Profiles ──
 
-func (c *Client) GetServiceConfig(oltIP string) ([]byte, error) {
-	return c.SendAndWait(oltIP, CmdServiceConfigRpt, nil, 3*time.Second)
+func (c *Client) GetServiceConfig(ctx context.Context, oltIP string) ([]byte, error) {
+	return c.SendAndWait(ctx, oltIP, CmdServiceConfigRpt, nil, DefaultTimeout)
 }
 
-func (c *Client) SetServiceConfig(oltIP string, data []byte) error {
-	_, err := c.SendAndWait(oltIP, CmdServiceTypeSend, data, 3*time.Second)
+func (c *Client) SetServiceConfig(ctx context.Context, oltIP string, data []byte) error {
+	if len(data) > 19 {
+		return fmt.Errorf("service config data too large (max 19 bytes, got %d)", len(data))
+	}
+	_, err := c.SendAndWait(ctx, oltIP, CmdServiceTypeSend, data, DefaultTimeout)
 	return err
 }
 
 // ── Alarms ──
 
-func (c *Client) GetAlarms(oltIP string) (*AlarmInfo, error) {
-	resp, err := c.SendAndWait(oltIP, CmdOltAlarmReport, nil, 3*time.Second)
+func (c *Client) GetAlarms(ctx context.Context, oltIP string) (*AlarmInfo, error) {
+	resp, err := c.SendAndWait(ctx, oltIP, CmdOltAlarmReport, nil, DefaultTimeout)
 	if err != nil {
 		return nil, err
 	}
-	raw := hex.EncodeToString(resp)
-	hasAlarm := len(resp) > 3 && resp[3] != 0
-	return &AlarmInfo{Raw: raw, HasAlarm: hasAlarm}, nil
+	return &AlarmInfo{
+		Raw:      hex.EncodeToString(resp),
+		HasAlarm: len(resp) > 3 && resp[3] != 0,
+	}, nil
 }
 
-func (c *Client) GetOnuAlarms(oltIP string) ([]byte, error) {
-	return c.SendAndWait(oltIP, CmdCpeAlarmReport, nil, 3*time.Second)
+func (c *Client) GetOnuAlarms(ctx context.Context, oltIP string) ([]byte, error) {
+	return c.SendAndWait(ctx, oltIP, CmdCpeAlarmReport, nil, DefaultTimeout)
 }
 
 // ── OLT Configuration ──
 
-func (c *Client) ChangeOltIP(oltIP string, newIP string) error {
+func (c *Client) ChangeOltIP(ctx context.Context, oltIP, newIP string) error {
 	ip := net.ParseIP(newIP).To4()
 	if ip == nil {
-		return fmt.Errorf("invalid IP: %s", newIP)
+		return fmt.Errorf("%w: %s", ErrInvalidIP, newIP)
 	}
-	_, err := c.SendAndWait(oltIP, CmdIpConfiguration, ip, 3*time.Second)
+	_, err := c.SendAndWait(ctx, oltIP, CmdIpConfiguration, ip, DefaultTimeout)
 	return err
 }
 
-func (c *Client) RebootOlt(oltIP string) error {
-	_, err := c.SendAndWait(oltIP, CmdOltSoftreset, nil, 3*time.Second)
+func (c *Client) RebootOlt(ctx context.Context, oltIP string) error {
+	_, err := c.SendAndWait(ctx, oltIP, CmdOltSoftreset, nil, DefaultTimeout)
 	return err
 }
 
-func (c *Client) UpgradeFirmware(oltIP string, data []byte) error {
-	_, err := c.SendAndWait(oltIP, CmdOltUpdateBin, data, 10*time.Second)
+func (c *Client) UpgradeFirmware(ctx context.Context, oltIP string, data []byte) error {
+	if len(data) > 19 {
+		return fmt.Errorf("firmware data chunk too large (max 19 bytes, got %d)", len(data))
+	}
+	_, err := c.SendAndWait(ctx, oltIP, CmdOltUpdateBin, data, 10*time.Second)
 	return err
 }
 
 // ── Raw Command ──
 
-func (c *Client) SendRawCommand(oltIP string, cmd CommandCode, data []byte) ([]byte, error) {
-	return c.SendAndWait(oltIP, cmd, data, 5*time.Second)
+func (c *Client) SendRawCommand(ctx context.Context, oltIP string, cmd CommandCode, data []byte) ([]byte, error) {
+	if !IsValidCommand(int(cmd)) {
+		return nil, fmt.Errorf("unknown command code %d", cmd)
+	}
+	return c.SendAndWait(ctx, oltIP, cmd, data, 5*time.Second)
 }
 
 // ── OLT Cache ──
@@ -404,7 +606,12 @@ func (c *Client) SendRawCommand(oltIP string, cmd CommandCode, data []byte) ([]b
 func (c *Client) GetOlt(ip string) *OltStatus {
 	c.oltsMu.RLock()
 	defer c.oltsMu.RUnlock()
-	return c.olts[ip]
+	orig, ok := c.olts[ip]
+	if !ok {
+		return nil
+	}
+	copy := *orig
+	return &copy
 }
 
 func (c *Client) GetAllOlts() []*OltStatus {
@@ -412,7 +619,8 @@ func (c *Client) GetAllOlts() []*OltStatus {
 	defer c.oltsMu.RUnlock()
 	result := make([]*OltStatus, 0, len(c.olts))
 	for _, o := range c.olts {
-		result = append(result, o)
+		copy := *o
+		result = append(result, &copy)
 	}
 	return result
 }
@@ -429,4 +637,27 @@ func (c *Client) RemoveOlt(ip string) {
 	c.oltsMu.Lock()
 	defer c.oltsMu.Unlock()
 	delete(c.olts, ip)
+}
+
+func (c *Client) PendingCount() int {
+	c.pendingMu.Lock()
+	defer c.pendingMu.Unlock()
+	return len(c.pending)
+}
+
+// ── Validation helpers ──
+
+func validateOnuSN(sn string) error {
+	if sn == "" {
+		return fmt.Errorf("onu sn required")
+	}
+	if len(sn) > MaxOnuSnLen {
+		return fmt.Errorf("onu sn too long (max %d chars)", MaxOnuSnLen)
+	}
+	for _, r := range sn {
+		if r < 32 || r > 126 {
+			return fmt.Errorf("onu sn contains non-printable characters")
+		}
+	}
+	return nil
 }
