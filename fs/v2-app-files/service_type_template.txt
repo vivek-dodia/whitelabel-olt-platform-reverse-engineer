@@ -1,0 +1,83 @@
+#ONU service tpye template
+>ONU_service_name:    SFU_type1              
+>ONU_service_number:  1                             #very important, must be 0~255
+
+<flow 1 start>                       //example for VOIP
+	>max_BD    10             //uint16_t, max bandwith , Unit 20Kbit/s   ---10*20 =200K
+	>fix_BD     4         	      //uint16_t, fixed bandwith , Unit 20Kbit/s   ----80K
+	>ass_BD     4                //uint16_t, assure bandwith  ,Unit 20Kbit/s   ----80k
+	>type        3                 //uint8_t, service type
+	>priority    7               //uint8_t, priority, 0~7,  0: top priority              ---7
+	>weight     100              //uint8_t, range, 1~255, 255: top priority          --- 100
+	>valid        0                  //uint8_t, enable the flow: 1; disable the flow: 0      ---0
+	>vlan1_id   0       		//uint16_t, pptep1  VLAN(TCI), 0: no vlan is required       
+	>vlan2_id   0                  //uint16_t, pptep2  VLAN(TCI),
+	>vlan3_id   0                  //uint16_t, pptep3  VLAN(TCI),
+	>vlan4_id   0                  //uint16_t, pptep4  VLAN(TCI),
+	>vlan5_id   0                  //uint16_t, pptep5  VLAN(TCI),   ---- priority = 7, vlan =103
+<end> 
+
+<flow 2 start>                       // for muticast
+	>max_BD    5000             //uint16_t, max bandwith , Unit 20Kbit/s   ---5000*20 =100M
+	>fix_BD     150         	      //uint16_t, fixed bandwith , Unit 20Kbit/s    --150*20 = 3M
+	>ass_BD     150                //uint16_t, assure bandwith  ,Unit 20Kbit/s     --150*20 = 3M
+	>type        3                 //uint8_t, service type
+	>priority    1               //uint8_t, priority, 0~7,  0: top priority              ---1
+	>weight     1              //uint8_t, range, 1~255, 255: top priority          --- 1
+	>valid        1                  //uint8_t, enable the flow: 1; disable the flow: 0      ---0
+	>vlan1_id   0                  //uint16_t, pptep1  VLAN(TCI), 0: no vlan is required     --- priority = 0, vlan =101
+	>vlan2_id   0                  //uint16_t, pptep2  VLAN(TCI),
+	>vlan3_id   0                  //uint16_t, pptep3  VLAN(TCI),
+	>vlan4_id   0                  //uint16_t, pptep4  VLAN(TCI),
+	>vlan5_id   0                  //uint16_t, pptep5  VLAN(TCI),
+<end> 
+
+
+<flow 3 start>            //reserved
+	>max_BD    5000             //uint16_t, max bandwith , Unit 20Kbit/s   ---5000*20 =100M
+	>fix_BD     150         	      //uint16_t, fixed bandwith , Unit 20Kbit/s    --150*20 = 3M
+	>ass_BD     150                //uint16_t, assure bandwith  ,Unit 20Kbit/s     --150*20 = 3M
+	>type        3                 //uint8_t, service type
+	>priority    1               //uint8_t, priority, 0~7,  0: top priority              ---1
+	>weight     1              //uint8_t, range, 1~255, 255: top priority          --- 1
+	>valid        0                  //uint8_t, enable the flow: 1; disable the flow: 0      ---0
+	>vlan1_id   0                  //uint16_t, pptep1  VLAN(TCI), 0: no vlan is required     --- priority = 0, vlan =101
+	>vlan2_id   0                  //uint16_t, pptep2  VLAN(TCI),
+	>vlan3_id   0                  //uint16_t, pptep3  VLAN(TCI),
+	>vlan4_id   0                  //uint16_t, pptep4  VLAN(TCI),
+	>vlan5_id   0                  //uint16_t, pptep5  VLAN(TCI),
+<end> 
+
+
+<flow 4 start>          //reserved
+	>max_BD    5000             //uint16_t, max bandwith , Unit 20Kbit/s   ---5000*20 =100M
+	>fix_BD     150         	      //uint16_t, fixed bandwith , Unit 20Kbit/s    --150*20 = 3M
+	>ass_BD     150                //uint16_t, assure bandwith  ,Unit 20Kbit/s     --150*20 = 3M
+	>type        3                 //uint8_t, service type 1~5
+	>priority    1               //uint8_t, priority, 0~7,  0: top priority              ---1
+	>weight     1              //uint8_t, range, 1~255, 255: top weight          --- 1
+	>valid        0                  //uint8_t, enable the flow: 1; disable the flow: 0      ---0
+	>vlan1_id   101                  //uint16_t, pptep1  VLAN(TCI), 0: no vlan is required     --- priority = 0, vlan =101
+	>vlan2_id   0                  //uint16_t, pptep2  VLAN(TCI),
+	>vlan3_id   0                  //uint16_t, pptep3  VLAN(TCI),
+	>vlan4_id   0                  //uint16_t, pptep4  VLAN(TCI),
+	>vlan5_id   0                  //uint16_t, pptep5  VLAN(TCI),
+<end> 
+
+
+<flow 5 start>      //for internet
+	>max_BD    25000             //uint16_t, max bandwith , Unit 20Kbit/s   ---25000*20 =500M
+	>fix_BD     150         	      //uint16_t, fixed bandwith , Unit 20Kbit/s    --150*20 = 3M
+	>ass_BD     150                //uint16_t, assure bandwith  ,Unit 20Kbit/s     --150*20 = 3M
+	>type        3                 //uint8_t, service type
+	>priority    1               //uint8_t, priority, 0~7,  0: top priority              ---1
+	>weight     1              //uint8_t, range, 1~255, 255: top priority          --- 1
+	>valid        1                  //uint8_t, enable the flow: 1; disable the flow: 0      ---0
+	>vlan1_id   32768          //uint16_t, pptep1  VLAN(TCI), 0: no vlan is required , if vlanid=32768， pptpe effective，but id =0    --- pptpe =1, id = 0
+	>vlan2_id   32768                  //uint16_t, pptep2  VLAN(TCI), 
+	>vlan3_id   32768                  //uint16_t, pptep3  VLAN(TCI),
+	>vlan4_id   32768                  //uint16_t, pptep4  VLAN(TCI),
+	>vlan5_id   0                  //uint16_t, pptep5  VLAN(TCI),
+<end>  
+
+#end of service type definition

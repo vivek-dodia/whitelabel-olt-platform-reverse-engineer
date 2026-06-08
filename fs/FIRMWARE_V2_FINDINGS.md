@@ -14,15 +14,22 @@ The new firmware is not just a patch — it is a fundamentally different managem
 
 ---
 
-## What Changed: UDP → HTTP
+## What Changed
+
+> Initial assumption was "UDP → HTTP". After decompiling the new app, the real picture is:
+> the binary protocol **stayed** and gained per-frame authentication, AND the firmware
+> **added** a standalone web UI. See "Two Independent Management Paths" below.
 
 | | v1 (old firmware) | v2 (new firmware) |
 |-|-------------------|-------------------|
-| Management transport | UDP 64219/64218 | HTTP on port 128 |
-| Discovery | ARP broadcast with `"OLT"` marker | Same (ARP-based, auto-discovered by app) |
-| Interface | Windows app speaks binary UDP directly | Windows app + web browser at `http://OLT_IP:128` |
-| Terminal commands | Sent via proprietary UDP frames (raw Ethernet for optics) | Entered in web UI Terminal tab, REST API behind it |
-| Authentication | Fixed key UDP handshake | HTTP login (admin/operator/viewer roles) |
+| Binary protocol | UDP 64219/64218, no per-frame auth | Same family + 4-byte keyed hash per frame; dynamic reply port |
+| Web interface | None | HTTP on port 128 (served by firmware, independent of app) |
+| Discovery | ARP broadcast with `"OLT"` marker | Same, plus `OLT_login_send` (cmd 128) text announce |
+| Windows app | .NET 8 WinForms, binary UDP | .NET 8 WinForms, binary UDP + hash auth (`FS PON Manager V1.1.0`) |
+| Optics command | Raw Ethernet, often failed (the bug) | Same channel (cmd 65/0x41) but now hash-authenticated → works |
+| Vendor key | None | `fsoptics` (from `appmanagement.ini`) |
+| Status reports | Binary only | Binary + ASCII text reports (cmd 128–132) |
+| Authentication | Fixed key UDP handshake (cmd 66) | Per-frame keyed hash + web login (admin/operator/viewer) |
 | OLT addressing | Static IP (default 100.64.2.200) | Static or DHCP (set via `set_ip_addr_mode`) |
 | Default IP | Varies | 192.168.1.3 (factory) |
 | Default CAPWAP IP | N/A | 192.168.1.100 |
@@ -223,23 +230,164 @@ before plugging in the next one.
 
 ---
 
-## HTTP API — Status: Unknown (next step)
+## Two Independent Management Paths
 
-The web UI at port 128 makes REST calls that drive all management functions. These have not
-yet been captured or documented. The grid-agent currently uses the v1 UDP protocol and will
-not work with these new firmware OLTs.
+A key structural finding from decompiling the new app: there are **two separate management
+interfaces**, not one.
 
-**Next step:** Capture browser traffic against `http://100.64.2.149:128/` with the HAR reverse
-engineering tool to map all API endpoints, then update the grid-agent with an HTTP client
-for v2 firmware OLTs.
+1. **The Windows app (`FS PON Manager V1.1.0`)** still speaks the binary UDP/raw-Ethernet
+   protocol — same family as v1, but with a new per-frame authentication layer (below). This is
+   how the app auto-discovers and manages OLTs on the LAN.
+2. **The HTTP web server on port 128** is baked into the OLT firmware itself and is fully
+   independent of the Windows app. The browser UI you log into is served by the OLT.
 
-Endpoints expected (inferred from web UI tabs and terminal commands):
-- `GET /api/onus` or similar — ONU list with performance
-- `POST /api/terminal` or similar — terminal command execution
-- `GET /api/device` — OLT device info
-- `GET /api/whitelist` — whitelist read
-- `POST /api/whitelist` — whitelist write
-- `GET /api/system-log` — event log
+So "v1 → v2" is not "UDP → HTTP". It is: the binary protocol gained authentication, AND the
+firmware additionally exposes a standalone web UI. Both work simultaneously.
+
+---
+
+## V2 Binary Protocol (decompiled from `APP_OLT_Stick_V2_new.cs`)
+
+The new Windows app is namespace `APP_OLT_Stick_Eth`. Decompiled clean (no obfuscation, 11,801
+lines) — see [decompiled/APP_OLT_Stick_V2_new.cs](decompiled/APP_OLT_Stick_V2_new.cs). It still
+uses SharpPcap for raw Ethernet + UDP. The wire protocol changed in three significant ways.
+
+### Change 1 — Per-frame keyed hash authentication (this was the bug)
+
+Every command frame now carries a **4-byte keyed hash header** prepended to the payload.
+This is almost certainly why v1 commands (including `get_onu_optics`) failed against the new
+firmware — the new firmware rejects frames without a valid hash.
+
+```
+V2 frame payload = [4-byte hash] + [cmd_code(1)] + [seq(2)] + [data...]
+
+hash = Hashcaculation(OLT_SN, vendor_key, payload[0:4])
+```
+
+The hash (`SN_Change.Hashcaculation`, line ~5430) is a custom DJB2-variant over three inputs in
+order — the OLT serial number, the vendor key, and the first 4 bytes of the payload:
+
+```python
+def hashcaculation(sn: bytes, key: bytes, first4: bytes) -> bytes:
+    num = 5381
+    M = 0xFFFFFFFF
+    def mix(buf):
+        nonlocal num
+        for i, b in enumerate(buf):
+            num = ((num << 5) + num + b) & M       # num*33 + b
+            num ^= num >> 13
+            num = (num + (num << 7)) & M
+            num ^= (b << (i % 4 * 8)) & M
+        num ^= num >> 16
+        num = (num + (num << 3)) & M
+        num ^= num >> 4
+    mix(sn); mix(key); mix(first4)
+    return bytes([(num >> 24) & 0xFF, (num >> 16) & 0xFF,
+                  (num >> 8) & 0xFF, num & 0xFF])     # big-endian
+```
+
+### Change 2 — Vendor key is the literal string `fsoptics`
+
+The app loads its vendor keys from `appmanagement.ini`, shipped inside the MSI (saved as
+[v2-app-files/appmanagement.ini](v2-app-files/appmanagement.ini)):
+
+```
+fsoptics                  # line 0 = Vendor_Read_Key
+fsoptics                  # line 1 = Vendor_Write_Key
+FS PON Manager V1.1.0     # line 2 = APP_version
+```
+
+Both read and write keys are `fsoptics`. This string is fed to `Hashcaculation` as the `key`
+argument for every frame.
+
+### Change 3 — Dynamic UDP port + 16-byte OLT SN embedded per packet
+
+v1 used fixed UDP ports 64219/64218. v2 negotiates the reply port from the OLT's announced
+source port, and embeds the 16-byte OLT serial in every received frame. Received-frame layout
+(`Content[]` offsets, line ~1160):
+
+```
+[0:6]    Sender MAC
+[20:24]  Sender IP (from IP header)
+[28:30]  Source UDP port (uint16 BE) — used as DEST port for replies (dynamic, not fixed)
+[32:34]  UDP length (uint16 BE)
+[36:52]  OLT serial number (16 bytes ASCII)
+[52]     Command code
+[53:55]  Sequence / upd_ID (uint16 BE)
+[52:]    Payload
+```
+
+The default `dest_UDP_port` is still 64218 until the OLT announces otherwise.
+
+### New command codes (text-report family)
+
+The `Command_Code` enum gained a 0x80+ range, and command 65 (`0x41`, ASCII `A`) is now used
+for ONU optics responses. These carry **ASCII text payloads** (starting at offset 4), which the
+app keyword-matches — a major shift from v1's binary-only responses.
+
+| Code | Name | Notes |
+|------|------|-------|
+| 65 (0x41) | (optics / status text) | ONU optics response channel, ASCII payload |
+| 128 (0x80) | OLT_login_send | OLT login/announce — carries `oltiSN` for discovery |
+| 129 (0x81) | OLT_Status_report | OLT-level optics/status (see `ParseOltParameters`) |
+| 130 (0x82) | OLT_Alarm_report | OLT alarm text |
+| 131 (0x83) | ONU_Status_report | ONU status; enqueued for optics parsing |
+| 132 (0x84) | ONU_Alarm_report | ONU alarm text |
+
+The old reset commands (69 `OLT_Reset_Master`, 70 `OLT_Reset_Slave`, 71 `OLT_Softreset`) are
+**gone** from the v2 enum.
+
+### Text-report keyword dispatch (line ~1243)
+
+The async text reports are matched against substrings to drive ONU/OLT state:
+
+| Keyword in payload | Meaning |
+|--------------------|---------|
+| `on_line` | ONU ON_LINE |
+| `off_line` | ONU OFF_LINE |
+| `dying_gasp` | ONU DYING_GASP |
+| `reset_ok` | ONU CONFIGURE (post-reset) |
+| `upload_ok` | ONU UP_LOAD |
+| `LOSLOFalarm` | ONU LOFi (loss of signal/frame) |
+| `Rogue_ONU_Alarm` | Rogue ONU detected |
+| `oltiSN` | OLT info/login report (discovery) |
+| `Neighbor` | LLDP neighbor / port info (`get_port_info`) |
+| `Get PN:` | OLT part number (`get_olt_pn`) |
+| `access result` | Password/access result |
+
+### ONU optics parsing (`ParseOnuParameters`, line ~3160)
+
+Optics response is an ASCII string split on `;` and `:`, yielding 5 floats:
+```
+voltage ; temperature ; bias ; tx_pwr ; rx_pwr
+```
+This matches the ONU List performance string format exactly. The OLT-level variant
+(`ParseOltParameters`) additionally computes `tx_pwr = 10*log10(raw)` and extracts a `pn=` field.
+
+---
+
+## HTTP API on port 128 — Status: FULLY REVERSE ENGINEERED
+
+The firmware's standalone web UI was captured and decoded, and a working Python client was
+built and tested live. Full documentation + client: **[web-api/](web-api/)**
+(see [web-api/README.md](web-api/README.md)).
+
+Summary of what it is:
+- **Auth:** `GET /api/challenge` → `md5(password + nonce)` → `POST /api/login` → `token`,
+  passed as `?token=` on every call. Roles: admin/operator/viewer.
+- **Realtime over SSE:** device info, ONU status, and terminal-command output are pushed on
+  `GET /api/sse` — the `*/refresh` and `/api/cmd` POSTs only trigger the work.
+- **Two gotchas:** the embedded server (1) rejects JSON with whitespace (send compact JSON),
+  and (2) drops the first one or two triggers on a cold SSE stream (re-fire until events arrive;
+  use a separate connection for triggers).
+- **Endpoints** cover device/config/user, ONU list, terminal commands, whitelist (binary
+  up/download), firmware upgrade, and password management — full table in the web-api README.
+- Verified live against OLT SN `C2604649438` (100.64.2.147:128): login, device optics, ONU
+  optics, and `get_olt_pn()` all working.
+
+This means the grid-agent now has **two** fully-understood ways to drive v2 OLTs: the binary
+protocol above, or this HTTP API. The HTTP API is the simpler integration (plain JSON + SSE,
+no per-frame hashing, no raw sockets).
 
 ---
 
@@ -247,8 +395,27 @@ Endpoints expected (inferred from web UI tabs and terminal commands):
 
 ```
 fs/
-├── FS_GPON_OLT_STICK_V2_Setup-new.msi     # New installer (FS PON Manager V1.1.0)
-├── official-docs/
-│   └── GPON OLT STICK WEB User Guide-new.docx  # New web UI user guide
-└── FIRMWARE_V2_FINDINGS.md                # This file
+├── FS_GPON_OLT_STICK_V2_Setup-new.msi          # New installer (FS PON Manager V1.1.0)
+├── FIRMWARE_V2_FINDINGS.md                      # This file
+├── decompiled/
+│   └── APP_OLT_Stick_V2_new.cs                 # Decompiled new app (11,801 lines, clean)
+├── web-api/                                    # Port-128 HTTP API: docs + working Python client
+│   ├── README.md                               # Full HTTP/SSE API reference
+│   ├── olt_web_client.py                       # Tested Python client
+│   └── captures/                               # HAR, analysis, web UI source
+├── v2-app-files/                               # Files extracted from the new MSI
+│   ├── appmanagement.ini                       # Vendor keys (fsoptics) + version
+│   ├── service_type_template.txt               # Service profile template w/ field docs
+│   └── whitelist_template.txt                  # Bulk whitelist template
+└── official-docs/
+    └── GPON OLT STICK WEB User Guide-new.docx  # New web UI user guide
 ```
+
+## Reverse Engineering Method (v2)
+
+1. Extracted the MSI: OLE compound doc → CAB payload → 30 files (`olefile` + `7z`/`cabextract`)
+2. Identified the managed assembly (`APP_OLT_Stick_V2.dll`) among the extracted files
+3. Installed .NET 8 SDK to `~/.dotnet` (no sudo) + `ICSharpCode.Decompiler 8.2.0.7535`
+4. Resolved WinForms refs via the `Microsoft.WindowsDesktop.App.Ref` NuGet package
+5. `DecompileWholeModuleAsString()` → clean C# (same toolchain as v1)
+6. Traced the auth/optics/login paths to recover the wire protocol and the `fsoptics` key

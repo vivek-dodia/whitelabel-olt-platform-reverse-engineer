@@ -1,0 +1,6 @@
+#OLT SN: W5221000019      
+OLT_IP: 192.168.2.3
+# CPE SN-Service Type --active-- CPE description
+ZTEGC2509297  3  YES  #polling back NO 1
+ZTEGC2509298  4  YES  #polling back NO 2
+ZTEGC2509299  5  NO  #polling back NO 3

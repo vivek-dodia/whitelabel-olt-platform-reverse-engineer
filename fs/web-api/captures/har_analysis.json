@@ -1,0 +1,146 @@
+{
+  "base_url": "http://100.64.2.147:128",
+  "authentication": {
+    "type": "token_query",
+    "detected_methods": [
+      "token_query"
+    ],
+    "location": "header",
+    "header_name": "Authorization",
+    "pattern": "{token}",
+    "description": "Custom authentication: token_query"
+  },
+  "endpoints": [
+    {
+      "pattern": "/api/challenge",
+      "methods": [
+        "GET"
+      ],
+      "calls_observed": 2,
+      "query_params": {
+        "required": [],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/config",
+      "methods": [
+        "GET"
+      ],
+      "calls_observed": 2,
+      "query_params": {
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/device/refresh",
+      "methods": [
+        "POST"
+      ],
+      "calls_observed": 2,
+      "query_params": {
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/login",
+      "methods": [
+        "POST"
+      ],
+      "calls_observed": 1,
+      "query_params": {
+        "required": [],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/onu/refresh",
+      "methods": [
+        "POST"
+      ],
+      "calls_observed": 2,
+      "query_params": {
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/sse",
+      "methods": [
+        "GET"
+      ],
+      "calls_observed": 3,
+      "query_params": {
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/time/sync",
+      "methods": [
+        "POST"
+      ],
+      "calls_observed": 1,
+      "query_params": {
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    },
+    {
+      "pattern": "/api/user",
+      "methods": [
+        "GET"
+      ],
+      "calls_observed": 2,
+      "query_params": {
+        "required": [
+          "token"
+        ],
+        "optional": []
+      },
+      "request_body_schema": null,
+      "response_schema": null,
+      "requires_auth": false
+    }
+  ],
+  "pagination": {
+    "detected": false,
+    "type": null,
+    "params": []
+  },
+  "total_entries_analyzed": 15,
+  "unique_endpoints": 8
+}

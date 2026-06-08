@@ -13,3 +13,10 @@ fs/decompile/obj/
 
 # Build artifacts
 fs/grid-agent/dist/
+
+# Secrets — OLT credentials, never commit
+.env
+
+# OS / tool noise
+.DS_Store
+.playwright-mcp/
