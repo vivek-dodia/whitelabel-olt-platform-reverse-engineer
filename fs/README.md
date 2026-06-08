@@ -1,8 +1,11 @@
 # FS.com OLT SFP Stick — Reverse Engineering
 
-Reverse engineering of the FS.com GPON OLT SFP stick (GPON-SFP-OLT-MAC-I) and FS PON Manager V1.0.0.
+Reverse engineering of the FS.com GPON OLT SFP stick (GPON-SFP-OLT-MAC-I).
 
-## Status: FULLY DECODED
+> **Two firmware generations exist.** This file documents v1 (FS PON Manager V1.0.0, UDP protocol).
+> For the new firmware see **[FIRMWARE_V2_FINDINGS.md](FIRMWARE_V2_FINDINGS.md)** — v2 replaces UDP with an HTTP interface on port 128 and ships with a full web UI.
+
+## Status: FULLY DECODED (v1)
 
 The FS PON Manager is a .NET 8 WinForms app with **zero obfuscation** and **PDB debug symbols included**. Full C# source decompiled in one pass using ICSharpCode.Decompiler.
 
@@ -161,17 +164,20 @@ ONU connected: SN `TPLGD092299A` on OLT1.
 ## Directory Structure
 ```
 fs/
-├── README.md                  # This file
-├── FS_PON_OLT_STICK_Setup.msi # Original installer (LFS)
-├── official-docs/             # FS documentation
+├── README.md                          # This file (v1 protocol)
+├── FIRMWARE_V2_FINDINGS.md            # v2 firmware — HTTP interface, live deployment, new commands
+├── FS_PON_OLT_STICK_Setup.msi         # v1 installer (LFS)
+├── FS_GPON_OLT_STICK_V2_Setup-new.msi # v2 installer — FS PON Manager V1.1.0 (LFS)
+├── official-docs/
 │   ├── cn_fs-pon-manager-app-configuration-guide-*.pdf
-│   └── gpon-sfp-olt-mac-i-datasheet-*.pdf
-├── decompiled/                # Full decompiled C# source
-│   └── APP_OLT_Stick_V2.cs   # 10,954 lines, complete source
-├── decompile/                 # Decompiler project
+│   ├── gpon-sfp-olt-mac-i-datasheet-*.pdf
+│   └── GPON OLT STICK WEB User Guide-new.docx  # v2 web interface guide
+├── decompiled/                        # Full decompiled C# source (v1 app)
+│   └── APP_OLT_Stick_V2.cs           # 10,954 lines, complete source
+├── decompile/                         # Decompiler project
 │   ├── Program.cs
 │   └── decompile.csproj
-├── fs-olt1.pcapng             # First capture (14,523 packets)
-├── fs-olt2.pcapng             # Second capture (9,448 packets)
-└── parse_fs_protocol.py       # Protocol decoder script
+├── fs-olt1.pcapng                     # First capture (14,523 packets)
+├── fs-olt2.pcapng                     # Second capture (9,448 packets)
+└── parse_fs_protocol.py               # Protocol decoder script
 ```
