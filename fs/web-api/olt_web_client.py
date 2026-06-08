@@ -286,6 +286,20 @@ class OltWebClient:
         r.raise_for_status()
         return r.json()
 
+    def set_config(self, copyright: str) -> dict:
+        """POST /api/config — WRITE. The web UI only ever sends {copyright}; that is
+        the sole writable field observed. Returns the server's JSON response."""
+        self._require_token()
+        r = self.session.post(
+            self._q("/api/config"),
+            data=_compact({"copyright": copyright}),
+            headers={"Content-Type": "application/json"},
+            timeout=self.timeout,
+        )
+        if not r.ok:
+            raise RuntimeError(f"set_config failed: {r.json().get('message', r.text)}")
+        return r.json()
+
     def get_device(self, window: float = 12.0) -> Optional[dict]:
         """Trigger a device refresh and return the device_info SSE event, with optics
         parsed. Fields: olt_sn, name, pn, status, uptime, extra(+parsed optics)."""
@@ -418,6 +432,117 @@ class OltWebClient:
             )
             if not r.ok:
                 raise RuntimeError(f"whitelist upload failed: {r.json().get('error', r.text)}")
+
+    # ── user management (WRITE) ──
+
+    def change_password(self, old_password: str, new_password: str) -> dict:
+        """POST /api/user/changepwd — change the logged-in user's password.
+
+        The OLT invalidates the session afterwards; you must log in again with the
+        new password. Returns the server's JSON response."""
+        self._require_token()
+        r = self.trigger_session.post(
+            self._q("/api/user/changepwd"),
+            data=_compact({"old_password": old_password, "new_password": new_password}),
+            headers={"Content-Type": "application/json"},
+            timeout=self.timeout,
+        )
+        if not r.ok:
+            raise RuntimeError(f"change_password failed: {r.json().get('error', r.text)}")
+        return r.json()
+
+    def reset_user_password(self, username: str) -> dict:
+        """POST /api/user/reset — reset another user's password to its default.
+        Admin only. Returns {message} on success."""
+        self._require_token()
+        r = self.trigger_session.post(
+            self._q("/api/user/reset"),
+            data=_compact({"username": username}),
+            headers={"Content-Type": "application/json"},
+            timeout=self.timeout,
+        )
+        if not r.ok:
+            raise RuntimeError(f"reset_user_password failed: {r.json().get('error', r.text)}")
+        return r.json()
+
+    # ── firmware upgrade (WRITE — flashes the OLT) ──
+
+    def upgrade_firmware(
+        self,
+        firmware: "bytes | str",
+        block_size: int = 1024,
+        progress_callback: Optional[Callable[[int], None]] = None,
+        status_timeout: float = 60.0,
+    ) -> None:
+        """Flash a firmware image to the OLT. DESTRUCTIVE — do not run on a unit you
+        can't recover. Mirrors the web UI's exact sequence:
+
+          1. POST /api/fw/header  — first 12 bytes of the image (octet-stream).
+          2. Poll GET /api/fw/status until state == 'receiving' (the "erasing flash"
+             phase); abort on state == 'error'.
+          3. POST /api/fw/block   — the remaining bytes (from offset 12) in
+             `block_size` chunks; each response carries {status}, 'complete' ends it.
+
+        `firmware` may be a path or raw bytes. `progress_callback(pct)` is called with
+        0-100 as blocks upload. Live fw_progress/fw_complete/fw_error also appear on the
+        SSE stream if you have it open. Raises RuntimeError on any server error."""
+        self._require_token()
+        if isinstance(firmware, str):
+            with open(firmware, "rb") as fh:
+                data = fh.read()
+        else:
+            data = bytes(firmware)
+        if len(data) < 12:
+            raise ValueError("firmware image too small (need at least a 12-byte header)")
+
+        # 1. header
+        r = self.trigger_session.post(
+            self._q("/api/fw/header"),
+            data=data[:12],
+            headers={"Content-Type": "application/octet-stream"},
+            timeout=self.timeout,
+        )
+        if not r.ok:
+            raise RuntimeError(f"fw/header failed: {r.json().get('error', r.text)}")
+
+        # 2. wait for flash erase to finish (state -> 'receiving')
+        deadline = time.time() + status_timeout
+        while time.time() < deadline:
+            time.sleep(0.5)
+            sr = self.trigger_session.get(self._q("/api/fw/status"), timeout=self.timeout)
+            sr.raise_for_status()
+            sj = sr.json()
+            if sj.get("state") == "receiving":
+                break
+            if sj.get("state") == "error":
+                raise RuntimeError(f"fw/status error: {sj.get('error')}")
+        else:
+            raise RuntimeError("timed out waiting for OLT to enter 'receiving' state")
+
+        # 3. stream the body (everything after the 12-byte header) in blocks
+        offset, total = 12, len(data) - 12
+        while offset < len(data):
+            chunk = data[offset:offset + block_size]
+            br = self.trigger_session.post(
+                self._q("/api/fw/block"),
+                data=chunk,
+                headers={"Content-Type": "application/octet-stream"},
+                timeout=self.timeout,
+            )
+            if not br.ok:
+                raise RuntimeError(f"fw/block failed at offset {offset}: {br.json().get('error', br.text)}")
+            offset += len(chunk)
+            if progress_callback:
+                progress_callback(min(100, (offset - 12) * 100 // total))
+            if br.json().get("status") == "complete":
+                break
+
+    def cancel_firmware(self) -> None:
+        """POST /api/fw/cancel — abort an in-progress firmware upgrade."""
+        self._require_token()
+        r = self.trigger_session.post(self._q("/api/fw/cancel"), timeout=self.timeout)
+        if not r.ok:
+            raise RuntimeError(f"fw/cancel failed: {r.text}")
 
     # ── teardown ──
 

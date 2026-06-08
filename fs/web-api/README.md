@@ -134,10 +134,17 @@ are not filtered by the client — caller beware.
 
 ## Python client usage
 
+The client is a complete 1:1 wrapper — every one of the 16 endpoints above has a
+method. Reads/operational calls are live-tested; the write/destructive ones
+(`set_config`, `change_password`, `reset_user_password`, `upgrade_firmware`,
+`cancel_firmware`) are implemented to match the web UI exactly but should be used
+with care on production OLTs.
+
 ```python
 from olt_web_client import OltWebClient
 
 with OltWebClient("100.64.2.147", "admin", "<password>") as c:   # logs in on enter
+    # reads
     print(c.get_user())
     print(c.get_config())
     print(c.get_device())                 # dict incl. parsed 'optics'
@@ -145,6 +152,18 @@ with OltWebClient("100.64.2.147", "admin", "<password>") as c:   # logs in on en
         print(onu["id"], onu["sn"], onu["state"], onu["tx_pwr_dbm"], onu["rx_pwr_dbm"])
     print(c.run_command("get_olt_pn()"))
     print(c.download_whitelist())
+
+    # writes (use with care)
+    # c.set_config(copyright="My NOC 2026")
+    # c.upload_whitelist([{"sn": "TPLG31A11C1A", "type": 1, "active": True}])
+    # c.change_password(old_password="...", new_password="...")   # invalidates session
+    # c.reset_user_password("operator")                            # admin only
+    # c.run_command('set_ipmaskgate("100.64.2.50","255.255.255.0","100.64.2.1")')
+    # c.run_command('set_ip_addr_mode(0)')                         # 0=static, 1=DHCP
+
+    # firmware upgrade (DESTRUCTIVE — flashes the OLT)
+    # c.upgrade_firmware("olt_fw.bin", progress_callback=lambda p: print(f"{p}%"))
+    # c.cancel_firmware()
 ```
 
 Or run it directly against an OLT:
