@@ -20,3 +20,5 @@ fs/grid-agent/dist/
 # OS / tool noise
 .DS_Store
 .playwright-mcp/
+__pycache__/
+*.pyc
