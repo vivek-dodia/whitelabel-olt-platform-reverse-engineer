@@ -1,22 +1,36 @@
 [
   {
-    "ip": "100.64.2.200",
-    "name": "Lab OLT-1",
-    "serial": "C2603236285",
-    "mac": "00:00:00:50:00:20:ee:64",
+    "ip": "100.64.2.142",
+    "name": "OLT-A",
     "status": "online",
     "addedAt": 1712678400000,
     "siteLabel": "Office Lab",
-    "lastSeen": 1775767897264
+    "serial": "C2604649438",
+    "pn": "GPON-SFP-OLTMAC",
+    "lastSeen": 1780981534943,
+    "optics": {
+      "tx_pwr_mw": 3.22,
+      "voltage": 3.24,
+      "temperature": 40.2,
+      "bias_ma": 29.84,
+      "alarm": 0
+    }
   },
   {
-    "ip": "100.64.2.225",
-    "name": "Lab OLT-2",
-    "serial": "C2603236286",
-    "mac": "00:00:00:50:00:20:da:64",
-    "status": "online",
+    "ip": "100.64.2.143",
+    "name": "OLT-B",
+    "status": "offline",
     "addedAt": 1712678400000,
     "siteLabel": "Office Lab",
-    "lastSeen": 1775767204870
+    "serial": "C2604649437",
+    "pn": "GPON-SFP-OLTMAC",
+    "lastSeen": 1780978835013,
+    "optics": {
+      "tx_pwr_mw": 4.38,
+      "voltage": 3.26,
+      "temperature": 39.1,
+      "bias_ma": 34.97,
+      "alarm": 0
+    }
   }
 ]

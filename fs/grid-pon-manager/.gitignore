@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# per-OLT credential overrides — never commit secrets
+/data/olt-secrets.json
+
 # vercel
 .vercel
 

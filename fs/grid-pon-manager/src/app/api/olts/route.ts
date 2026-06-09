@@ -1,73 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadOlts, addOlt, removeOlt, updateOlt } from "@/lib/olt-store";
-import { getOltClient, getCachedStatus, startPoller } from "@/lib/olt-client";
+import { setOltSecret, deleteOltSecret, hasOltSecret } from "@/lib/olt-creds";
+import { oltManager } from "@/lib/olt-manager";
 
-// Start background poller on first request
-let pollerInitialized = false;
-function ensurePoller() {
-  if (pollerInitialized) return;
-  pollerInitialized = true;
-  startPoller(() => loadOlts().map((o) => o.ip));
-}
-
-// GET /api/olts — list all managed OLTs with cached live status
+// GET /api/olts — list managed OLTs from the config store (instant; the
+// dashboard fetches live device/ONU data per-OLT). `hasPassword` reflects a
+// per-OLT credential override; passwords themselves are never returned.
 export async function GET() {
-  ensurePoller();
-
-  const olts = loadOlts();
-  const results = olts.map((olt) => {
-    const cached = getCachedStatus(olt.ip);
-    if (cached) {
-      return {
-        ...olt,
-        status: cached.status,
-        serial: cached.serial || olt.serial,
-        mac: cached.mac || olt.mac,
-        lastSeen: cached.lastSeen || olt.lastSeen,
-      };
-    }
-    return olt;
-  });
-
-  return NextResponse.json(results);
+  const olts = loadOlts().map((o) => ({ ...o, hasPassword: hasOltSecret(o.ip) }));
+  return NextResponse.json(olts);
 }
 
-// POST /api/olts — add a new OLT by IP
+// POST /api/olts — add an OLT by IP. Optional per-OLT user/password override.
+// Probes the OLT once to learn its serial/PN and mark it online.
 export async function POST(req: NextRequest) {
-  ensurePoller();
-
   const body = await req.json();
-  const { ip, name, siteLabel } = body;
+  const { ip, name, siteLabel, user, password } = body as {
+    ip?: string;
+    name?: string;
+    siteLabel?: string;
+    user?: string;
+    password?: string;
+  };
 
   if (!ip || !name) {
-    return NextResponse.json(
-      { error: "ip and name are required" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "ip and name are required" }, { status: 400 });
   }
 
-  const client = getOltClient();
-  const info = await client.shakeHand(ip);
+  if (password) setOltSecret(ip, password, user);
+  const olt = addOlt(ip, name, { siteLabel, user });
 
-  const olt = addOlt(ip, name, siteLabel);
-  if (info) {
-    updateOlt(ip, {
-      serial: info.serial,
-      mac: info.mac,
-      status: "online",
-      lastSeen: Date.now(),
-    });
+  // Best-effort probe so the card shows real data immediately.
+  try {
+    const dev = await oltManager.withClient(ip, (c) => c.getDevice());
+    if (dev) {
+      updateOlt(ip, {
+        status: "online",
+        serial: dev.olt_sn,
+        pn: dev.pn,
+        lastSeen: Date.now(),
+        optics: {
+          tx_pwr_mw: dev.optics.tx_pwr_mw,
+          voltage: dev.optics.voltage,
+          temperature: dev.optics.temperature,
+          bias_ma: dev.optics.bias_ma,
+          alarm: dev.optics.alarm,
+        },
+      });
+    }
+  } catch {
+    updateOlt(ip, { status: "offline" });
   }
 
-  return NextResponse.json({ ...olt, ...info }, { status: 201 });
+  const fresh = loadOlts().find((o) => o.ip === ip) ?? olt;
+  return NextResponse.json({ ...fresh, hasPassword: hasOltSecret(ip) }, { status: 201 });
 }
 
-// DELETE /api/olts — remove an OLT
+// DELETE /api/olts — remove an OLT and forget its session + stored secret.
 export async function DELETE(req: NextRequest) {
-  const { ip } = await req.json();
-  if (!ip) {
-    return NextResponse.json({ error: "ip is required" }, { status: 400 });
-  }
+  const { ip } = (await req.json()) as { ip?: string };
+  if (!ip) return NextResponse.json({ error: "ip is required" }, { status: 400 });
+  oltManager.invalidate(ip);
+  deleteOltSecret(ip);
   const removed = removeOlt(ip);
   return NextResponse.json({ removed });
 }

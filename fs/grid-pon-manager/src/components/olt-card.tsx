@@ -1,14 +1,6 @@
 "use client";
 
-interface OltInfo {
-  ip: string;
-  mac: string;
-  serial: string;
-  name: string;
-  status: "online" | "offline" | "unknown";
-  lastSeen?: number;
-  siteLabel?: string;
-}
+import type { OltInfo } from "@/lib/ui-types";
 
 function StatusDot({ status }: { status: string }) {
   const color =
@@ -23,10 +15,7 @@ function StatusDot({ status }: { status: string }) {
       {status === "online" && (
         <span
           className="absolute inline-flex h-full w-full rounded-full opacity-40"
-          style={{
-            backgroundColor: color,
-            animation: "pulse-dot 2s ease-in-out infinite",
-          }}
+          style={{ backgroundColor: color, animation: "pulse-dot 2s ease-in-out infinite" }}
         />
       )}
       <span
@@ -47,13 +36,24 @@ function timeAgo(ts?: number): string {
   return `${Math.floor(diff / 86400)}d ago`;
 }
 
-export function OltCard({
-  olt,
-  onClick,
-}: {
-  olt: OltInfo;
-  onClick: () => void;
-}) {
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-muted)]">
+        {label}
+      </span>
+      <span className="text-[13px] font-[family-name:var(--font-mono)] text-[var(--color-text-secondary)]">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+export function OltCard({ olt, onClick }: { olt: OltInfo; onClick: () => void }) {
+  const o = olt.optics;
+  const hasOptics =
+    o && (o.temperature !== null || o.voltage !== null || o.tx_pwr_mw !== null);
+
   return (
     <button
       onClick={onClick}
@@ -88,7 +88,7 @@ export function OltCard({
         </span>
       </div>
 
-      {/* Details */}
+      {/* Identity */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--color-text-muted)]">IP</span>
@@ -102,20 +102,27 @@ export function OltCard({
             {olt.serial || "--"}
           </span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-[var(--color-text-muted)]">MAC</span>
-          <span className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-text-secondary)]">
-            {olt.mac || "--"}
-          </span>
-        </div>
       </div>
+
+      {/* Optics summary */}
+      {hasOptics && (
+        <div className="grid grid-cols-3 gap-2 mt-4 pt-3 border-t border-[var(--color-border)]">
+          <Metric
+            label="Temp"
+            value={o!.temperature !== null ? `${o!.temperature}°C` : "--"}
+          />
+          <Metric label="Vcc" value={o!.voltage !== null ? `${o!.voltage} V` : "--"} />
+          <Metric
+            label="TX"
+            value={o!.tx_pwr_mw !== null ? `${o!.tx_pwr_mw} mW` : "--"}
+          />
+        </div>
+      )}
 
       {/* Footer */}
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--color-border)]">
         {olt.siteLabel && (
-          <span className="text-xs text-[var(--color-text-muted)]">
-            {olt.siteLabel}
-          </span>
+          <span className="text-xs text-[var(--color-text-muted)]">{olt.siteLabel}</span>
         )}
         <span className="text-xs text-[var(--color-text-muted)] ml-auto">
           {timeAgo(olt.lastSeen)}

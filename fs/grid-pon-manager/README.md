@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GRID PON Manager
 
-## Getting Started
+Web UI for managing FS GPON OLT SFP sticks (**v2 firmware**) over the firmware's
+built-in **port-128 HTTP API**. This replaces the original v1 build, which spoke
+the raw UDP binary protocol — the v2 sticks reject those frames (they require the
+new per-frame hash auth), so the UI now drives the HTTP/SSE web API instead.
 
-First, run the development server:
+See [`../FIRMWARE_V2_FINDINGS.md`](../FIRMWARE_V2_FINDINGS.md) and
+[`../web-api/`](../web-api/) for the reverse-engineering notes the client is based on.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Architecture
+
+```
+Browser ──HTTP──▶ Next.js route handlers ──▶ OltWebClient (per OLT) ──HTTP/SSE──▶ OLT :128
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **`src/lib/olt-web-client.ts`** — TypeScript port of `web-api/olt_web_client.py`.
+  One instance per OLT. Challenge/response login (`md5(password + nonce)` → token),
+  a persistent SSE stream for device/ONU/command results, and the cold-stream
+  trigger-retry quirk handled. Covers all 16 firmware endpoints.
+- **`src/lib/olt-manager.ts`** — singleton holding one logged-in client per OLT IP
+  (the embedded server is fragile under concurrent connections, so we reuse a
+  long-lived client and let the browser poll our routes). Re-logs-in on token expiry.
+- **`src/lib/olt-creds.ts`** — credential resolution: per-OLT secret →
+  `olts.json` user → `OLT_USER`/`OLT_PW` env.
+- **`src/lib/olt-store.ts`** — config store of managed OLTs (`data/olts.json`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### API routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | Method | Purpose |
+|-------|--------|---------|
+| `/api/olts` | GET/POST/DELETE | list / add / remove managed OLTs |
+| `/api/olts/[ip]/device` | GET | device info + OLT optics (live) |
+| `/api/olts/[ip]/onus` | GET | ONU list with parsed DDM optics |
+| `/api/olts/[ip]/cmd` | POST | run a firmware terminal command |
+| `/api/olts/[ip]/whitelist` | GET/POST | download / upload ONU whitelist |
+| `/api/olts/[ip]/config` | GET/POST | read settings / write copyright |
+| `/api/olts/[ip]/firmware` | POST | flash a firmware image (destructive) |
 
-## Learn More
+### UI
 
-To learn more about Next.js, take a look at the following resources:
+Dashboard fleet grid → per-OLT detail with tabs: **Overview** (device optics),
+**ONUs** (DDM table), **Terminal**, **Whitelist**, **Settings** (network /
+provisioning), **Firmware**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cp .env.example .env      # set OLT_USER / OLT_PW (fleet default credentials)
+bun install
+bun dev                   # http://localhost:3000
+```
 
-## Deploy on Vercel
+### Credentials
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- The fleet-wide default user/password come from `.env` (`OLT_USER`, `OLT_PW`).
+- A per-OLT override can be entered in the **Add OLT** dialog; it is stored in
+  `data/olt-secrets.json` (gitignored — never committed).
+- Factory defaults: `admin`/`abcd1@`, `operator`/`op1234`, `viewer`/`view123`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Managed OLTs
+
+`data/olts.json` is the config-based list of OLTs to manage (add/remove via the UI).
+Automating this from NetBox or similar is a future enhancement.
+
+## Build
+
+```bash
+bun run build
+bun run lint
+```

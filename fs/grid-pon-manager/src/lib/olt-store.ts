@@ -1,31 +1,43 @@
 /**
  * GRID PON Manager — OLT Store
  *
- * Simple JSON file-based store for managed OLTs.
- * Tracks which OLTs to poll, their last known status, etc.
+ * Config-based store for managed OLTs (data/olts.json). Tracks which OLTs to
+ * manage, an optional per-OLT username, and the last known live status/optics
+ * so the dashboard renders instantly before a fresh poll completes.
+ *
+ * Passwords are NOT stored here (this file is committed) — see olt-creds.ts.
  */
 
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
 export interface ManagedOlt {
   ip: string;
   name: string;
+  /** Optional per-OLT username override; password lives in olt-secrets.json. */
+  user?: string;
+  /** OLT serial number, learned from the device on first contact. */
   serial?: string;
-  mac?: string;
+  pn?: string;
   status: "online" | "offline" | "unknown";
   lastSeen?: number;
   addedAt: number;
   siteLabel?: string;
+  /** Cached device optics summary from the last successful poll. */
+  optics?: {
+    tx_pwr_mw: number | null;
+    voltage: number | null;
+    temperature: number | null;
+    bias_ma: number | null;
+    alarm: number | null;
+  };
 }
 
 const STORE_PATH = path.join(process.cwd(), "data", "olts.json");
 
 function ensureDir() {
   const dir = path.dirname(STORE_PATH);
-  if (!existsSync(dir)) {
-    require("fs").mkdirSync(dir, { recursive: true });
-  }
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 }
 
 export function loadOlts(): ManagedOlt[] {
@@ -43,12 +55,21 @@ export function saveOlts(olts: ManagedOlt[]) {
   writeFileSync(STORE_PATH, JSON.stringify(olts, null, 2));
 }
 
-export function addOlt(ip: string, name: string, siteLabel?: string): ManagedOlt {
+export function getOlt(ip: string): ManagedOlt | undefined {
+  return loadOlts().find((o) => o.ip === ip);
+}
+
+export function addOlt(
+  ip: string,
+  name: string,
+  opts: { siteLabel?: string; user?: string } = {}
+): ManagedOlt {
   const olts = loadOlts();
   const existing = olts.find((o) => o.ip === ip);
   if (existing) {
     existing.name = name;
-    if (siteLabel) existing.siteLabel = siteLabel;
+    if (opts.siteLabel) existing.siteLabel = opts.siteLabel;
+    if (opts.user) existing.user = opts.user;
     saveOlts(olts);
     return existing;
   }
@@ -57,7 +78,8 @@ export function addOlt(ip: string, name: string, siteLabel?: string): ManagedOlt
     name,
     status: "unknown",
     addedAt: Date.now(),
-    siteLabel,
+    ...(opts.siteLabel ? { siteLabel: opts.siteLabel } : {}),
+    ...(opts.user ? { user: opts.user } : {}),
   };
   olts.push(olt);
   saveOlts(olts);

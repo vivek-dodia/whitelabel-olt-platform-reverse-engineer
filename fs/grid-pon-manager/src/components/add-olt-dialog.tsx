@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 
+const inputCls =
+  "w-full px-3.5 py-2.5 text-sm rounded-lg border border-[var(--color-border)] bg-white outline-none focus:border-[var(--color-grid-500)] focus:ring-2 focus:ring-[var(--color-grid-500)]/10 transition-all";
+
+const labelCls =
+  "block text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5";
+
 export function AddOltDialog({
   onClose,
   onAdded,
@@ -12,6 +18,8 @@ export function AddOltDialog({
   const [ip, setIp] = useState("");
   const [name, setName] = useState("");
   const [siteLabel, setSiteLabel] = useState("");
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,20 +27,23 @@ export function AddOltDialog({
     e.preventDefault();
     setError("");
     setSubmitting(true);
-
     try {
       const res = await fetch("/api/olts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ip, name, siteLabel: siteLabel || undefined }),
+        body: JSON.stringify({
+          ip,
+          name,
+          siteLabel: siteLabel || undefined,
+          user: user || undefined,
+          password: password || undefined,
+        }),
       });
-
       if (!res.ok) {
         const data = await res.json();
         setError(data.error || "Failed to add OLT");
         return;
       }
-
       onAdded();
     } catch {
       setError("Network error");
@@ -46,21 +57,16 @@ export function AddOltDialog({
       className="fixed inset-0 z-50 flex items-center justify-center"
       style={{ animation: "fade-up 0.2s ease-out" }}
     >
-      {/* Overlay */}
       <div
         className="absolute inset-0 bg-[var(--color-text-primary)]/40 backdrop-blur-sm"
         onClick={onClose}
       />
-
-      {/* Dialog */}
       <div
         className="relative bg-white rounded-2xl border border-[var(--color-border)] shadow-2xl w-full max-w-md mx-4 p-6"
         style={{ animation: "slide-up 0.3s ease-out" }}
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">
-            Add OLT
-          </h2>
+          <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Add OLT</h2>
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-grid-50)] transition-colors cursor-pointer text-[var(--color-text-muted)]"
@@ -73,35 +79,31 @@ export function AddOltDialog({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5">
-              OLT IP Address
-            </label>
+            <label className={labelCls}>OLT IP Address</label>
             <input
               type="text"
               value={ip}
               onChange={(e) => setIp(e.target.value)}
-              placeholder="100.64.2.200"
+              placeholder="100.64.2.148"
               required
-              className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[var(--color-border)] bg-white outline-none focus:border-[var(--color-grid-500)] focus:ring-2 focus:ring-[var(--color-grid-500)]/10 transition-all font-[family-name:var(--font-mono)]"
+              className={`${inputCls} font-[family-name:var(--font-mono)]`}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5">
-              Name
-            </label>
+            <label className={labelCls}>Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Site A - OLT 1"
+              placeholder="Site A — OLT 1"
               required
-              className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[var(--color-border)] bg-white outline-none focus:border-[var(--color-grid-500)] focus:ring-2 focus:ring-[var(--color-grid-500)]/10 transition-all"
+              className={inputCls}
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5">
+            <label className={labelCls}>
               Site Label
               <span className="text-[var(--color-text-muted)] font-normal normal-case tracking-normal ml-1">
                 (optional)
@@ -112,8 +114,39 @@ export function AddOltDialog({
               value={siteLabel}
               onChange={(e) => setSiteLabel(e.target.value)}
               placeholder="Office Lab"
-              className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[var(--color-border)] bg-white outline-none focus:border-[var(--color-grid-500)] focus:ring-2 focus:ring-[var(--color-grid-500)]/10 transition-all"
+              className={inputCls}
             />
+          </div>
+
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-grid-50)] p-3 space-y-3">
+            <p className="text-[11px] text-[var(--color-text-muted)]">
+              Credentials (optional) — leave blank to use the fleet default from{" "}
+              <span className="font-[family-name:var(--font-mono)]">.env</span> (OLT_USER / OLT_PW).
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className={labelCls}>User</label>
+                <input
+                  type="text"
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
+                  placeholder="admin"
+                  className={inputCls}
+                  autoComplete="off"
+                />
+              </div>
+              <div>
+                <label className={labelCls}>Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••"
+                  className={inputCls}
+                  autoComplete="new-password"
+                />
+              </div>
+            </div>
           </div>
 
           {error && (
